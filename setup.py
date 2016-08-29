@@ -1,19 +1,14 @@
 from setuptools import setup
-from codecs import open
 from os import path
 
 import mupub
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
-    long_description = f.read()
-
 setup(
     name = mupub.__title__,
     version = mupub.__version__,
     description = mupub.__summary__,
-    long_description = long_description,
     url = mupub.__uri__,
     author = mupub.__author__,
     author_email = mupub.__author_email__,
