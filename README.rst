@@ -13,7 +13,7 @@ Development setup
 This project uses typical Python tools. Once you clone the repository
 you will need to create the appropriate virtual environment. A
 ``Makefile`` is provided for various developer tasks, including the
-initial task of installing required packages,
+initial task of installing required packages, ::
 
    $ make requirements
 
