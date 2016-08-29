@@ -55,6 +55,7 @@ html_sidebars = {
     ]
 }
 
-musite_path = os.path.abspath('../../musite/docs/_build/html')
+#musite_path = os.path.abspath('../../musite/docs/_build/html')
+musite_path = 'http://mudev-documentation.readthedocs.io/en/latest/'
 intersphinx_mapping = { 'python': ('https://docs.python.org/3', None),
                         'musite': (musite_path, None), }

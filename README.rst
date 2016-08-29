@@ -1,15 +1,15 @@
 mupub - A publishing tool for the Mutopia Project
 
+.. image:: https://readthedocs.org/projects/mutopia-rewrite/badge/?version=latest
+   :target: http://mutopia-rewrite.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
 Synopsis
 --------
 Currently the back-end publication software is a collection of shell
 scripts and Java; this project aims to update this set of tools into a
 more cohesive and flexible application with more opportunities for
 automation.
-
-.. image:: https://readthedocs.org/projects/mutopia-rewrite/badge/?version=latest
-:target: http://mutopia-rewrite.readthedocs.io/en/latest/?badge=latest
-:alt: Documentation Status
 
 
 Development setup
