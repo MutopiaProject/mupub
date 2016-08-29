@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="38cm" height="26cm" viewBox="-110 -21 756 502" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #d8e5e5" x="-47.9704" y="-19.5629" width="693.322" height="440.309" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="-47.9704" y="-19.5629" width="693.322" height="440.309" rx="20" ry="20"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="9.93371" y="20.5937" width="120" height="52" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="9.93371" y="20.5937" width="120" height="52" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="69.9337" y="42.4937">
+      <tspan x="69.9337" y="42.4937">Obtain LilyPond</tspan>
+      <tspan x="69.9337" y="58.4937">Version of file</tspan>
+    </text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="249.133,141.316 269.133,121.316 289.133,141.316 269.133,161.316 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" points="249.133,141.316 269.133,121.316 289.133,141.316 269.133,161.316 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="500.173" y="115.316" width="126.8" height="52" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="500.173" y="115.316" width="126.8" height="52" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="563.573" y="137.216">
+      <tspan x="563.573" y="137.216">Set Environment</tspan>
+      <tspan x="563.573" y="153.216">for LilyPond</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" points="289.133,141.316 299.133,141.316 490.173,141.316 495.701,141.316 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="487.937,146.316 497.937,141.316 487.937,136.316 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="397.741" y="134.317">[found match]</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="249.133,141.316 239.133,141.316 176.659,141.316 171.131,141.316 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="178.895,136.316 168.895,141.316 178.895,146.316 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="214.828" y="128.632">[else]</text>
+  </g>
+  <ellipse style="fill: #000000" cx="-98.5757" cy="46.5937" rx="10" ry="10"/>
+  <g>
+    <rect style="fill: #ffffff" x="-17.1413" y="216.424" width="174.15" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-17.1413" y="216.424" width="174.15" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="69.9337" y="238.324">
+      <tspan x="69.9337" y="238.324">convert-ly to update file</tspan>
+    </text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="249.133,234.424 269.133,214.424 289.133,234.424 269.133,254.424 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="249.133,234.424 269.133,214.424 289.133,234.424 269.133,254.424 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="183.983" y="28.5937" width="170.3" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="183.983" y="28.5937" width="170.3" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="269.133" y="50.4937">
+      <tspan x="269.133" y="50.4937">Find matching compiler</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="269.133,64.5937 269.133,74.5937 269.133,111.316 269.133,116.844 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="264.133,109.08 269.133,119.08 274.133,109.08 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="325.373" y="285.156" width="182.6" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="325.373" y="285.156" width="182.6" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="416.673" y="307.056">
+      <tspan x="416.673" y="307.056">Install matching compiler</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="157.009,234.424 167.009,234.424 239.133,234.424 244.661,234.424 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="236.897,239.424 246.897,234.424 236.897,229.424 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="-26.7913" y="115.316" width="193.45" height="52" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-26.7913" y="115.316" width="193.45" height="52" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="69.9337" y="137.216">
+      <tspan x="69.9337" y="137.216">Set environment</tspan>
+      <tspan x="69.9337" y="153.216">to nearest LilyPond version</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="69.9337,167.316 69.9337,177.316 69.9337,206.424 69.9337,211.951 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="64.9337,204.187 69.9337,214.187 74.9337,204.187 "/>
+  </g>
+  <rect style="fill: #000000" x="220.035" y="374.366" width="393.249" height="8"/>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="563.573,167.316 563.573,290.86 564.128,290.86 564.128,369.894 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="559.128,362.13 564.128,372.13 569.128,362.13 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="269.133,254.424 269.133,331.01 269.191,331.01 269.191,369.894 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="264.191,362.13 269.191,372.13 274.191,362.13 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="240.055" y="321.861">[else]</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="416.673,321.156 416.673,333.632 416.66,333.632 416.66,369.894 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="411.66,362.13 416.66,372.13 421.66,362.13 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="289.133,234.424 416.673,234.424 416.673,280.684 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="411.673,272.92 416.673,282.92 421.673,272.92 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="342.903" y="224.424">[convert failed]</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="129.934,46.5937 139.934,46.5937 173.983,46.5937 179.511,46.5937 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="171.747,51.5937 181.747,46.5937 171.747,41.5937 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="-88.5757,46.5937 -78.5757,46.5937 -0.0662863,46.5937 5.46158,46.5937 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="-2.30235,51.5937 7.69765,46.5937 -2.30235,41.5937 "/>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="416.673" cy="465.252" rx="15" ry="15"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="416.673" cy="465.252" rx="15" ry="15"/>
+    <ellipse style="fill: #000000" cx="416.673" cy="465.252" rx="10" ry="10"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="416.66,382.366 416.66,410.594 416.673,410.594 416.673,445.78 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="411.673,438.016 416.673,448.016 421.673,438.016 "/>
+  </g>
+  <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="460.993" y="6.84879">
+    <tspan x="460.993" y="6.84879">LilyPond compiler cache</tspan>
+  </text>
+</svg>

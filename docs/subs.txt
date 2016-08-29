@@ -1,0 +1,37 @@
+.. Substitutions for mudev documentation
+
+.. |coverage| raw:: html
+
+   <a href="https://coverage.readthedocs.io/">coverage</a>
+
+.. |githubapi| raw:: html
+
+   <a href="https://developer.github.com/v3/">GitHub API</a>
+
+.. |lilypond| raw:: html
+
+   <a href="http://lilypond.org/">LilyPond</a>
+
+.. |mutopia| raw:: html
+
+   <a href="http://www.mutopiaproject.org">Mutopia Project</a>
+
+.. |django| raw:: html
+
+   <a href="https://docs.djangoproject.com/en/1.9">Django</a>
+
+.. |heroku| raw:: html
+
+   <a href="https://www.heroku.com/home">heroku</a>
+
+.. |psql| raw:: html
+
+   <a href="https://www.postgresql.org/docs/9.4/static/app-psql.html">psql</a>
+
+.. |postgres| raw:: html
+
+   <a href="https://www.postgresql.org/docs/9.4/">postgres</a>
+
+.. |sphinx| raw:: html
+
+   <a href="http://sphinx-doc.org/">Sphinx</a>

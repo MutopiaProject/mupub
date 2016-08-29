@@ -1,0 +1,10 @@
+ mutopiatitle =      "this test"
+ mutopiaopus =       "Op. 5 No. 5"
+ mutopiacomposer =   "SorF"
+ mutopiainstrument = "Guitar"
+ date =              "19th C."
+ style =             "Classical"
+ source =            "First edition facsimile"
+ copyright =	     "Creative Commons Attribution-ShareAlike 2.5"
+ 
+ footer = "Mutopia-2006/01/01-999"

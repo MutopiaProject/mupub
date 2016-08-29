@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="16cm" height="17cm" viewBox="117 107 305 338" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #d8e5e5" x="183.65" y="131.5" width="151.9" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="183.65" y="131.5" width="151.9" height="36" rx="20" ry="20"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="259.6" y="153.4">
+      <tspan x="259.6" y="153.4">Prepare LilyPond File</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="210.7" y="216.667" width="97.8" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="210.7" y="216.667" width="97.8" height="36" rx="20" ry="20"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="259.6" y="238.567">
+      <tspan x="259.6" y="238.567">Build Assets</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="189.225" y="301.833" width="140.75" height="52" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="189.225" y="301.833" width="140.75" height="52" rx="20" ry="20"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="259.6" y="323.733">
+      <tspan x="259.6" y="323.733">Synchronize</tspan>
+      <tspan x="259.6" y="339.733">Assets With Server</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="179.5" y="408" width="160.2" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="179.5" y="408" width="160.2" height="36" rx="20" ry="20"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="259.6" y="429.9">
+      <tspan x="259.6" y="429.9">Update Site Database</tspan>
+    </text>
+  </g>
+  <ellipse style="fill: #000000" cx="128" cy="149.5" rx="10" ry="10"/>
+  <g>
+    <ellipse style="fill: #ffffff" cx="404" cy="426" rx="15" ry="15"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="404" cy="426" rx="15" ry="15"/>
+    <ellipse style="fill: #000000" cx="404" cy="426" rx="10" ry="10"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="259.6,167.5 259.6,177.5 259.6,206.667 259.6,212.195 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="254.6,204.431 259.6,214.431 264.6,204.431 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="259.6,252.667 259.6,262.667 259.6,291.833 259.6,297.361 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="254.6,289.597 259.6,299.597 264.6,289.597 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="259.6,353.833 259.6,363.833 259.6,398 259.6,403.528 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="254.6,395.764 259.6,405.764 264.6,395.764 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="339.7,426 349.7,426 379,426 384.528,426 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="376.764,431 386.764,426 376.764,421 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="138,149.5 148,149.5 173.65,149.5 179.178,149.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="171.414,154.5 181.414,149.5 171.414,144.5 "/>
+  </g>
+  <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 4; stroke: #000000" x1="119.9" y1="194.2" x2="421" y2="194.2"/>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="358.175" y="183.2">
+    <tspan x="358.175" y="183.2">Manual</tspan>
+  </text>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="345.9" y="214.2">
+    <tspan x="345.9" y="214.2">Automated</tspan>
+  </text>
+</svg>

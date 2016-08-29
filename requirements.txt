@@ -1,0 +1,8 @@
+# application packages
+rdflib==4.2.1
+requests==2.11.1
+
+# deveoper packages
+coverage==4.2
+pylint==1.6.4
+#sphinx==1.4.6

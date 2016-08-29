@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="24cm" height="24cm" viewBox="128 42 470 461" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #d8e5e5" x="130" y="86" width="467" height="355" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="130" y="86" width="467" height="355" rx="20" ry="20"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="428.2" y="121.75" width="125.9" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="428.2" y="121.75" width="125.9" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="491.15" y="143.65">
+      <tspan x="491.15" y="143.65">find contribution</tspan>
+    </text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="319.924,224.712 339.924,204.712 359.924,224.712 339.924,244.712 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" points="319.924,224.712 339.924,204.712 359.924,224.712 339.924,244.712 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="186" y="206.712" width="80" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="186" y="206.712" width="80" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="226" y="228.612">
+      <tspan x="226" y="228.612">assign id</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="279.424" y="292" width="121" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="279.424" y="292" width="121" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="339.924" y="313.9">
+      <tspan x="339.924" y="313.9">update headers</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="291.8" y="388.5" width="96.25" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="291.8" y="388.5" width="96.25" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="339.925" y="410.4">
+      <tspan x="339.925" y="410.4">build assets</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" points="339.924,244.712 339.924,275.646 339.924,275.646 339.924,287.528 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="334.924,279.764 339.924,289.764 344.924,279.764 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="304.924" y="276">[update]</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="319.924,224.712 314.5,224.712 314.5,224.712 270.472,224.712 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="278.236,219.712 268.236,224.712 278.236,229.712 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="293" y="215">[new]</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="226,242.712 226,310 274.952,310 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="267.188,315 277.188,310 267.188,305 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="339.924,328 339.924,358.25 339.925,358.25 339.925,384.028 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="334.925,376.264 339.925,386.264 344.925,376.264 "/>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="470.724,224.712 490.724,204.712 510.724,224.712 490.724,244.712 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="470.724,224.712 490.724,204.712 510.724,224.712 490.724,244.712 "/>
+  </g>
+  <ellipse style="fill: #000000" cx="490.724" cy="59" rx="10" ry="10"/>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="490.724,69 490.724,84.5026 491.15,84.5026 491.15,117.278 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="486.15,109.514 491.15,119.514 496.15,109.514 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="411.7" y="342.132" width="158.05" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="411.7" y="342.132" width="158.05" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="490.725" y="364.032">
+      <tspan x="490.725" y="364.032">sync data with server</tspan>
+    </text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="490.724" cy="487" rx="15" ry="15"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="490.724" cy="487" rx="15" ry="15"/>
+    <ellipse style="fill: #000000" cx="490.724" cy="487" rx="10" ry="10"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="490.724,244.712 490.724,293.422 490.725,293.422 490.725,337.66 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="485.725,329.896 490.725,339.896 495.725,329.896 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="520" y="265">[done]</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="490.725,378.132 490.725,425.066 490.724,425.066 490.724,467.528 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="485.724,459.764 490.724,469.764 495.724,459.764 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="159" y="108">
+    <tspan x="159" y="108">Publication</tspan>
+  </text>
+  <g>
+    <rect style="fill: #ffe5cd" x="190" y="121.75" width="131.2" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="190" y="121.75" width="131.2" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="255.6" y="143.65">
+      <tspan x="255.6" y="143.65">update AssetMap</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="491.15,157.75 491.15,181.231 490.724,181.231 490.724,200.24 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="485.724,192.476 490.724,202.476 495.724,192.476 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="321.2,139.75 331.2,139.75 418.2,139.75 423.728,139.75 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="415.964,144.75 425.964,139.75 415.964,134.75 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="470.724,224.712 460.724,224.712 369.924,224.712 364.396,224.712 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="372.16,219.712 362.16,224.712 372.16,229.712 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="405.324" y="214.712">[found]</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="291.8,406.5 160,406.5 160,139.75 185.528,139.75 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="177.764,144.75 187.764,139.75 177.764,134.75 "/>
+  </g>
+</svg>

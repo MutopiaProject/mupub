@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="23cm" height="19cm" viewBox="323 6 447 375" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #d8e5e5" x="324.884" y="46.8731" width="444.27" height="282.541" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="324.884" y="46.8731" width="444.27" height="282.541" rx="20" ry="20"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="338.793" y="148.53" width="111.3" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="338.793" y="148.53" width="111.3" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="394.443" y="170.43">
+      <tspan x="394.443" y="170.43">Build PDF files</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="485.674" y="148.53" width="102.25" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="485.674" y="148.53" width="102.25" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="536.799" y="170.43">
+      <tspan x="536.799" y="170.43">Build PS files</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="610.275" y="108.035" width="150.65" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="610.275" y="108.035" width="150.65" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="685.6" y="129.935">
+      <tspan x="685.6" y="129.935">Build preview image</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="644.45" y="189.373" width="82.3" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="644.45" y="189.373" width="82.3" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="685.6" y="211.273">
+      <tspan x="685.6" y="211.273">Build RDF</tspan>
+    </text>
+  </g>
+  <g>
+    <ellipse style="fill: #ffffff" cx="685.6" cy="365.232" rx="15" ry="15"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" cx="685.6" cy="365.232" rx="15" ry="15"/>
+    <ellipse style="fill: #000000" cx="685.6" cy="365.232" rx="10" ry="10"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="639.275" y="270.71" width="92.65" height="36" rx="20" ry="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="639.275" y="270.71" width="92.65" height="36" rx="20" ry="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="685.6" y="292.61">
+      <tspan x="685.6" y="292.61">Change log</tspan>
+    </text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" points="685.6,225.373 685.6,235.373 685.6,260.71 685.6,266.238 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="680.6,258.474 685.6,268.474 690.6,258.474 "/>
+  </g>
+  <ellipse style="fill: #000000" cx="465.705" cy="17.7088" rx="10" ry="10"/>
+  <rect style="fill: #000000" x="370.135" y="85.8718" width="191.139" height="8"/>
+  <rect style="fill: #000000" x="370.135" y="231.551" width="191.139" height="8"/>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="394.443,184.53 394.443,199.564 394.028,199.564 394.028,227.079 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="389.028,219.315 394.028,229.315 399.028,219.315 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="536.799,184.53 536.799,199.47 537.382,199.47 537.382,227.079 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="532.382,219.315 537.382,229.315 542.382,219.315 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="465.705,17.7088 465.705,34.5097 465.705,68.3038 465.705,81.3997 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="460.705,73.6358 465.705,83.6358 470.705,73.6358 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="685.6,144.035 685.6,154.035 685.6,179.373 685.6,184.9 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="680.6,177.136 685.6,187.136 690.6,177.136 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="465.705,239.551 465.705,280.642 600.134,280.642 600.134,75.4636 685.6,75.4636 685.6,103.563 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="680.6,95.7987 685.6,105.799 690.6,95.7987 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="685.6,306.71 685.6,327.21 685.6,327.21 685.6,345.76 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="680.6,337.996 685.6,347.996 690.6,337.996 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="394.028,93.8718 394.028,106.11 394.443,106.11 394.443,144.057 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="389.443,136.294 394.443,146.294 399.443,136.294 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="537.382,93.8718 537.382,103.873 536.799,103.873 536.799,144.057 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="531.799,136.294 536.799,146.294 541.799,136.294 "/>
+  </g>
+  <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="340.584" y="65.9737">
+    <tspan x="340.584" y="65.9737">Build Assets</tspan>
+  </text>
+</svg>
