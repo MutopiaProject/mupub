@@ -7,6 +7,11 @@ scripts and Java; this project aims to update this set of tools into a
 more cohesive and flexible application with more opportunities for
 automation.
 
+.. image:: https://readthedocs.org/projects/mutopia-rewrite/badge/?version=latest
+:target: http://mutopia-rewrite.readthedocs.io/en/latest/?badge=latest
+:alt: Documentation Status
+
+
 Development setup
 -----------------
 
@@ -16,5 +21,3 @@ you will need to create the appropriate virtual environment. A
 initial task of installing required packages, ::
 
    $ make requirements
-
-More information is available in the project documentation.
