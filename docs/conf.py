@@ -5,7 +5,6 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.githubpages',
 ]
 
 templates_path = ['_templates']
@@ -40,8 +39,6 @@ html_theme_options = {
     'logo': 'mutopia-logo.svg',
     'logo_name': False,
     'fixed_sidebar': True,
-#    'github_user': 'glenl',
-#    'github_repo': project,
 }
 
 #html_logo = 'graphics/mutopia-logo.svg'
