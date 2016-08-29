@@ -21,11 +21,10 @@ setup(
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Intended Audience :: End Users/Desktop',
-        'License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
+        'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Topic :: Database :: Front-Ends',
         'Topic :: Documentation :: Sphinx',
-        'Topic :: ',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
