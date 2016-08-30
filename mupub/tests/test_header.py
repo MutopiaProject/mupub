@@ -2,16 +2,12 @@
 """
 
 import os.path
-import logging
 import sys
 from unittest import TestCase
 import mupub
 
 TEST_DATA = 'data'
 PREFIX = os.path.join(os.path.dirname(__file__), TEST_DATA, 'mu')
-
-logger = logging.getLogger()
-logger.level = logging.DEBUG
 
 
 class HeaderTest(TestCase):
@@ -113,14 +109,4 @@ class HeaderTest(TestCase):
     def test_find(self):
         hdr = mupub.find_header('SorF/O5/sor-op5-5', PREFIX)
         self.assertEqual(hdr.get_field('composer'), 'SorF')
-
-
-    def test_find_with_logging(self):
-        stream_handler = logging.StreamHandler(sys.stdout)
-        logger.addHandler(stream_handler)
-        try:
-            hdr = mupub.find_header('SorF/O77/sorf-o77-01', PREFIX)
-            self.assertEqual(hdr.get_field('style'), 'Classical')
-        finally:
-            logger.removeHandler(stream_handler)
 

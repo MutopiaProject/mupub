@@ -269,9 +269,23 @@ class Header(object):
             return self._table[kwd]
         return None
 
+
     def is_valid(self):
-        """A (not quite perfect) check for a validity."""
-        return self.get_field('footer') is not None
+        """A check for a header validity."""
+        required_fields = ['title',
+                           'composer',
+                           'instrument',
+                           'source']
+        for field in required_fields:
+            if not self.get_field(field):
+                return False
+
+        # License or copyright (legacy) should be there.
+        # If copyright, we have to fix that up later.
+        if not (self.get_field('license') or self.get_field('copyright')):
+            return False
+
+        return True
 
 
 _LILYENDS = ('.ly', '.ily', '.lyi',)
