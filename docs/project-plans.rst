@@ -184,7 +184,7 @@ Unit testing will be an integral part of project development.
 
 Project Documentation
 `````````````````````
-:DOC-TOOL: All documentation will be written using |sphinx| and ReST.
+:DOC-TOOL: All documentation will be written using |sphinx|.
 
 :DOC-CODE: Doc strings within python code will be formatted so that
            sphinx tools (autodoc) can be used to create a reasonable
