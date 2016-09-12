@@ -75,7 +75,7 @@ class LYLoader(Loader):
 
         :param str infile: LilyPond input file
         :returns: table of header key / values
-        :rtype: dictd
+        :rtype: dict
 
         """
         logger = logging.getLogger(__name__)
@@ -194,12 +194,13 @@ class Header(object):
     """
     A Header contains a table that can be loaded with any type of
     Loader. Once instantiated, multiple calls to loadTable will call
-    the loader's load() method and update the table.
+    the loader's ``load()`` method and update the table.
 
     """
     def __init__(self, loader):
         self._table = {}
         self._loader = loader
+
 
     def len(self):
         """Return length of header.
@@ -209,6 +210,7 @@ class Header(object):
 
         """
         return len(self._table)
+
 
     def load_table(self, lyf):
         """Update the existing table with another file.
@@ -221,6 +223,7 @@ class Header(object):
         """
         self._table.update(self._loader.load(lyf))
 
+
     def load_table_list(self, folder, filelist):
         """Update the existing table with a list of files.
 
@@ -229,6 +232,10 @@ class Header(object):
 
         """
         self._table.update(self._loader.load_files(folder, filelist))
+
+
+    def set_field(self, key, value):
+        self._table[key] = value
 
 
     def use(self, loader):
@@ -271,11 +278,21 @@ class Header(object):
 
 
     def is_valid(self):
-        """A check for a header validity."""
+        """A check for a header validity.
+
+        This is a *quick* validator that only checks that required
+        fields are present. It does not check the validity of the
+        fields.
+
+        :return: True if the all required fields are present.
+
+        """
         required_fields = ['title',
                            'composer',
                            'instrument',
-                           'source']
+                           'style',
+                           'maintainer',
+                           'source',]
         for field in required_fields:
             if not self.get_field(field):
                 return False
@@ -297,7 +314,7 @@ def find_header(relpath, prefix=FTP_BASE):
     :rtype: Header
 
     """
-    p_to_hdr = os.path.join(prefix, relpath)
+    p_to_hdr = os.path.abspath(os.path.join(prefix, relpath))
     headers = [x for x in os.listdir(p_to_hdr) if x.endswith(_LILYENDS)]
 
     hdr = Header(LYLoader())
@@ -322,7 +339,4 @@ def find_header(relpath, prefix=FTP_BASE):
         return hdr
     else:
         # Test for partial table?
-        # Give more help here?
-        logger = logging.getLogger(__name__)
-        logger.warning(p_to_hdr + ' - No header loaded')
         return None

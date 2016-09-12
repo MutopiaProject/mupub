@@ -1,4 +1,4 @@
-"""mut.Header tests for mut
+"""mupub.Header tests for mupub
 """
 
 import os.path

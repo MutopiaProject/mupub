@@ -1,5 +1,6 @@
 import argparse
 import pkg_resources
+import sys
 import mupub
 
 
@@ -16,7 +17,7 @@ def _registered_commands(group='mupub.registered_commands'):
 
     registered_commands = pkg_resources.iter_entry_points(group=group)
     return dict((c.name, c) for c in registered_commands)
-
+        
 
 def dispatch(argv):
     """
@@ -24,7 +25,7 @@ def dispatch(argv):
     registered_commands = _registered_commands()
     parser = argparse.ArgumentParser(prog='mupub')
     parser.add_argument(
-        '--version',
+        '-v, --version',
         action='version',
         version='%(prog)s version {0}'.format(mupub.__version__)
     )

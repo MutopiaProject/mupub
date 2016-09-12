@@ -2,4 +2,4 @@
 branch = 1
 
 [report]
-omit = *tests*, docs/*
+omit = *tests*, docs/*, ~/.virtualenvs/*

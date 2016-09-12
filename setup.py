@@ -30,6 +30,7 @@ setup(
     entry_points = {
         'mupub.registered_commands': [
             'check = mupub.commands.check:main',
+            'init = mupub.commands.init:main',
         ],
         'console_scripts': [
             'mupub = mupub.__main__:main',

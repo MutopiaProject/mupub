@@ -21,14 +21,22 @@ This implies that you must have, as a minimum to start development,
 the following tools installed,
 
   - ``python3``, 3.5 is preferred. Note that in the ``mkvirtualenv``
-    linux command above, the python3 references a symbolic link to
-    the latest compiler.
+    linux command above, the python3 should reference a symbolic link
+    to the latest 3.* compiler on your platform.
 
   - ``virtualenv``, the core virtual environment tool.
 
   - ``virtualenvwrapper`` which, among other things, provides the
     ``mkvirtualenv`` and ``workon`` commands plus other tools for
     managing virtual environments.
+
+
+For document writers
+~~~~~~~~~~~~~~~~~~~~
+
+This has been separated out to make it easy for document hosting, ::
+
+  $ (mupub) $ pip install -r readthedocs.txt
 
 
 Application structure
@@ -52,7 +60,7 @@ dispatch into the desired command. This can be accomplished using
              'mupub = mupub.__main__:main',
          ],
      },
-     
+
 A stub of the ``check`` command has been created to test this. A
 distribution of the package can be built with, ::
 
