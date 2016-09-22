@@ -5,7 +5,6 @@ import psycopg2
 import mupub
 from mupub.config import config_dict
 
-
 def _valid_composer(conn, composer):
     try:
         cur = conn.cursor()
@@ -54,7 +53,8 @@ def _basic_checks(header):
                        'instrument',
                        'source',
                        'style',
-                       'maintainer',]
+                       'maintainer',
+                       'lp_version',]
     failed_count = 0
     for required_field in required_fields:
         item = header.get_field(required_field)
@@ -114,18 +114,28 @@ def validate(header):
     return fails
 
 
-def check(lyfile, debug=False):
-    header = _load_complete_header(lyfile)
+def check(infile, debug=False):
+    header = _load_complete_header(infile)
     if not header:
         print('failed to find header')
         return
-
     failure_count = validate(header)
     if failure_count > 0:
-        print('{} failed one or more tests'.format(lyfile))
+        print('{} failed one or more validations'.format(infile))
     else:
-        print('{} is valid'.format(lyfile))
+        lp_version = header.get_value('lp_version')
+        print('{} is valid'.format(infile))
+        print('This file uses LilyPond version '
+              + header.get_value('lp_version'))
+        path = mupub.working_path(lp_version)
+        if not path:
+            print('No appropriate compiler found.')
+            path = mupub.install_lily_binary(lp_version)
 
+        # Path could still be None if the compiler wasn't found or the
+        # installation failed.
+        if path:
+            print('Will use compiler at ' + path)
 
 
 def main(args):
@@ -136,7 +146,8 @@ def main(args):
         help='play louder'
     )
     parser.add_argument(
-        'lyfile',
+        'infile',
+        nargs='?',
         help='lilypond file to check'
     )
 

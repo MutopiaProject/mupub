@@ -1,0 +1,5 @@
+"""
+"""
+
+class BadConfiguration(Exception):
+    pass
