@@ -3,6 +3,7 @@ This module contains structures to hold LilyPond headers (Header) and
 mechanisms (Loaders) to fill them in various ways.
 
 """
+__docformat__ = 'reStructuredText'
 
 import re
 import subprocess
@@ -197,6 +198,7 @@ class Header(object):
     the loader's ``load()`` method and update the table.
 
     """
+
     def __init__(self, loader):
         self._table = {}
         self._loader = loader
@@ -287,6 +289,7 @@ class Header(object):
         :return: True if the all required fields are present.
 
         """
+
         required_fields = ['title',
                            'composer',
                            'instrument',
@@ -314,6 +317,7 @@ def find_header(relpath, prefix=FTP_BASE):
     :rtype: Header
 
     """
+
     p_to_hdr = os.path.abspath(os.path.join(prefix, relpath))
     headers = [x for x in os.listdir(p_to_hdr) if x.endswith(_LILYENDS)]
 

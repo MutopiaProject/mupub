@@ -1,8 +1,12 @@
+"""Utility functions for mupub.
+"""
+__docformat__ = 'reStructuredText'
+
 import os
 import argparse
 import ruamel.yaml as yaml
 import mupub.config
-        
+
 
 class ConfigDumpAction(argparse.Action):
     """Dump the configuration to stdout.

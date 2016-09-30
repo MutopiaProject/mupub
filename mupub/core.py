@@ -1,6 +1,8 @@
 """Core routines for the mutopia utilities library.
 """
 
+__docformat__ = 'reStructuredText'
+
 import os
 import re
 import datetime

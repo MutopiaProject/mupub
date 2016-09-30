@@ -1,19 +1,28 @@
 """ Interactions with LilyPond
 """
 
+__docformat__ = 'reStructuredText'
+
 import os
 import re
-import requests
 import subprocess
+import requests
 from clint.textui import progress
 from mupub.config import CONFIG_DIR
 
 LYCACHE = os.path.join(CONFIG_DIR, 'lycache')
+BINURL = 'http://download.linuxaudio.org/lilypond/binaries'
 
 class LyVersion():
+    """LilyPond version class.
+
+    This class attempts to simplify version compares so that versions
+    can be easily sorted and managed.
+
+    """
     def __init__(self, lp_version):
         self.version = lp_version
-        v_vec = lp_version.split('.',2)
+        v_vec = lp_version.split('.', 2)
         try:
             self.sortval = int(v_vec[0])*100 + int(v_vec[1])
         except ValueError:
@@ -28,12 +37,18 @@ class LyVersion():
     def __eq__(self, other):
         return self.sortval == other.sortval
 
+    def matches(self, other):
+        """Check for match against another LyVersion object."""
+        return self.sortval == other.sortval
+
 
 def working_path(lp_version):
     """ Return a path to the appropriate lilypond script.
 
     :param str lp_version: LilyPond version string from .ly file
-    :return:
+    :rtype: str
+    :return: path to LilyPond binary for this version or,
+             None if not found.
 
     """
 
@@ -42,7 +57,7 @@ def working_path(lp_version):
              if os.path.isdir(os.path.join(LYCACHE, x))]
     version_path = None
     for version in vlist:
-        if version == ly_version:
+        if ly_version.matches(version):
             version_path = os.path.join(LYCACHE,
                                         str(version),
                                         'bin',
@@ -53,17 +68,17 @@ def working_path(lp_version):
 
 
 def _run_install_script(fnm):
-    m = re.search('lilypond-([\.0-9]+-[\d+])', fnm)
-    if not m:
+    script_match = re.search(r'lilypond-([\.0-9]+-[\d+])', fnm)
+    if not script_match:
         # throw exception here?
         print('could not determine prefix from ' + fnm)
         return
     print('Attempting installation.')
-    prefix = '--prefix=' + os.path.join(LYCACHE, m.group(1))
+    prefix = '--prefix=' + os.path.join(LYCACHE, script_match.group(1))
     command = ['/bin/sh', fnm, '--batch', prefix]
     subprocess.run(command, shell=False)
 
-    
+
 def install_lily_binary(lp_version):
     """ Find an appropriate lilypond installation script.
 
@@ -71,16 +86,14 @@ def install_lily_binary(lp_version):
     """
 
     # Put these in configuration somewhere?
-    BINURL = 'http://download.linuxaudio.org/lilypond/binaries'
-    version_table = { '2.8': '2.8.8-1',
-                      '2.10': '2.10.33-1',
-                      '2.12': '2.12.3-1',
-                      '2.14': '2.14.2-1',
-                      '2.16': '2.16.2-1',
-                      '2.17': '2.17.97-1',
-                      '2.18': '2.18-2-1',
-                      '2.19': '2.19-48-1',
-    }
+    version_table = {'2.8': '2.8.8-1',
+                     '2.10': '2.10.33-1',
+                     '2.12': '2.12.3-1',
+                     '2.14': '2.14.2-1',
+                     '2.16': '2.16.2-1',
+                     '2.17': '2.17.97-1',
+                     '2.18': '2.18-2-1',
+                     '2.19': '2.19-48-1', }
 
     # First order of business is to see if we can resolve this
     # compiler version.
@@ -104,11 +117,11 @@ def install_lily_binary(lp_version):
 
     # Get the shell script in a binary stream.
     print('getting ' + script_url)
-    r = requests.get(script_url, stream=True)
+    request = requests.get(script_url, stream=True)
     script_fnm = os.path.join(LYCACHE, binscript)
     with open(script_fnm, 'wb') as out_script:
-        total_len = int(r.headers.get('content-length'))
-        for chunk in progress.bar(r.iter_content(chunk_size=1024),
+        total_len = int(request.headers.get('content-length'))
+        for chunk in progress.bar(request.iter_content(chunk_size=1024),
                                   expected_size=(total_len/1024) + 1):
             if chunk:
                 out_script.write(chunk)

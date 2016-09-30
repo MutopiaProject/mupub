@@ -10,11 +10,11 @@ import os
 import sys
 import subprocess
 from clint.textui import prompt, validators, colored, puts
-from mupub.config import config_dict, save
+from mupub.config import CONFIG_DICT, save
 from mupub.utils import ConfigDumpAction
 
 def _q_path(category, key, qstr):
-    table = config_dict[category]
+    table = CONFIG_DICT[category]
     default = table.get(key, '')
     try:
         val = prompt.query(qstr,
@@ -29,7 +29,7 @@ def _q_path(category, key, qstr):
 
 
 def _q_str(category, key, qstr):
-    table = config_dict[category]
+    table = CONFIG_DICT[category]
     default = table.get(key, '')
     try:
         val = prompt.query(qstr, default=default)
@@ -41,7 +41,7 @@ def _q_str(category, key, qstr):
 
 
 def _q_int(category, key, qstr):
-    table = config_dict[category]
+    table = CONFIG_DICT[category]
     default = table.get(key, 0)
     try:
         val = int(prompt.query(qstr,
@@ -79,7 +79,7 @@ def _set_remote(path):
     try:
         repo_remote = prompt.options('Repo remote to use for fetches',
                                      rem_options)
-        config_dict['mutopia']['repo_remote'] = repo_remote
+        CONFIG_DICT['mutopia']['repo_remote'] = repo_remote
     except EOFError:
         print('\n')
         pass
@@ -91,7 +91,7 @@ def mutopia_init(debug):
     :param debug: boolean flag
 
     """
-    cur_repo = config_dict['mutopia']['local_repo']
+    cur_repo = CONFIG_DICT['mutopia']['local_repo']
     while True:
         path = _q_path('mutopia',
                        'local_repo',
@@ -102,7 +102,7 @@ def mutopia_init(debug):
             break
         else:
             puts(colored.yellow('Enter a valid git repository.'))
-            config_dict['mutopia']['local_repo'] = cur_repo
+            CONFIG_DICT['mutopia']['local_repo'] = cur_repo
 
     if path is not None:
         _set_remote(path)

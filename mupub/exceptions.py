@@ -1,4 +1,4 @@
-"""
+"""Exceptions for mupub.
 """
 
 class BadConfiguration(Exception):

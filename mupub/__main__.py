@@ -5,7 +5,6 @@ The main console script entry point.
 
 import sys
 from mupub.cli import dispatch
-from mupub.config import config_dict
 
 def main():
     """Dispatch with system arguments. """

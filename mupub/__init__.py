@@ -23,7 +23,7 @@ from .core import id_from_footer
 from .header import Loader, LYLoader, VersionLoader, SchemeLoader
 from .header import RawLoader, Header
 from .header import find_header
-from .config import config_dict
+from .config import CONFIG_DICT
 from .lily import working_path, install_lily_binary
 from .commands.check import check
 from .commands.init import init
