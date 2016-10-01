@@ -115,10 +115,10 @@ def database_init(debug):
 
     """
     _q_int('database', 'port', 'Database port')
-    _q_str('database', 'db_name', 'Database name')
+    _q_str('database', 'name', 'Database name')
     _q_str('database', 'user', 'Database user name')
     _q_str('database', 'host', 'Database host')
-    _q_str('database', 'db_password', 'Database password')
+    _q_str('database', 'password', 'Database password')
 
 
 def init(debug, dump):
