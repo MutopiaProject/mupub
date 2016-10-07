@@ -2,4 +2,4 @@
 branch = 1
 
 [report]
-omit = *tests*, docs/*, ~/.virtualenvs/*
+omit = mupub/commands/*, *tests*, docs/*, ~/.virtualenvs/*

@@ -24,9 +24,9 @@ from .header import Loader, LYLoader, VersionLoader, SchemeLoader
 from .header import RawLoader, Header
 from .header import find_header
 from .config import CONFIG_DICT, CONFIG_DIR
-from .lily import LyLocator
+from .lily import LyLocator, LyVersion
 from .exceptions import BadConfiguration
-from .validate import DBValidator
+from .validate import Validator, DBValidator
 from .commands.check import check
 from .commands.init import init
 from .commands.build import build

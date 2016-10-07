@@ -9,7 +9,6 @@ import mupub
 TEST_DATA = 'data'
 PREFIX = os.path.join(os.path.dirname(__file__), TEST_DATA, 'mu')
 
-
 class HeaderTest(TestCase):
     """mupub.Header test class"""
 
@@ -109,3 +108,13 @@ class HeaderTest(TestCase):
     def test_find(self):
         hdr = mupub.find_header('SorF/O5/sor-op5-5', PREFIX)
         self.assertEqual(hdr.get_field('composer'), 'SorF')
+
+
+    def test_versions(self):
+        lyv_2 = mupub.LyVersion('2.16.2')
+        lyv_3 = mupub.LyVersion('2.16.3')
+        lyv_4 = mupub.LyVersion('2.19.0')
+        self.assertTrue(lyv_3 == lyv_2)
+        self.assertTrue(lyv_3.matches(lyv_2))
+        self.assertFalse(lyv_3.full_match(lyv_2))
+        self.assertTrue(lyv_4 > lyv_2)
