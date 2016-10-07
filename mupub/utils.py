@@ -8,6 +8,19 @@ import ruamel.yaml as yaml
 import mupub.config
 
 
+def resolve_input(infile):
+    base = os.path.basename(os.getcwd())
+    if not infile:
+        if os.path.exists(base+'.ly'):
+            infile = base+'.ly'
+        elif os.path.exists(base+'-lys'):
+            candidate = os.path.join(base+'-lys', base+'.ly')
+            if os.path.exists(candidate):
+                infile = candidate
+
+    return base,infile
+
+
 class ConfigDumpAction(argparse.Action):
     """Dump the configuration to stdout.
 
@@ -23,7 +36,7 @@ class ConfigDumpAction(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, True)
-        print(yaml.dump(mupub.config.config_dict,
+        print(yaml.dump(mupub.config.CONFIG_DICT,
                         Dumper=yaml.RoundTripDumper)
         )
 

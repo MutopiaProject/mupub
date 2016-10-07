@@ -23,7 +23,10 @@ from .core import id_from_footer
 from .header import Loader, LYLoader, VersionLoader, SchemeLoader
 from .header import RawLoader, Header
 from .header import find_header
-from .config import CONFIG_DICT
-from .lily import working_path, install_lily_binary
+from .config import CONFIG_DICT, CONFIG_DIR
+from .lily import LyLocator
+from .exceptions import BadConfiguration
+from .validate import DBValidator
 from .commands.check import check
 from .commands.init import init
+from .commands.build import build

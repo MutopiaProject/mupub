@@ -12,4 +12,4 @@ class CheckTest(TestCase):
         basic = os.path.join(os.path.dirname(__file__),
                              TEST_DATA,
                              'basic-hdr.ly')
-        mupub.check(basic)
+        mupub.check(basic, database='default')

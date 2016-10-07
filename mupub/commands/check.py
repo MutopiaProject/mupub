@@ -7,100 +7,38 @@ import argparse
 import os
 import sys
 import psycopg2
+from clint.textui import colored, puts
 import mupub
 from mupub.config import CONFIG_DICT
 
-def _valid_composer(conn, composer):
-    try:
-        cur = conn.cursor()
-        cur.execute('select count(*) from mutopia_composer where composer=%s;',
-                    (composer,))
-        (count,) = cur.fetchone()
-        if count != 1:
-            print('composer "{}" is not valid'.format(composer))
-            return False
-    finally:
-        cur.close()
-    return True
 
+def check(infile, header_file, database, debug=False):
+    """Check sanity for a given file.
+    """
 
-def _valid_style(conn, style):
-    try:
-        cur = conn.cursor()
-        cur.execute('select count(*) from mutopia_style where style=%s',
-                    (style,))
-        (count,) = cur.fetchone()
-        if count != 1:
-            print('style "{}" is not valid'.format(style))
-            return False
-    finally:
-        cur.close()
-    return True
+    if database not in CONFIG_DICT:
+        print('Invalid database name - ' + database)
+        return
 
+    base, infile = mupub.utils.resolve_input(infile)
+    if not infile:
+        puts(colored.red('Failed to resolve input file'))
+        return
+    
+    if not infile:
+        puts(colored.red('Failed to resolve input file'))
+        return
 
-def _valid_license(conn, mu_license):
-    try:
-        cur = conn.cursor()
-        cur.execute('select count(id) from mutopia_license where name=%s',
-                    (mu_license,))
-        (count,) = cur.fetchone()
-        if count != 1:
-            print('license "{}" is not valid'.format(mu_license))
-            return False
-    finally:
-        cur.close()
-    return True
-
-
-def _basic_checks(header):
-    required_fields = ['title',
-                       'composer',
-                       'instrument',
-                       'source',
-                       'style',
-                       'maintainer',
-                       'lp_version',]
-    failed_count = 0
-    for required_field in required_fields:
-        item = header.get_field(required_field)
-        if not item:
-            print('missing header keyword: {}'.format(required_field))
-            failed_count += 1
-
-    # license check is done separately to accomodate for copyright
-    # synonym.
-    if header.get_field('copyright'):
-        print('copyright will be updated to license')
-        header.set_field('license', header.get_field('copyright'))
+    if header_file:
+        header = mupub.find_header(header_file)
     else:
-        if not header.get_field('license'):
-            print('no license or copyright found')
-            failed_count += 1
+        header = mupub.find_header(infile)
 
-    return failed_count
+    if not header:
+        print('failed to find header')
+        return
 
-
-def _load_complete_header(lyfile):
-    if os.path.isdir(lyfile):
-        print('searching all of {} for header'.format(lyfile))
-        return mupub.find_header(lyfile, '.')
-    else:
-        ly_header = mupub.Header(mupub.LYLoader())
-        ly_header.load_table(lyfile)
-        ly_header.use(mupub.VersionLoader())
-        ly_header.load_table(lyfile)
-        return ly_header
-
-
-def validate(header):
-    fails = _basic_checks(header)
-    if  fails > 0:
-        print('basic checks failed, stopping now.')
-        return fails
-
-    db_dict = CONFIG_DICT['remote_db']
-#    db_dict = CONFIG_DICT['local_db']
-    fails = 0
+    db_dict = CONFIG_DICT[database]
     try:
         conn = psycopg2.connect(database=db_dict['name'],
                                 user=db_dict['user'],
@@ -108,43 +46,21 @@ def validate(header):
                                 port=db_dict['port'],
                                 password=db_dict['password']
                                 ,)
-        if not _valid_composer(conn, header.get_field('composer')):
-            fails += 1
-        if not _valid_style(conn, header.get_field('style')):
-            fails += 1
-        if not _valid_license(conn, header.get_field('license')):
-            fails += 1
+        validator = mupub.DBValidator(conn)
+        if not validator.validate_header(header):
+            print('{} failed validation'.format(infile))
+            return
+
+        lp_version = header.get_value('lilypondVersion')
+        print('{} is valid'.format(infile))
+        print('This file uses LilyPond version ' + lp_version)
+        locator = mupub.LyLocator(lp_version)
+        path = locator.working_path()
+
+        print('LilyPond compiler will be ' + path)
+
     finally:
         conn.close()
-
-    return fails
-
-
-def check(infile, debug=False):
-    """Check sanity for a given file.
-    """
-    header = _load_complete_header(infile)
-    if not header:
-        print('failed to find header')
-        return
-    failure_count = validate(header)
-    if failure_count > 0:
-        print('{} failed one or more validations'.format(infile))
-    else:
-        lp_version = header.get_value('lp_version')
-        print('{} is valid'.format(infile))
-        print('This file uses LilyPond version '
-              + header.get_value('lp_version'))
-        path = mupub.working_path(lp_version)
-
-        # Path could still be None if the compiler wasn't found or the
-        # installation failed.
-        if path:
-            print('Will use compiler at ' + path)
-        else:
-            print('No appropriate compiler found, installing...')
-            mupub.install_lily_binary(lp_version)
-            return
 
 
 def main(args):
@@ -157,14 +73,19 @@ def main(args):
         help='play louder'
     )
     parser.add_argument(
-        'infile',
-        nargs='?',
-        help='lilypond file to check'
+        '--database',
+        default='default',
+        help='Database to use (defined in config)'
+    )
+    parser.add_argument(
+        '--infile',
+        help='lilypond input file (try to work it out if not given)'
+    )
+    parser.add_argument(
+        '--header-file',
+        help='lilypond file that contains the header'
     )
 
     args = parser.parse_args(args)
 
-    try:
-        check(**vars(args))
-    except Exception as ex:
-        sys.exit('{ex.__class__.__name__} - {ex}'.format(ex=ex))
+    check(**vars(args))

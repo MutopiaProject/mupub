@@ -1,3 +1,6 @@
+"""Command line interface (CLI) module.
+"""
+
 import argparse
 import pkg_resources
 import sys
@@ -25,7 +28,7 @@ def dispatch(argv):
     registered_commands = _registered_commands()
     parser = argparse.ArgumentParser(prog='mupub')
     parser.add_argument(
-        '-v, --version',
+        '-v', '--version',
         action='version',
         version='%(prog)s version {0}'.format(mupub.__version__)
     )

@@ -36,8 +36,7 @@ class ConfigTest(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        os.unlink(BASIC_CONFIG_FNM)
-        os.unlink(BASIC_CONFIG_FNM + '~')
+        pass
 
 
     def test_list_config(self):
@@ -53,10 +52,11 @@ class ConfigTest(TestCase):
             count += 1
         self.assertEqual(count, 2)
 
+
     def test_basic_config(self):
         """basic configuration tests"""
         config = mupub.config.load(BASIC_CONFIG_FNM)
-        mupub.config.config_dict = config
+        mupub.config.CONFIG_DICT = config
 
         config_backup = BASIC_CONFIG_FNM + '~'
         config['mutopia']['newthing'] = 'ta-da'

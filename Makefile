@@ -12,6 +12,9 @@ coverage:
 docs:
 	(cd docs; make html)
 
+install:
+	python setup.py install
+
 dist:
 	python setup.py sdist
 

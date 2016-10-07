@@ -70,21 +70,21 @@ class HeaderTest(TestCase):
                             TEST_DATA,
                             'version-dup.ly')
         verdup.load_table(path)
-        self.assertEqual(verdup.get_value('lp_version'), '2.19.35')
+        self.assertEqual(verdup.get_value('lilypondVersion'), '2.19.35')
 
         vercom = mupub.Header(mupub.VersionLoader())
         path = os.path.join(os.path.dirname(__file__),
                             TEST_DATA,
                             'version-comment.ly')
         vercom.load_table(path)
-        self.assertEqual(vercom.get_value('lp_version'), '2.19.35')
+        self.assertEqual(vercom.get_value('lilypondVersion'), '2.19.35')
 
         verobt = mupub.Header(mupub.VersionLoader())
         path = os.path.join(os.path.dirname(__file__),
                             TEST_DATA,
                             'version-obtuse.ly')
         verobt.load_table(path)
-        self.assertEqual(verobt.get_value('lp_version'), '2.19.35')
+        self.assertEqual(verobt.get_value('lilypondVersion'), '2.19.35')
 
 
     def test_multiple(self):
@@ -103,10 +103,9 @@ class HeaderTest(TestCase):
                             'hdr-raw.ly')
         header.load_table(path)
         self.assertEqual(header.get_value('title'), '12 Etudes')
-        self.assertEqual(header.get_value('style'), None)
+        self.assertEqual(header.get_value('style'), '')
 
 
     def test_find(self):
         hdr = mupub.find_header('SorF/O5/sor-op5-5', PREFIX)
         self.assertEqual(hdr.get_field('composer'), 'SorF')
-

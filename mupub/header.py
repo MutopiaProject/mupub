@@ -10,12 +10,34 @@ import subprocess
 import os
 import os.path
 import logging
+from rdflib import Namespace, URIRef, Graph, Literal
 from abc import ABCMeta, abstractmethod
 from mupub import FTP_BASE
 
 _HEADER_PAT = re.compile(r'\\header', flags=re.UNICODE)
 _HTAG_PAT = re.compile(r'\s*(\w+)\s*=\s*\"(.*)\"', flags=re.UNICODE)
 _VERSION_PAT = re.compile(r'\s*\\version\s+\"([^\"]+)\"')
+
+REQUIRED_FIELDS = [
+    'title',
+    'composer',
+    'instrument',
+    'style',
+    'maintainer',
+    'source',
+]
+ADDITIONAL_FIELDS = [
+    'lilypondVersion',
+    'opus',
+    'lyricist',
+    'date',
+    'metre',
+    'arranger',
+    'maintainerEmail',
+    'maintainerWeb',
+    'moreInfo',
+]
+
 
 class Loader(metaclass=ABCMeta):
     """
@@ -125,7 +147,7 @@ class VersionLoader(Loader):
                 line = line.split('%', 1)[0]
                 vmatch = _VERSION_PAT.search(line)
                 if vmatch is not None:
-                    table['lp_version'] = vmatch.group(1)
+                    table['lilypondVersion'] = vmatch.group(1)
                     # break when found
                     break
         return table
@@ -200,7 +222,10 @@ class Header(object):
     """
 
     def __init__(self, loader):
+        # initialize all our header fields with blanks
         self._table = {}
+        for key in REQUIRED_FIELDS+ADDITIONAL_FIELDS:
+            self._table[key] = ''
         self._loader = loader
 
 
@@ -290,26 +315,51 @@ class Header(object):
 
         """
 
-        required_fields = ['title',
-                           'composer',
-                           'instrument',
-                           'style',
-                           'maintainer',
-                           'source',]
-        for field in required_fields:
-            if not self.get_field(field):
+        for field in REQUIRED_FIELDS:
+            if self.get_field(field) is None:
                 return False
 
         # License or copyright (legacy) should be there.
         # If copyright, we have to fix that up later.
-        if not (self.get_field('license') or self.get_field('copyright')):
+        if self.get_field('license') == '' or self.get_field('copyright') == '':
             return False
 
         return True
 
 
+    def makeRDFGraph(self, assets):
+
+        # handled separately: 'for', 'licence',
+        rdf = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+        mp = Namespace("http://www.mutopiaproject.org/piece-data/0.1/")
+        graph = Graph()
+        piece = URIRef('.')
+        graph.bind('mp', mp)
+        for field in ADDITIONAL_FIELDS:
+            obj = self.get_field(field)
+            if obj is None:
+                obj = ''
+            graph.add((piece, mp[field], Literal(obj)))
+
+        # Add special tags
+        graph.add((piece, mp['for'], Literal(self.get_field('instrument'))))
+        graph.add((piece, mp['licence'], Literal(self.get_field('license'))))
+        graph.add((piece, mp['id'], Literal(self.get_value('footer'))))
+
+        for key in assets.keys():
+            graph.add((piece, mp[key], Literal(assets[key])))
+
+        return graph
+
+
+    def writeRDF(self, path, assets):
+        graph = self.makeRDFGraph(assets)
+        graph.serialize(destination=path, format='xml')
+
+
+
 _LILYENDS = ('.ly', '.ily', '.lyi',)
-def find_header(relpath, prefix=FTP_BASE):
+def find_header(relpath, prefix='.'):
     """Get header associated with given path and prefx
 
     :param relpath: file path, relative to compser to find LilyPond files.
@@ -319,7 +369,11 @@ def find_header(relpath, prefix=FTP_BASE):
     """
 
     p_to_hdr = os.path.abspath(os.path.join(prefix, relpath))
-    headers = [x for x in os.listdir(p_to_hdr) if x.endswith(_LILYENDS)]
+    if os.path.isdir(p_to_hdr):
+        headers = [x for x in os.listdir(p_to_hdr) if x.endswith(_LILYENDS)]
+    else:
+        headers = [relpath,]
+        p_to_hdr = prefix
 
     hdr = Header(LYLoader())
     hdr.load_table_list(p_to_hdr, headers)
@@ -340,7 +394,10 @@ def find_header(relpath, prefix=FTP_BASE):
         # The version tag *should* live where the header is found
         hdr.use(VersionLoader())
         hdr.load_table_list(p_to_hdr, headers)
-        return hdr
-    else:
-        # Test for partial table?
-        return None
+        # Presence of footer hasn't been checked and that is a requirement.
+        footer = hdr.get_value('footer')
+        if footer:
+            hdr.set_field('id', footer)
+            return hdr
+
+    return None

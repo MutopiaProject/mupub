@@ -13,12 +13,22 @@ _CONFIG_DEFAULT = """
 mutopia:
   repo_remote: upstream
 
-remote_db:
+default:
   host: mu-devo.chgf8mujp4sf.us-west-2.rds.amazonaws.com
   user: muuser
   name: mudb
   password: ChopinFTW
   port: 5432
+
+lilypond:
+  V2_8: 2.8.8-1
+  V2_10: 2.10.33-1
+  V2_12: 2.12.3-1
+  V2_14: 2.14.2-1
+  V2_16: 2.16.2-1
+  V2_17: 2.17.97-1
+  V2_18: 2.18.2-1
+  V2_19: 2.19.48-1
 """
 
 def load(config_file=_CONFIG_FNM):
