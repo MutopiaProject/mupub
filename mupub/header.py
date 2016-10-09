@@ -357,14 +357,13 @@ class Header(object):
         graph.serialize(destination=path, format='xml')
 
 
-
 _LILYENDS = ('.ly', '.ily', '.lyi',)
 def find_header(relpath, prefix='.'):
     """Get header associated with given path and prefx
 
     :param relpath: file path, relative to compser to find LilyPond files.
     :return: filled Header object, None if no files found in relpath
-    :rtype: Header
+    :rtype: Header, None if invalid
 
     """
 
@@ -394,10 +393,6 @@ def find_header(relpath, prefix='.'):
         # The version tag *should* live where the header is found
         hdr.use(VersionLoader())
         hdr.load_table_list(p_to_hdr, headers)
-        # Presence of footer hasn't been checked and that is a requirement.
-        footer = hdr.get_value('footer')
-        if footer:
-            hdr.set_field('id', footer)
-            return hdr
+        return hdr
 
     return None
