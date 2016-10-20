@@ -8,7 +8,31 @@ import ruamel.yaml as yaml
 import mupub.config
 
 
-def resolve_input(infile):
+def _find_files(folder, outlist):
+    for entry in os.scandir(path=folder):
+        # ignore hidden and backup files
+        if entry.name.startswith('.') or entry.name.endswith('~'):
+            continue
+        if entry.is_file():
+            outlist.append(os.path.join(folder, entry.name))
+        elif entry.is_dir():
+            # recurse to get files under this folder
+            outlist = _find_files(os.path.join(folder, entry.name), outlist)
+    return outlist
+
+
+def find_files(folder):
+    """Return a list of all files in a folder
+
+    :param str folder: The top-most folder.
+    :returns: list of files under folder
+    :rtype: list of strings
+
+    """
+    return _find_files(folder, [])
+
+
+def resolve_input(infile=None):
     base = os.path.basename(os.getcwd())
     if not infile:
         if os.path.exists(base+'.ly'):

@@ -1,6 +1,7 @@
 """Utilities for testing.
 """
 
+import os
 from unittest import TestCase
 import logging
 

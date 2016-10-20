@@ -85,10 +85,10 @@ def _set_remote(path):
         pass
 
 
-def mutopia_init(debug):
+def mutopia_init(verbose):
     """Initialize configuration in the mutopia category.
 
-    :param debug: boolean flag
+    :param verbose: boolean flag
 
     """
     cur_repo = CONFIG_DICT['mutopia']['local_repo']
@@ -108,10 +108,10 @@ def mutopia_init(debug):
         _set_remote(path)
 
 
-def database_init(debug):
+def database_init(verbose):
     """Initialize configuration in the database category.
 
-    :param debug: boolean flag
+    :param verbose: boolean flag
 
     """
     _q_int('database', 'port', 'Database port')
@@ -121,7 +121,7 @@ def database_init(debug):
     _q_str('database', 'password', 'Database password')
 
 
-def init(debug, dump):
+def init(verbose, dump):
     """The init entry point.
 
     Queries for specific configution needed to adequately run all
@@ -131,15 +131,15 @@ def init(debug, dump):
     are passed into the routine --- as arguments are added, they must
     also be added here.
 
-    :param debug: boolean flag
+    :param verbose: boolean flag
     :param dump: dump argument was specified and handled by now, the
                  argument is present but not used by this routine.
 
     """
 
     try:
-        mutopia_init(debug)
-        database_init(debug)
+        mutopia_init(verbose)
+        database_init(verbose)
         save()
     except KeyboardInterrupt:
         puts(colored.red('\nConfiguration aborted, not saved.'))
@@ -153,7 +153,7 @@ def main(args):
     """
     parser = argparse.ArgumentParser(prog='mupub init')
     parser.add_argument(
-        '--debug',
+        '--verbose',
         action='store_true',
         help='Louder.'
     )
@@ -165,7 +165,5 @@ def main(args):
     args = parser.parse_args(args)
 
     if not args.dump:
-        try:
-            init(**vars(args))
-        except Exception as ex:
-            sys.exit('{ex.__class__.__name__} - {ex}'.format(ex=ex))
+        init(**vars(args))
+    #else: dumping is handled in an action routine

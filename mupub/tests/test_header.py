@@ -4,10 +4,10 @@
 import os.path
 import sys
 from unittest import TestCase
+from .tutils import PREFIX
 import mupub
 
 TEST_DATA = 'data'
-PREFIX = os.path.join(os.path.dirname(__file__), TEST_DATA, 'mu')
 
 class HeaderTest(TestCase):
     """mupub.Header test class"""
@@ -96,6 +96,7 @@ class HeaderTest(TestCase):
 
 
     def test_raw(self):
+        """Parsing raw headers"""
         header = mupub.Header(mupub.RawLoader())
         path = os.path.join(os.path.dirname(__file__),
                             TEST_DATA,
@@ -106,11 +107,13 @@ class HeaderTest(TestCase):
 
 
     def test_find(self):
+        """Find headers"""
         hdr = mupub.find_header('SorF/O5/sor-op5-5', PREFIX)
         self.assertEqual(hdr.get_field('composer'), 'SorF')
 
 
     def test_versions(self):
+        """Test LilyPond version matching"""
         lyv_2 = mupub.LyVersion('2.16.2')
         lyv_3 = mupub.LyVersion('2.16.3')
         lyv_4 = mupub.LyVersion('2.19.0')

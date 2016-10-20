@@ -46,6 +46,7 @@ class ConfigTest(TestCase):
 
 
     def test_iterate(self):
+        """Iterating configuration entries"""
         mu_conf = yaml.load(BASIC_CONFIG)
         count = 0
         for item in mu_conf['mutopia']:

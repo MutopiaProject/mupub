@@ -2,7 +2,7 @@ requirements:
 	pip install -r requirements.txt
 
 test:
-	python -m unittest
+	python -m unittest -v
 
 coverage:
 	coverage run -m unittest && \

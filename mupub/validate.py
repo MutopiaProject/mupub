@@ -25,7 +25,7 @@ class Validator(metaclass=abc.ABCMeta):
         return False
 
     @classmethod
-    def basic_checks(cls, header):
+    def basic_checks(cls, header, verbose=False):
         """Perform basic checks on a header.
 
         Simple check to make sure that required fields are present.
@@ -40,23 +40,27 @@ class Validator(metaclass=abc.ABCMeta):
         for required_field in REQUIRED_FIELDS:
             item = header.get_field(required_field)
             if not item:
-                puts(colored.red('missing header keyword: {}'.format(required_field)))
+                if verbose:
+                    message = 'missing header keyword: {}'
+                    puts(colored.red(message.format(required_field)))
                 failed_count += 1
 
         # license check is done separately to accomodate for copyright
         # synonym.
         if header.get_field('copyright'):
-            puts(colored.yellow(('copyright will be updated to license')))
+            if verbose:
+                puts(colored.yellow(('copyright will be updated to license')))
             header.set_field('license', header.get_field('copyright'))
         else:
             if not header.get_field('license'):
-                puts(colored.red('no license or copyright found'))
+                if verbose:
+                    puts(colored.red('no license or copyright found'))
                 failed_count += 1
 
         return failed_count
 
 
-    def validate_header(self, header):
+    def validate_header(self, header, verbose=False):
         """Validate a header.
 
         If basic checks are good, several fields are checked against
@@ -69,18 +73,24 @@ class Validator(metaclass=abc.ABCMeta):
 
         """
 
-        failures = self.basic_checks(header)
+        failures = self.basic_checks(header, verbose)
         if failures > 0:
             # No use bothering with further tests.
             return False
         if not self.validate_composer(header.get_field('composer')):
-            puts(colored.red('Invalid composer field: ' + header.get_field('composer')))
+            if verbose:
+                puts(colored.red('Invalid composer field: ' 
+                                 + header.get_field('composer')))
             return False
         if not self.validate_style(header.get_field('style')):
-            puts(colored.red('Invalid style field: ' + header.get_field('style')))
+            if verbose:
+                puts(colored.red('Invalid style field: '
+                                 + header.get_field('style')))
             return False
         if not self.validate_license(header.get_field('license')):
-            puts(colored.red('Invalid license field: ' + header.get_field('license')))
+            if verbose:
+                puts(colored.red('Invalid license field: '
+                                 + header.get_field('license')))
             return False
         return True
 

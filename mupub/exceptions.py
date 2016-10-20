@@ -3,3 +3,6 @@
 
 class BadConfiguration(Exception):
     pass
+
+class IncompleteBuild(Exception):
+    pass

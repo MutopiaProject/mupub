@@ -2,14 +2,8 @@
 """
 
 import argparse
-import glob
-import gzip
 import os
-import png
-import shutil
 import subprocess
-import sys
-import zipfile
 from clint.textui import colored, puts
 import mupub
 from mupub.config import CONFIG_DICT
@@ -18,21 +12,6 @@ from mupub.config import CONFIG_DICT
 def _remove_if_exists(path):
     if os.path.exists(path):
         os.unlink(path)
-
-
-def _collect_lyfile(infile):
-    dir_name = os.path.dirname(infile)
-    if dir_name == '':
-        # nothing to zip
-        return infile
-
-    if dir_name.endswith('-lys'):
-        zip_name = os.path.basename(dir_name) + '.zip'
-        puts(colored.green('Zipping source files into '+zip_name))
-        with zipfile.ZipFile(zip_name, 'w') as lyzip:
-            for folder in os.listdir(dir_name):
-                lyzip.write(os.path.join(dir_name, folder))
-        return zip_name
 
 
 def _stripped_base(infile):
@@ -102,63 +81,10 @@ def build_rdf(header, base, assets):
     header.writeRDF(rdf_path, assets)
 
 
-def _zip_maybe(basefnm, tail, ziptail):
-    files = glob.glob('*'+tail)
-    if len(files) == 1:
-        single_file = basefnm+tail
-        if files[0] != single_file:
-            os.rename(files[0], single_file)
-        # single ps files get compressed
-        if tail.endswith('.ps'):
-            gzipped_name = single_file+'.gz'
-            with open(single_file, 'rb') as ps_in:
-                with gzip.open(gzipped_name, 'wb') as gz_out:
-                    shutil.copyfileobj(ps_in, gz_out)
-            os.unlink(single_file)
-            return gzipped_name
-        else:
-            return single_file
-    else:
-        zip_name = basefnm+ziptail
-        puts(colored.green('Zipping files into '+zip_name))
-        with zipfile.ZipFile(zip_name, 'w') as outzip:
-            for file_to_zip in files:
-                outzip.write(file_to_zip)
-        for zipped_file in files:
-            os.unlink(zipped_file)
-        return zip_name
-        
-
-def collect_assets(infile):
-    assets = {}
-    basefnm = os.path.basename(os.path.abspath('.'))
-    assets['lyFile'] = _collect_lyfile(infile)
-    assets['midFile'] = _zip_maybe(basefnm, '.mid', '-mids.zip')
-    assets['psFileA4'] = _zip_maybe(basefnm, '-a4.ps', '-a4-pss.zip')
-    assets['psFileLet'] = _zip_maybe(basefnm, '-let.ps', '-let-pss.zip')
-    assets['pdfFileA4'] = _zip_maybe(basefnm, '-a4.pdf', '-a4-pdfs.zip')
-    assets['pdfFileLet'] = _zip_maybe(basefnm, '-let.pdf', '-let-pdfs.zip')
-
-    # process the preview image
-    pngfiles = glob.glob('*.preview.png')
-    preview_name = basefnm + '-preview.png'
-    if len(pngfiles) == 1:
-        if pngfiles[0] != preview_name:
-            os.rename(pngfiles[0], preview_name)
-        assets['pngFile'] = preview_name
-        with open(preview_name, 'rb') as png_file:
-            png_reader = png.Reader(file=png_file)
-            width, height, _, _ = png_reader.read()
-            assets['pngWidth'] = str(width)
-            assets['pngHeight'] = str(height)
-
-    return assets
-
-
-def build_one(infile, lily_path, do_preview, debug=False):
+def build_one(infile, lily_path, do_preview, verbose=False):
     """Primary entry point for the build entry point.
 
-    :param debug: True of debugging.
+    :param verbose: True for verbose output.
     :param database: Name of database entry in configuration.
     :param infile: LilyPond file to build, might be None
 
@@ -180,14 +106,29 @@ def build_one(infile, lily_path, do_preview, debug=False):
 
 
 
-def build(debug, database, infile, header_file):
+def lily_build(verbose, database, infile, header):
     # The database name should be a name in the configuration file.
     # It would be difficult to make this a choice selection in the
     # argument parser so just check early and exit if necessary.
     if database not in CONFIG_DICT:
         puts(colored.red('Invalid database name - ' + database))
         return
-    
+
+    locator = mupub.LyLocator(header.get_value('lilypondVersion'))
+    lily_path = locator.working_path()
+
+    # Build each score, doing a preview on the first one only.
+    do_preview = True
+    for ly_file in infile:
+        build_one(ly_file, lily_path, do_preview, verbose)
+        do_preview = False
+
+
+def build(verbose, database, infile, header_file, collect_only):
+    if len(infile) < 1:
+        _, lyfile = mupub.utils.resolve_input()
+        infile.append(lyfile)
+
     if header_file:
         header = mupub.find_header(header_file)
     else:
@@ -201,16 +142,10 @@ def build(debug, database, infile, header_file):
         puts(colored.red('Validation failed.'))
         return
 
-    locator = mupub.LyLocator(header.get_value('lilypondVersion'))
-    lily_path = locator.working_path()
+    if not collect_only:
+        lily_build(verbose, database, infile, header)
 
-    # Build each score, doing a preview on the first one only.
-    do_preview = True
-    for ly_file in infile:
-        build_one(ly_file, lily_path, do_preview, debug)
-        do_preview = False
-
-    assets = collect_assets(infile[0])
+    assets = mupub.collect_assets(infile[0])
     puts(colored.green('Creating RDF file'))
     header.writeRDF(os.path.basename(os.path.abspath('.'))+'.rdf', assets)
 
@@ -223,7 +158,7 @@ def main(args):
     """
     parser = argparse.ArgumentParser(prog='mupub build')
     parser.add_argument(
-        '--debug',
+        '--verbose',
         action='store_true',
         help='Louder.'
     )
@@ -235,12 +170,17 @@ def main(args):
     parser.add_argument(
         'infile',
         nargs='*',
+        default=[],
         help='lilypond input file (try to work it out if not given)'
     )
     parser.add_argument(
         '--header-file',
         help='lilypond file that contains the header'
     )
+    parser.add_argument(
+        '--collect-only',
+        action='store_true',
+        help='collect built files into publishable assets')
 
     args = parser.parse_args(args)
     build(**vars(args))

@@ -12,19 +12,15 @@ import mupub
 from mupub.config import CONFIG_DICT
 
 
-def check(infile, header_file, database, debug=False):
-    """Check sanity for a given file.
+def check(infile, header_file, database, verbose):
+    """Check sanity for a given input file.
     """
 
     if database not in CONFIG_DICT:
-        print('Invalid database name - ' + database)
+        puts(colored.red('Invalid database name - ' + database))
         return
 
     base, infile = mupub.utils.resolve_input(infile)
-    if not infile:
-        puts(colored.red('Failed to resolve input file'))
-        return
-    
     if not infile:
         puts(colored.red('Failed to resolve input file'))
         return
@@ -35,7 +31,7 @@ def check(infile, header_file, database, debug=False):
         header = mupub.find_header(infile)
 
     if not header:
-        print('failed to find header')
+        puts(colored.red('failed to find header'))
         return
 
     db_dict = CONFIG_DICT[database]
@@ -44,20 +40,22 @@ def check(infile, header_file, database, debug=False):
                                 user=db_dict['user'],
                                 host=db_dict['host'],
                                 port=db_dict['port'],
-                                password=db_dict['password']
-                                ,)
+                                password=db_dict['password'],)
         validator = mupub.DBValidator(conn)
-        if not validator.validate_header(header):
-            print('{} failed validation'.format(infile))
+        if not validator.validate_header(header, verbose):
+            puts(colored.red('{} failed validation'.format(infile)))
             return
 
         lp_version = header.get_value('lilypondVersion')
-        print('{} is valid'.format(infile))
-        print('This file uses LilyPond version ' + lp_version)
+        if verbose:
+            puts(colored.green('{} is valid'.format(infile)))
+            puts(colored.green('This file uses LilyPond version '
+                               + lp_version))
         locator = mupub.LyLocator(lp_version)
         path = locator.working_path()
 
-        print('LilyPond compiler will be ' + path)
+        if verbose:
+            puts(colored.green('LilyPond compiler will be ' + path))
 
     finally:
         conn.close()
@@ -68,7 +66,7 @@ def main(args):
     """
     parser = argparse.ArgumentParser(prog='mupub check')
     parser.add_argument(
-        '--debug',
+        '--verbose',
         action='store_true',
         help='play louder'
     )
@@ -78,7 +76,8 @@ def main(args):
         help='Database to use (defined in config)'
     )
     parser.add_argument(
-        '--infile',
+        'infile',
+        nargs='?',
         help='lilypond input file (try to work it out if not given)'
     )
     parser.add_argument(

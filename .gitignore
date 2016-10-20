@@ -24,3 +24,10 @@ __pycache__/
 # Translations
 *.mo
 *.pot
+
+# from test builds (maybe)
+*.pdf
+*.gz
+*.png
+*.mid
+*.rdf
