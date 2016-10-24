@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
-<svg width="20cm" height="24cm" viewBox="87 -55 387 469" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="25cm" height="19cm" viewBox="41 -19 490 380" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <g>
     <rect style="fill: #d8e5e5" x="88.2834" y="-17.6186" width="384.717" height="377.369" rx="20" ry="20"/>
     <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="88.2834" y="-17.6186" width="384.717" height="377.369" rx="20" ry="20"/>
   </g>
-  <ellipse style="fill: #000000" cx="294.05" cy="-43.7142" rx="10" ry="10"/>
+  <ellipse style="fill: #000000" cx="52.7327" cy="28.2715" rx="10" ry="10"/>
   <g>
     <rect style="fill: #ffffff" x="242.05" y="10.2715" width="104" height="36" rx="20" ry="20"/>
     <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-linejoin: round; stroke: #000000" x="242.05" y="10.2715" width="104" height="36" rx="20" ry="20"/>
@@ -53,21 +53,21 @@
     </text>
   </g>
   <g>
-    <ellipse style="fill: #ffffff" cx="295.398" cy="397.882" rx="15" ry="15"/>
-    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="295.398" cy="397.882" rx="15" ry="15"/>
-    <ellipse style="fill: #000000" cx="295.398" cy="397.882" rx="10" ry="10"/>
+    <ellipse style="fill: #ffffff" cx="515.713" cy="311.882" rx="15" ry="15"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="515.713" cy="311.882" rx="15" ry="15"/>
+    <ellipse style="fill: #000000" cx="515.713" cy="311.882" rx="10" ry="10"/>
   </g>
   <g>
     <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="295.397,252.882 295.397,273.382 295.398,273.382 295.398,289.41 "/>
     <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="290.398,281.646 295.398,291.646 300.398,281.646 "/>
   </g>
   <g>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="295.398,329.882 295.398,339.882 295.398,371.874 295.398,377.402 "/>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="290.398,369.638 295.398,379.638 300.398,369.638 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="347.798,311.882 357.798,311.882 489.705,311.882 495.233,311.882 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="487.469,316.882 497.469,311.882 487.469,306.882 "/>
   </g>
   <g>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="294.05,-33.7142 294.05,-23.7142 294.05,0.27152 294.05,5.79938 "/>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="289.05,-1.96455 294.05,8.03545 299.05,-1.96455 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="63.738,28.2715 73.738,28.2715 232.05,28.2715 237.578,28.2715 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="229.814,33.2715 239.814,28.2715 229.814,23.2715 "/>
   </g>
   <g>
     <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="396.996,187 396.996,234.882 370.694,234.882 "/>
