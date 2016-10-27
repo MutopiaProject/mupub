@@ -38,10 +38,10 @@ pieces. Updates are fairly easy as an assumption can be made that the
 copyright and legal issues have already been made. In either case
 there are fields in the header that must be updated,
 
-id
+  id
     A field whose value is the full `mutopiaID`
 
-footer
+  footer
     A field whose value contains copyright information for the piece.
     This is a formal |lilypond| tag that defines markup located at the
     bottom of the first page. The footer may make reference to other
@@ -89,16 +89,21 @@ regards to locating the appropriate file containing the header.
 
 Building assets
 ---------------
-Building assets involves the preparatory step of determining the
-appropriate compiler to use for the build.
+
+The mechanism of building publication assets specified in the
+requirements (see :ref:`req-pub`) are described here. To solve the
+problem of submissions using various |lilypond| version, a compiler
+caching method is described. The initial step is preparatory and
+outlines how to determine the appropriate compiler to use for the
+build.
 
 .. image:: graphics/lilypond-cache.svg
    :width: 80%
    :align: center
 
+
 LilyPond compiler cache
 ```````````````````````
-
 Attempting automated installations of |lilypond| is probably not worth
 the risk. The activity diagram proposes a mechanism that attempts an
 automated workaround in the event the version in the file does not
@@ -125,8 +130,8 @@ manually in the cache.
 
 Build order
 ```````````
-The following flow diagram describes a recommended order for the
-build,
+The following flow diagram describes a recommended order for building
+assets,
 
 .. image:: graphics/build-assets.svg
    :width: 60 %
