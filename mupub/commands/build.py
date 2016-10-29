@@ -2,6 +2,7 @@
 """
 
 import argparse
+import glob
 import os
 import subprocess
 from clint.textui import colored, puts
@@ -38,7 +39,7 @@ def build_scores(base_params, infile):
         command.append(infile)
         subprocess.run(command, stdout=subprocess.PIPE)
 
-        # rename the pdf
+        # rename the pdf and ps files to include their page size
         pdf_fnm = basefnm + '.pdf'
         if os.path.exists(pdf_fnm):
             sized_pdf = basefnm + '-{0}.pdf'.format(pagedef[psize])
@@ -50,27 +51,29 @@ def build_scores(base_params, infile):
             os.rename(ps_fnm, sized_ps)
 
 
-def build_preview(base_params, infile):
+def build_preview(base_params, lpversion, infile):
     """Build a preview file
 
     :param base_params: Starting list of LilyPond command and parameters.
     :param infile: LilyPond file to compile
 
     """
-    preview_params = ['-dno-print-pages',
-                      '-dno-include-book-title-preview',
-                      '-dresolution=72',
-                      '-dpreview',
+
+    preview_params = ['-dno-include-book-title-preview',
+                      '-dresolution=101',
                       '--format=png',]
 
-    basefnm = _stripped_base(infile)
+    if lpversion < mupub.LyVersion('2.14'):
+        base_params.append('--preview')
+        base_params.append('--no-print')
+    else:
+        base_params.append('-dno-print-pages'),
+        base_params.append('-dpreview')
+
     command = base_params + preview_params
     command.append(infile)
     puts(colored.green('Building preview and midi'))
     subprocess.run(command, stdout=subprocess.PIPE)
-
-    # cleanup excess files
-    _remove_if_exists(basefnm + '.preview.eps')
 
 
 def build_rdf(header, base, assets):
@@ -81,12 +84,13 @@ def build_rdf(header, base, assets):
     header.writeRDF(rdf_path, assets)
 
 
-def build_one(infile, lily_path, do_preview, verbose=False):
-    """Primary entry point for the build entry point.
+def build_one(infile, lily_path, lpversion, do_preview, verbose=False):
+    """Build a single lilypond file.
 
-    :param verbose: True for verbose output.
-    :param database: Name of database entry in configuration.
     :param infile: LilyPond file to build, might be None
+    :param lily_path: Path to LilyPond build script
+    :param do_preview: Boolean to flag additional preview build
+    :param verbose: True for verbose output.
 
     """
 
@@ -95,15 +99,11 @@ def build_one(infile, lily_path, do_preview, verbose=False):
         puts(colored.red('Failed to resolve input file'))
         return
 
-    base_params = [lily_path,
-                   '--loglevel=BASIC_PROGRESS',
-                   '-dmidi-extension="mid"',
-                   '-dno-point-and-click',]
+    base_params = [lily_path, '-dno-point-and-click',]
 
     build_scores(base_params, infile)
     if do_preview:
-        build_preview(base_params, infile)
-
+        build_preview(base_params, lpversion, infile)
 
 
 def lily_build(verbose, database, infile, header):
@@ -114,21 +114,24 @@ def lily_build(verbose, database, infile, header):
         puts(colored.red('Invalid database name - ' + database))
         return
 
-    locator = mupub.LyLocator(header.get_value('lilypondVersion'))
+    lpversion = mupub.LyVersion(header.get_value('lilypondVersion'))
+    locator = mupub.LyLocator(str(lpversion))
     lily_path = locator.working_path()
 
     # Build each score, doing a preview on the first one only.
     do_preview = True
     for ly_file in infile:
-        build_one(ly_file, lily_path, do_preview, verbose)
+        build_one(ly_file, lily_path, lpversion, do_preview, verbose)
         do_preview = False
 
 
 def build(verbose, database, infile, header_file, collect_only):
+    base, lyfile = mupub.utils.resolve_input()
     if len(infile) < 1:
-        _, lyfile = mupub.utils.resolve_input()
         infile.append(lyfile)
 
+    # if a header file was given, use that for reading the header,
+    # else infile.
     if header_file:
         header = mupub.find_header(header_file)
     else:
@@ -145,9 +148,19 @@ def build(verbose, database, infile, header_file, collect_only):
     if not collect_only:
         lily_build(verbose, database, infile, header)
 
-    assets = mupub.collect_assets(infile[0])
+    # rename all .midi files to .mid
+    for mid in glob.glob('*.midi'):
+        os.rename(mid, mid[:len(mid)-1])
+
+    assets = mupub.collect_assets(base)
     puts(colored.green('Creating RDF file'))
-    header.writeRDF(os.path.basename(os.path.abspath('.'))+'.rdf', assets)
+    header.writeRDF(base+'.rdf', assets)
+
+    # remove by-products of build
+    _remove_if_exists(base+'.ps')
+    _remove_if_exists(base+'.png')
+    _remove_if_exists(base+'.preview.png')
+    _remove_if_exists(base+'.preview.eps')
 
 
 def main(args):
@@ -164,7 +177,7 @@ def main(args):
     )
     parser.add_argument(
         '--database',
-        default='default',
+        default='local_db',
         help='Database to use (defined in config)'
     )
     parser.add_argument(

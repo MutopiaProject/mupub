@@ -33,6 +33,17 @@ def find_files(folder):
 
 
 def resolve_input(infile=None):
+    """Determine the file naming components for mutopia.
+
+    A convenience routine to determine the base name for a mutopia
+    piece. If no entry is given it is determined from the current
+    working directory.
+
+    :param str infile:
+    :returns: base (usually containing folder name) and infile, as strings.
+    :rtype: Tuple
+
+    """
     base = os.path.basename(os.getcwd())
     if not infile:
         if os.path.exists(base+'.ly'):

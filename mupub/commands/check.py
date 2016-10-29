@@ -6,20 +6,15 @@ __docformat__ = 'reStructuredText'
 import argparse
 import os
 import sys
-import psycopg2
+import sqlite3
 from clint.textui import colored, puts
 import mupub
-from mupub.config import CONFIG_DICT
+from mupub.config import CONFIG_DICT, DBPATH
 
 
-def check(infile, header_file, database, verbose):
+def check(infile, header_file):
     """Check sanity for a given input file.
     """
-
-    if database not in CONFIG_DICT:
-        puts(colored.red('Invalid database name - ' + database))
-        return
-
     base, infile = mupub.utils.resolve_input(infile)
     if not infile:
         puts(colored.red('Failed to resolve input file'))
@@ -34,47 +29,26 @@ def check(infile, header_file, database, verbose):
         puts(colored.red('failed to find header'))
         return
 
-    db_dict = CONFIG_DICT[database]
-    try:
-        conn = psycopg2.connect(database=db_dict['name'],
-                                user=db_dict['user'],
-                                host=db_dict['host'],
-                                port=db_dict['port'],
-                                password=db_dict['password'],)
+    with sqlite3.connect(DBPATH) as conn:
         validator = mupub.DBValidator(conn)
-        if not validator.validate_header(header, verbose):
+        if not validator.validate_header(header, True):
             puts(colored.red('{} failed validation'.format(infile)))
             return
 
         lp_version = header.get_value('lilypondVersion')
-        if verbose:
-            puts(colored.green('{} is valid'.format(infile)))
-            puts(colored.green('This file uses LilyPond version '
+        puts(colored.green('{} is valid'.format(infile)))
+        puts(colored.green('This file uses LilyPond version '
                                + lp_version))
         locator = mupub.LyLocator(lp_version)
         path = locator.working_path()
 
-        if verbose:
-            puts(colored.green('LilyPond compiler will be ' + path))
-
-    finally:
-        conn.close()
+        puts(colored.green('LilyPond compiler will be ' + path))
 
 
 def main(args):
     """Check entry point.
     """
     parser = argparse.ArgumentParser(prog='mupub check')
-    parser.add_argument(
-        '--verbose',
-        action='store_true',
-        help='play louder'
-    )
-    parser.add_argument(
-        '--database',
-        default='default',
-        help='Database to use (defined in config)'
-    )
     parser.add_argument(
         'infile',
         nargs='?',

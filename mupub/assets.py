@@ -11,23 +11,23 @@ import shutil
 import zipfile
 import mupub
 
-def _collect_lyfile(infile):
-    dir_name = os.path.dirname(infile)
-    if dir_name == '':
-        # nothing to zip
-        return infile
-
-    if dir_name.endswith('-lys'):
-        zip_name = os.path.basename(dir_name) + '.zip'
+def _collect_lyfile(basefnm):
+    dir_name = basefnm + '-lys'
+    if os.path.exists(dir_name):
+        zip_name = dir_name+'.zip'
         with zipfile.ZipFile(zip_name, 'w') as lyzip:
             zip_list = mupub.utils.find_files(dir_name)
             for zip_entry in zip_list:
                 lyzip.write(zip_entry)
         return zip_name
+    else:
+        return basefnm + '.ly'
 
 
 def _zip_maybe(basefnm, tail, ziptail):
     files = glob.glob('*'+tail)
+    if len(files) < 1:
+        return 'empty'
     if len(files) == 1:
         single_file = basefnm+tail
         if files[0] != single_file:
@@ -52,10 +52,24 @@ def _zip_maybe(basefnm, tail, ziptail):
         return zip_name
 
 
-def collect_assets(infile):
+def collect_assets(basefnm):
+    """After a build, collect all assets into their publishable components.
+
+    Once the piece has been built by LilyPond, the assets are
+    collected into other possible forms.
+
+     - multiple LilyPond files are zipped together
+     - multiple midi files are zipped
+     - all PostScript files are zipped
+     - multiple PDF files are zipped
+
+    :param str basefnm: base filename used for asset naming.
+    :returns: asset dictionary, useful for RDF creation.
+    :rtype: dictionary containing name:value pairs of assets.
+
+    """
     assets = {}
-    basefnm = os.path.basename(os.path.abspath('.'))
-    assets['lyFile'] = _collect_lyfile(infile)
+    assets['lyFile'] = _collect_lyfile(basefnm)
     assets['midFile'] = _zip_maybe(basefnm, '.mid', '-mids.zip')
     assets['psFileA4'] = _zip_maybe(basefnm, '-a4.ps', '-a4-pss.zip')
     assets['psFileLet'] = _zip_maybe(basefnm, '-let.ps', '-let-pss.zip')

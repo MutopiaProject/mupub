@@ -22,7 +22,7 @@ from .assets import collect_assets
 from .commands.build import build
 from .commands.check import check
 from .commands.init import init
-from .config import CONFIG_DICT, CONFIG_DIR
+from .config import CONFIG_DICT, CONFIG_DIR, DBPATH
 from .core import MUTOPIA_BASE, FTP_BASE, URL_BASE
 from .core import id_from_footer
 from .exceptions import BadConfiguration, IncompleteBuild

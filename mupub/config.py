@@ -10,15 +10,14 @@ CONFIG_DIR = os.path.join(os.environ.get('HOME'), '.mupub')
 _CONFIG_FNM = os.path.join(CONFIG_DIR, 'config.yml')
 
 _CONFIG_DEFAULT = """
-mutopia:
-  repo_remote: upstream
-
 default:
   host: mu-devo.chgf8mujp4sf.us-west-2.rds.amazonaws.com
   user: muuser
   name: mudb
   password: ChopinFTW
   port: 5432
+
+local_db: mu-min-db.db
 
 lilypond:
   V2_8: 2.8.8-1
@@ -44,11 +43,7 @@ def load(config_file=_CONFIG_FNM):
         with open(config_file, 'r') as ymlfile:
             return yaml.load(ymlfile, Loader=yaml.RoundTripLoader)
     except FileNotFoundError:
-        tmp_conf = yaml.load(_CONFIG_DEFAULT)
-        # set some defaults based on environment
-        repo = os.path.join(os.environ.get('HOME'), 'MutopiaProject')
-        tmp_conf['mutopia']['local_repo'] = repo
-        return tmp_conf
+        return yaml.load(_CONFIG_DEFAULT)
 
 
 def save(config_file=_CONFIG_FNM):
@@ -68,3 +63,4 @@ def save(config_file=_CONFIG_FNM):
 
 # load configuration when imported
 CONFIG_DICT = load()
+DBPATH = os.path.join(CONFIG_DIR, CONFIG_DICT['local_db'])

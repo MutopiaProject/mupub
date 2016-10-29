@@ -15,15 +15,6 @@
   maintainerEmail = "glenl.glx at gmail.com"
 }
 
-\paper {
-  % add space between composer/opus markup and first staff
-  markup-system-spacing #'padding = #3
-  % add a little space between composer and opus
-  markup-markup-spacing #'padding = #1.2
-  top-margin = #8
-  bottom-margin = #12
-}
-
 mbreak = {} % { \break }
 global = {
   \time 4/4

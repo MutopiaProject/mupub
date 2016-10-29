@@ -8,7 +8,7 @@ import os
 import subprocess
 import tarfile
 import requests
-from clint.textui import progress
+from clint.textui import progress, colored, puts
 import mupub
 
 # The location of LilyPond categorized binaries
@@ -167,12 +167,15 @@ class LinuxInstaller(LyInstaller):
         """
         binscript = 'lilypond-{0}.{1}.sh'.format(target, bintop)
         local_script = os.path.join(LYCACHE, binscript)
+        puts(colored.yellow('downloading build script'))
         self.download('/'.join([BINURL, bintop, binscript,]),
                       local_script)
         # execute script after downloading
         prefix = '--prefix=' + os.path.join(LYCACHE, target)
         command = ['/bin/sh', local_script, '--batch', prefix]
+        puts(colored.yellow('installing ...'))
         subprocess.run(command, shell=False)
+        puts(colored.yellow('Done. First run will initialize font tables.'))
 
 
 class MacInstaller(LyInstaller):

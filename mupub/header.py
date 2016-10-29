@@ -183,7 +183,7 @@ class SchemeLoader(Loader):
             raise FileNotFoundError
 
         lilycmd = ['lilypond', '-s', '-e',]
-        lilycmd.append(''.join(_LILYHDR_SCM))
+        lilycmd.append(''.join(_LILYHDR_SCM).strip())
         lilycmd.append(lyf)
         hdrs = subprocess.check_output(lilycmd, universal_newlines=True)
         hdr_map = {}
@@ -329,7 +329,6 @@ class Header(object):
 
     def makeRDFGraph(self, assets):
 
-        # handled separately: 'for', 'licence',
         rdf = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
         mp = Namespace("http://www.mutopiaproject.org/piece-data/0.1/")
         graph = Graph()
@@ -343,8 +342,13 @@ class Header(object):
 
         # Add special tags
         graph.add((piece, mp['for'], Literal(self.get_field('instrument'))))
-        graph.add((piece, mp['licence'], Literal(self.get_field('license'))))
         graph.add((piece, mp['id'], Literal(self.get_value('footer'))))
+        cc = self.get_field('license')
+        if not cc:
+            cc = self.get_field('copyright')
+            if not cc:
+                cc = self.get_field('licence')
+        graph.add((piece, mp['licence'], Literal(cc)))
 
         for key in assets.keys():
             graph.add((piece, mp[key], Literal(assets[key])))

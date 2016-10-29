@@ -110,7 +110,7 @@ class DBValidator(Validator):
         :rtype: bool
 
         """
-        query = 'select count(*) from mutopia_composer where composer=%s;'
+        query = 'select count(*) from composers where composer=?;'
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, (composer,))
@@ -129,7 +129,7 @@ class DBValidator(Validator):
         :rtype: bool
 
         """
-        query = 'select count(*) from mutopia_style where style=%s'
+        query = 'select count(*) from styles where style=?'
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, (style,))
@@ -148,7 +148,7 @@ class DBValidator(Validator):
         :rtype: bool
 
         """
-        query = 'select count(*) from mutopia_license where name=%s'
+        query = 'select count(*) from licenses where license=?'
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, (license_name,))
