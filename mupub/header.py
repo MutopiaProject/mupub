@@ -10,9 +10,8 @@ import subprocess
 import os
 import os.path
 import logging
-from rdflib import Namespace, URIRef, Graph, Literal
 from abc import ABCMeta, abstractmethod
-from mupub import FTP_BASE
+from rdflib import Namespace, URIRef, Graph, Literal
 
 _HEADER_PAT = re.compile(r'\\header', flags=re.UNICODE)
 _HTAG_PAT = re.compile(r'\s*(\w+)\s*=\s*\"(.*)\"', flags=re.UNICODE)
@@ -130,7 +129,7 @@ class LYLoader(Loader):
                 net_braces += _net_braces(line)
                 if net_braces < 1:
                     break
-            logger.info('Header loading searched {} lines'.format(lines))
+            logger.info('Header loading searched %s lines', lines)
 
         return table
 
@@ -262,6 +261,7 @@ class Header(object):
 
 
     def set_field(self, key, value):
+        """Set field in table."""
         self._table[key] = value
 
 
@@ -327,9 +327,16 @@ class Header(object):
         return True
 
 
-    def makeRDFGraph(self, assets):
+    def make_rdf_graph(self, assets):
+        """Create an RDF Graph from header and additional build assets.
 
-        rdf = Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+        :param assets: A dictionary containing name:value pairs
+                       describing assets for publication.
+        :returns: A graph instance
+        :rtype: rdflib.Graph
+
+        """
+
         mp = Namespace("http://www.mutopiaproject.org/piece-data/0.1/")
         graph = Graph()
         piece = URIRef('.')
@@ -343,12 +350,12 @@ class Header(object):
         # Add special tags
         graph.add((piece, mp['for'], Literal(self.get_field('instrument'))))
         graph.add((piece, mp['id'], Literal(self.get_value('footer'))))
-        cc = self.get_field('license')
-        if not cc:
-            cc = self.get_field('copyright')
-            if not cc:
-                cc = self.get_field('licence')
-        graph.add((piece, mp['licence'], Literal(cc)))
+        cc_name = self.get_field('license')
+        if not cc_name:
+            cc_name = self.get_field('copyright')
+            if not cc_name:
+                cc_name = self.get_field('licence')
+        graph.add((piece, mp['licence'], Literal(cc_name)))
 
         for key in assets.keys():
             graph.add((piece, mp[key], Literal(assets[key])))
@@ -356,8 +363,15 @@ class Header(object):
         return graph
 
 
-    def writeRDF(self, path, assets):
-        graph = self.makeRDFGraph(assets)
+    def write_rdf(self, path, assets):
+        """Write the RDF to an XML file.
+
+        :param str path: File path to write.
+        :param assets: Dictionary block of name:value pairs containing
+                       asset names.
+
+        """
+        graph = self.make_rdf_graph(assets)
         graph.serialize(destination=path, format='xml')
 
 
