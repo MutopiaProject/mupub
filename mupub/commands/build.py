@@ -81,7 +81,7 @@ def build_rdf(header, base, assets):
         rdf_path = rdf_path[:rdf_path.rfind('.')] + '-lys.rdf'
     else:
         rdf_path = base + '.rdf'
-    header.writeRDF(rdf_path, assets)
+    header.write_rdf(rdf_path, assets)
 
 
 def build_one(infile, lily_path, lpversion, do_preview, verbose=False):
@@ -154,7 +154,7 @@ def build(verbose, database, infile, header_file, collect_only):
 
     assets = mupub.collect_assets(base)
     puts(colored.green('Creating RDF file'))
-    header.writeRDF(base+'.rdf', assets)
+    header.write_rdf(base+'.rdf', assets)
 
     # remove by-products of build
     _remove_if_exists(base+'.ps')
