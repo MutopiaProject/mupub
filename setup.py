@@ -32,6 +32,7 @@ setup(
             'check = mupub.commands.check:main',
             'init = mupub.commands.init:main',
             'build = mupub.commands.build:main',
+            'clean = mupub.commands.clean:main',
         ],
         'console_scripts': [
             'mupub = mupub.__main__:main',
