@@ -32,8 +32,8 @@ def clean(verbose, dry_run):
             if dry_run:
                 puts(colored.yellow('would delete {}'.format(deadfile)))
             else:
+                os.unlink(deadfile)
                 if verbose:
-                    os.unlink(deadfile)
                     puts(colored.green('deleted {}'.format(deadfile)))
 
 
