@@ -7,25 +7,20 @@ when done.
 
 import argparse
 import os
-import psycopg2
 import re
+import requests
 import sqlite3
 from clint.textui import prompt, validators, colored, puts
 from mupub.config import CONFIG_DICT, CONFIG_DIR, DBPATH, save
 from mupub.utils import ConfigDumpAction
 
-# The local database definition: table names and fields.
+# The local database definition: table names and fields, basically
+# simple storage as hash tables.
 _TABLES = [
-    ('instruments', 'instrument text primary key'),
-    ('styles', 'style text primary key'),
-    ('composers', 'composer text primary key'),
-    ('licenses', 'license text primary key'),
-    ('assetmap', """
-           folder text,
-           name text,
-           has_lys integer,
-           piece_id integer
-    """),
+    ('instruments', 'instrument'),
+    ('styles', 'style'),
+    ('composers', 'composer'),
+    ('licenses', 'license'),
 ]
 
 def _q_str(category, key, qstr):
@@ -56,7 +51,7 @@ def _q_int(category, key, qstr):
 
 _REMOTE_DESCRIPTION="""
 For the purpose of header verification, portions of the database
-driving the web site is used to seed a small local database.
+driving the web site are used to seed a small local database.
 """
 
 def database_init():
@@ -64,11 +59,11 @@ def database_init():
 
     """
     print(_REMOTE_DESCRIPTION)
-    _q_int('remote_db', 'port', 'Database port')
-    _q_str('remote_db', 'name', 'Database name')
-    _q_str('remote_db', 'user', 'Database user name')
-    _q_str('remote_db', 'host', 'Database host')
-    _q_str('remote_db', 'password', 'Database password')
+    _q_int('default_db', 'port', 'Database port')
+    _q_str('default_db', 'name', 'Database name')
+    _q_str('default_db', 'user', 'Database user name')
+    _q_str('default_db', 'host', 'Database host')
+    _q_str('default_db', 'password', 'Database password')
 
 
 def _dbcopy(src_conn, dst_conn, select_q, insert_q):
@@ -78,59 +73,40 @@ def _dbcopy(src_conn, dst_conn, select_q, insert_q):
             dst_conn.execute(insert_q, selection)
 
 
-_ASSET_INSERT="""
-INSERT OR IGNORE
-   INTO assetmap (folder, name, has_lys, piece_id)
-   VALUES (?, ?, ?, ?)
-"""
+_INSERT = 'INSERT OR IGNORE INTO {0} ({1}) VALUES (?)'
+def _db_sync(local_conn):
 
-def db_sync(local_conn, remote_db):
-    db_dict = CONFIG_DICT[remote_db]
-    print('connecting to ' + db_dict['host'])
-    rem_conn = psycopg2.connect(database=db_dict['name'],
-                                user=db_dict['user'],
-                                host=db_dict['host'],
-                                port=db_dict['port'],
-                                password=db_dict['password'],)
-    print('connection established')
+    # Use the site's db_hook to request a dump of the minimal values
+    # we'll need to do simple verification.
+    site = CONFIG_DICT['site_url'].strip()
+    if site[len(site)-1] != '/':
+        site = site + '/'
+    try:
+        request = requests.get(site+'db_hook')
+        dbdata = request.json()
 
-    with rem_conn:
-        print('building assetmap')
-        _dbcopy(rem_conn,
-                local_conn,
-                'SELECT folder,name,has_lys,piece_id FROM mutopia_assetmap',
-                ' '.join(re.split('\s+',_ASSET_INSERT)).strip())
-        print('building instruments')
-        _dbcopy(rem_conn,
-                local_conn,
-                'SELECT instrument FROM mutopia_instrument',
-                'INSERT OR IGNORE INTO instruments (instrument) VALUES (?)')
-        print('building styles')
-        _dbcopy(rem_conn,
-                local_conn,
-                'SELECT style FROM mutopia_style',
-                'INSERT OR IGNORE INTO styles (style) VALUES (?)')
-        print('building composers')
-        _dbcopy(rem_conn,
-                local_conn,
-                'SELECT composer FROM mutopia_composer',
-                'INSERT OR IGNORE INTO composers (composer) VALUES (?)')
-        print('building licenses')
-        _dbcopy(rem_conn,
-                local_conn,
-                'SELECT name FROM mutopia_license',
-                'INSERT OR IGNORE INTO licenses (license) VALUES (?)')
+        for tname,cname in _TABLES:
+            for val in dbdata[tname]:
+                local_conn.execute(_INSERT.format(tname,cname), (val,))
+    except requests.exceptions.ConnectionError as exc:
+        puts(colored.red('Failed to connect to %s' % CONFIG_DICT['site_url']))
+        puts(colored.red('Fix the site_url config variable in %s' % CONFIG_DIR))
+        raise exc
 
-
-def sync_local_db(remote_db):
+def sync_local_db():
     schema_initialized = os.path.exists(DBPATH)
     conn = sqlite3.connect(DBPATH)
-    with conn:
-        if not schema_initialized:
-            for name, fields in _TABLES:
-                conn.execute('create table {0} ({1})'.format(
-                    name, ''.join(fields).strip()))
-        db_sync(conn, remote_db)
+    try:
+        with conn:
+            if not schema_initialized:
+                for name, fields in _TABLES:
+                    conn.execute('CREATE TABLE {0} ({1} TEXT PRIMARY KEY)'.format(
+                        name,
+                        ''.join(fields).strip()))
+            _db_sync(conn)
+    except Exception as exc:
+        puts(colored.yellow('Exception caught, rolling back changes.'))
+        puts(colored.yellow('Exception was %s' % exc))
 
 
 def init(dump, database, sync_only):
@@ -155,7 +131,7 @@ def init(dump, database, sync_only):
         except KeyboardInterrupt:
             puts(colored.red('\nConfiguration aborted, not saved.'))
 
-    sync_local_db(database)
+    sync_local_db()
 
 
 def main(args):
@@ -172,7 +148,7 @@ def main(args):
     )
     parser.add_argument(
         '--database',
-        default='remote_db',
+        default='default_db',
         help='Database to use (defined in config)'
     )
     parser.add_argument(

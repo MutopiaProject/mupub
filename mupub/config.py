@@ -9,8 +9,13 @@ import ruamel.yaml as yaml
 CONFIG_DIR = os.path.join(os.environ.get('HOME'), '.mupub')
 _CONFIG_FNM = os.path.join(CONFIG_DIR, 'config.yml')
 
+"""
+site_url: http://127.0.0.1:8000/
+"""
+
 _CONFIG_DEFAULT = """
-default:
+site_url: http://musite-dev.us-west-2.elasticbeanstalk.com/
+default_db:
   host: mu-devo.chgf8mujp4sf.us-west-2.rds.amazonaws.com
   user: muuser
   name: mudb
