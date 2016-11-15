@@ -177,7 +177,7 @@ def main(args):
     )
     parser.add_argument(
         '--database',
-        default='local_db',
+        default='default_db',
         help='Database to use (defined in config)'
     )
     parser.add_argument(
