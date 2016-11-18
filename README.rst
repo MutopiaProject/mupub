@@ -34,13 +34,14 @@ single folder hierarchy like this, ::
   $ echo "export WORKON_HOME=$WORKON_HOME" >> ~/.bashrc
   $ source ~/.bashrc
 
-To create and populate your virtual environment for this project, ::
+To create and populate a virtual environment named ``mupub``for this
+project, ::
 
   $ cd <your cloned workspace>
-  $ mkvirtualenv -a $(PWD) -r requirements.txt -python python3
+  $ mkvirtualenv -a $PWD -r requirements.txt -p python3 mupub
 
 To do development on the project you `activate` the environment using
-the ``workon`` command and leave it using ``deactivate``,
+the ``workon`` command and leave it using ``deactivate``, ::
 
   glenl@lola:mupub$ workon mupub
   (mupub) glenl@lola:mupub$
