@@ -34,7 +34,7 @@ single folder hierarchy like this, ::
   $ echo "export WORKON_HOME=$WORKON_HOME" >> ~/.bashrc
   $ source ~/.bashrc
 
-To create and populate a virtual environment named ``mupub``for this
+To create and populate a virtual environment named ``mupub`` for this
 project, ::
 
   $ cd <your cloned workspace>
