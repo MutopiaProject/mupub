@@ -1,4 +1,4 @@
-"""Publishing module, implementing the clean entry point.
+"""Clean module, implementing the clean entry point.
 """
 
 import argparse
