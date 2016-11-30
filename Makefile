@@ -15,7 +15,10 @@ docs:
 install:
 	python setup.py install
 
+dev_install:
+	pip install --editable .
+
 dist:
 	python setup.py sdist
 
-.PHONY: requirements test coverage docs dist
+.PHONY: requirements test coverage docs install dev_install dist
