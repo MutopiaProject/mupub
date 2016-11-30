@@ -22,6 +22,7 @@ from .assets import collect_assets
 from .commands.build import build
 from .commands.check import check
 from .commands.init import init
+from .commands.tag import tag
 from .config import CONFIG_DICT, CONFIG_DIR, DBPATH
 from .core import MUTOPIA_BASE, FTP_BASE, URL_BASE
 from .core import id_from_footer
@@ -31,3 +32,4 @@ from .header import RawLoader, Header
 from .header import find_header
 from .lily import LyLocator, LyVersion
 from .validate import Validator, DBValidator
+from .tagedit import tag_header

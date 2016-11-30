@@ -1,0 +1,17 @@
+  /home/glenl/work/mupub/mupub/tests/data:
+  total used in directory 64 available 154699744
+  drwxrwxr-x 3 glenl glenl 4096 Nov 28 15:31 .
+  drwxrwxr-x 4 glenl glenl 4096 Nov 28 15:27 ..
+  -rwxrwxr-x 1 glenl glenl 4519 Oct 30 13:40 basic-hdr.ly
+  -rw-rw-r-- 1 glenl glenl 1355 Aug  5 13:05 big-foot.ly
+  -rw-rw-r-- 1 glenl glenl  377 Aug 16 12:17 hdr-raw.ly
+  -rw-rw-r-- 1 glenl glenl  182 Aug 16 12:05 hdr-split-a.ly
+  -rw-rw-r-- 1 glenl glenl  237 Aug 16 12:06 hdr-split-b.ly
+  drwxrwxr-x 5 glenl glenl 4096 Aug 16 15:21 mu
+  -rw-rw-r-- 1 glenl glenl  407 Sep 21 22:44 old_version.ly
+  -rw-rw-r-- 1 glenl glenl 1355 Nov 28 15:31 tagged-file.ly
+  -rw-rw-r-- 1 glenl glenl 1489 Aug  5 12:51 unicode-hdr.ly
+  -rw-rw-r-- 1 glenl glenl  408 Nov 28 15:31 untagged-file.ly
+  -rw-rw-r-- 1 glenl glenl   87 Aug 16 11:26 version-comment.ly
+  -rw-rw-r-- 1 glenl glenl  101 Aug 16 11:26 version-dup.ly
+  -rw-rw-r-- 1 glenl glenl  164 Aug 16 12:02 version-obtuse.ly
