@@ -14,8 +14,6 @@ MUTOPIA_BASE = os.getenv('MUTOPIA_BASE',
 FTP_BASE = os.path.join(MUTOPIA_BASE, 'ftp')
 URL_BASE = 'http://www.mutopiaproject.org'
 
-_LYFILES = ('.ly', '.ily', '.lyi')
-
 
 _FOOT_PAT = re.compile('Mutopia-([0-9/]+)-([0-9]+)$')
 def id_from_footer(footer):
@@ -29,7 +27,7 @@ def id_from_footer(footer):
     """
     if not footer:
         raise ValueError('Empty footer')
-        
+
     fmat = _FOOT_PAT.search(footer)
     if fmat:
         (year,month,day) = fmat.group(1).split('/')
