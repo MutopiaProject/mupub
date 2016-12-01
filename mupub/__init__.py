@@ -9,7 +9,15 @@ __all__ = (
 
 __title__ = 'mupub'
 __summary__ = 'Musical score publishing utility for the Mutopia Project'
-__version__ = '0.1.1'
+
+"""Versioning:
+This utility follows a MAJOR . MINOR . EDIT format. Upon a major
+release, the MAJOR number is incremented and the MINOR is zeroed.
+During development of an upcoming release, the MINOR number may be
+incremented.
+
+"""
+__version__ = '0.2.alpha'
 
 __author__ = 'Glen Larsen and mutopia contributors'
 __author_email__= 'glenl.glx@gmail.com'

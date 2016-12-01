@@ -4,8 +4,20 @@
 import argparse
 import pkg_resources
 import sys
+import textwrap
 import mupub
 
+_LONG_DESCRIPTION="""
+This is a command-line utility for managing the publication of
+Mutopia Project contributions. All unctionality is provided by
+commands within this utility:
+
+    init  - Initialize workspace. Creates $HOME/.mupub
+    check - Reviews the contributed piece for validity.
+    tag   - Modifies the header with MutopiaProject fields.
+    build - Builds a complete set of output files for publication.
+    clean - Clears all build products.
+"""
 
 def _registered_commands(group='mupub.registered_commands'):
     """ Get our registered commands.
@@ -20,13 +32,18 @@ def _registered_commands(group='mupub.registered_commands'):
 
     registered_commands = pkg_resources.iter_entry_points(group=group)
     return dict((c.name, c) for c in registered_commands)
-        
+
 
 def dispatch(argv):
     """
     """
     registered_commands = _registered_commands()
-    parser = argparse.ArgumentParser(prog='mupub')
+    parser = argparse.ArgumentParser(
+        prog='mupub',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=textwrap.dedent(_LONG_DESCRIPTION),
+        epilog='Use mupub <command> --help for specific command help',
+)
     parser.add_argument(
         '-v', '--version',
         action='version',
