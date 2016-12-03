@@ -4,10 +4,15 @@
 __docformat__ = 'reStructuredText'
 
 import os
+import logging
+import time
 import ruamel.yaml as yaml
 
 CONFIG_DIR = os.path.join(os.environ.get('HOME'), '.mupub')
 _CONFIG_FNM = os.path.join(CONFIG_DIR, 'config.yml')
+
+class UTCFormatter(logging.Formatter):
+    converter = time.gmtime
 
 """
 site_url: http://127.0.0.1:8000/
@@ -32,8 +37,24 @@ lilypond:
   V2_16: 2.16.2-1
   V2_17: 2.17.97-1
   V2_18: 2.18.2-1
-  V2_19: 2.19.48-1
+  V2_19: 2.19.51-1
+
+# Simple logging to the console
+logging:
+  version: 1
+  disable_existing_loggers: False
+  formatters:
+    simple:
+      format: '%(levelname)s - %(message)s'
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: simple
+      level: INFO
+  root:
+    handlers: [console]
 """
+
 
 def load(config_file=_CONFIG_FNM):
     """Load a configuration file into a dictionary

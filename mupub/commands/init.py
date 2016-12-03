@@ -6,6 +6,7 @@ when done.
 """
 
 import argparse
+import logging
 import os
 import re
 import requests
@@ -13,6 +14,8 @@ import sqlite3
 from clint.textui import prompt, validators, colored, puts
 from mupub.config import CONFIG_DICT, CONFIG_DIR, DBPATH, save
 from mupub.utils import ConfigDumpAction
+
+logger = logging.getLogger(__name__)
 
 # The local database definition: table names and fields, basically
 # simple storage as hash tables.
@@ -91,7 +94,9 @@ def _db_sync(local_conn):
     except requests.exceptions.ConnectionError as exc:
         puts(colored.red('Failed to connect to %s' % CONFIG_DICT['site_url']))
         puts(colored.red('Fix the site_url config variable in %s' % CONFIG_DIR))
+        logger.exception(exc)
         raise exc
+
 
 def sync_local_db():
     schema_initialized = os.path.exists(DBPATH)
@@ -107,9 +112,10 @@ def sync_local_db():
     except Exception as exc:
         puts(colored.yellow('Exception caught, rolling back changes.'))
         puts(colored.yellow('Exception was %s' % exc))
+        logger.exception('In sync_local_db: %s', exc)
 
 
-def init(dump, database, sync_only):
+def init(dump, sync_only):
     """The init entry point.
 
     Queries for the basic configuration needed to adequately run all
@@ -123,7 +129,7 @@ def init(dump, database, sync_only):
                  argument is present but not used by this routine.
 
     """
-
+    logger.debug('init command starting.')
     if not sync_only:
         try:
             database_init()
@@ -145,11 +151,6 @@ def main(args):
         '--sync-only',
         action='store_true',
         help='Synchronize remote and local databases.'
-    )
-    parser.add_argument(
-        '--database',
-        default='default_db',
-        help='Database to use (defined in config)'
     )
     parser.add_argument(
         '--dump',

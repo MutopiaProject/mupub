@@ -3,11 +3,14 @@
 
 import argparse
 import glob
+import logging
 import os
 import subprocess
 from clint.textui import colored, puts
 import mupub
 from mupub.config import CONFIG_DICT
+
+logger = logging.getLogger(__name__)
 
 
 def _remove_if_exists(path):
@@ -84,19 +87,18 @@ def build_rdf(header, base, assets):
     header.write_rdf(rdf_path, assets)
 
 
-def build_one(infile, lily_path, lpversion, do_preview, verbose=False):
+def build_one(infile, lily_path, lpversion, do_preview):
     """Build a single lilypond file.
 
     :param infile: LilyPond file to build, might be None
     :param lily_path: Path to LilyPond build script
     :param do_preview: Boolean to flag additional preview build
-    :param verbose: True for verbose output.
 
     """
 
     base, infile = mupub.utils.resolve_input(infile)
     if not infile:
-        puts(colored.red('Failed to resolve input file'))
+        puts(colored.red('Failed to resolve infile %s' % infile))
         return
 
     base_params = [lily_path, '-dno-point-and-click',]
@@ -106,11 +108,12 @@ def build_one(infile, lily_path, lpversion, do_preview, verbose=False):
         build_preview(base_params, lpversion, infile)
 
 
-def lily_build(verbose, database, infile, header):
+def lily_build(database, infile, header):
     # The database name should be a name in the configuration file.
     # It would be difficult to make this a choice selection in the
     # argument parser so just check early and exit if necessary.
     if database not in CONFIG_DICT:
+        logger.debug('%s not in configuration.', database)
         puts(colored.red('Invalid database name - ' + database))
         return
 
@@ -121,11 +124,12 @@ def lily_build(verbose, database, infile, header):
     # Build each score, doing a preview on the first one only.
     do_preview = True
     for ly_file in infile:
-        build_one(ly_file, lily_path, lpversion, do_preview, verbose)
+        build_one(ly_file, lily_path, lpversion, do_preview)
         do_preview = False
 
 
-def build(verbose, database, infile, header_file, collect_only):
+def build(database, infile, header_file, collect_only):
+    logger.debug('build command starting')
     base, lyfile = mupub.utils.resolve_input()
     if len(infile) < 1:
         infile.append(lyfile)
@@ -146,7 +150,7 @@ def build(verbose, database, infile, header_file, collect_only):
         return
 
     if not collect_only:
-        lily_build(verbose, database, infile, header)
+        lily_build(database, infile, header)
 
     # rename all .midi files to .mid
     for mid in glob.glob('*.midi'):
@@ -161,6 +165,7 @@ def build(verbose, database, infile, header_file, collect_only):
     _remove_if_exists(base+'.png')
     _remove_if_exists(base+'.preview.png')
     _remove_if_exists(base+'.preview.eps')
+    logger.debug('Publishing build complete.')
 
 
 def main(args):
@@ -170,11 +175,6 @@ def main(args):
 
     """
     parser = argparse.ArgumentParser(prog='mupub build')
-    parser.add_argument(
-        '--verbose',
-        action='store_true',
-        help='Louder.'
-    )
     parser.add_argument(
         '--database',
         default='default_db',

@@ -4,6 +4,7 @@
 __docformat__ = 'reStructuredText'
 
 import abc
+import logging
 import os
 import subprocess
 import tarfile
@@ -29,6 +30,8 @@ linux-x86 - Any GNU/Linux distribution, x86
 mingw - Windows x86
 
 """
+
+logger = logging.getLogger(__name__)
 
 class LyVersion():
     """LilyPond version class.
@@ -176,6 +179,7 @@ class LinuxInstaller(LyInstaller):
         puts(colored.yellow('installing ...'))
         subprocess.run(command, shell=False)
         puts(colored.yellow('Done. First run will initialize font tables.'))
+        logger.debug('(Linux) Installed %s', binscript)
 
 
 class MacInstaller(LyInstaller):
@@ -196,6 +200,7 @@ class MacInstaller(LyInstaller):
         # extract after downloading
         with tarfile.open(local_tar, mode='r:bz2') as tar_f:
             tar_f.extractall(path=os.path.join(LYCACHE, target))
+        logger.debug('(Mac) downloaded %s', localtar)
 
 
 class LyLocator():

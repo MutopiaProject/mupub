@@ -1,4 +1,4 @@
-"""
+"""Module for various asset-related functions.
 """
 
 __docformat__ = 'reStructuredText'

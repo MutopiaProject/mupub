@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 """tagedit module, routines for editing tags in a LilyPond header
 """
+
 from datetime import date
+import logging
+import os
 import re
 from string import Template
+import tempfile
 import mupub
 
 _HEADER_PAT = re.compile(r'\\header')
@@ -53,7 +57,7 @@ class LilyURL():
         return '©\" {0} \"'.format(year)
 
 
-# Make license dictionary for their corresponding url definition
+# Make a license dictionary for their corresponding url definition
 # structures.
 _LICENSES = {
     'Public Domain': LilyURL(
@@ -192,7 +196,7 @@ def tag_header(infile, outfile, htable, muid):
     """Tag the outfile with mutopia publishing elements from infile
 
     :param File infile: The input file.
-    :param outfile: The output file.
+    :param File outfile: The output file.
     :param htable: The header key:value pairs from the input file.
     :param muid: The mutopia integer identifier.
     :returns: The htable passed on input.
@@ -221,7 +225,7 @@ def tag_header(infile, outfile, htable, muid):
 
         # Attempt to discard comments
         line = infline.split('%', 1)[0]
-        if len(line) < 1:
+        if len(line.strip()) < 1:
             outfile.write(infline)
             continue
 
@@ -261,3 +265,49 @@ def tag_header(infile, outfile, htable, muid):
                 outfile.write(infline)
 
     return htable
+
+
+def tag_file(header_file, id):
+    """Tag the given header file.
+
+    The tagging process happens in this sequence:
+
+      - obtain the header table from the file
+      - read the file, tagging and writing to a temporary file
+      - on success, rename the input file to a backup and copy the
+        temporary file into its place.
+
+    :param str header_file: input LilyPond file name
+    :param int id: The mutopia identifier
+    """
+    htable = mupub.LYLoader().load(header_file)
+    if not htable:
+        logger.info('No header found for %s.', header_file)
+        return
+
+    # Create and write the temporary tagged file.
+    with tempfile.NamedTemporaryFile(mode='w',
+                                     suffix='.ly',
+                                     prefix='mu_',
+                                     delete=False) as outfile:
+        outfnm = outfile.name
+        with open(header_file, mode='r', encoding='utf-8') as infile:
+            mupub.tag_header(infile, outfile, htable, id)
+
+    if os.path.exists(outfnm):
+        # header_file is closed, rename it to a backup file and create
+        # a new file with the same contents as the temporary output file.
+        backup = header_file+'~'
+        if os.path.exists(backup):
+            os.unlink(backup)
+        os.rename(header_file, backup)
+        with open(outfnm, 'r', encoding='utf-8') as tmpf:
+            with open(header_file, mode='w', encoding='utf-8') as tagged_file:
+                for line in tmpf:
+                    tagged_file.write(line)
+        os.unlink(outfnm)
+    else:
+        # Unlikely to get here --- if this doesn't exist an exception
+        # should have been raised --- but just in case.
+        logger = logging.getLogger(__name__)
+        logger.error('Something went wrong processing %s' % header_file)
