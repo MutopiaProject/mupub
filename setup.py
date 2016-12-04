@@ -5,6 +5,14 @@ import mupub
 
 here = path.abspath(path.dirname(__file__))
 
+install_requires = [
+    'pypng >= 0.0.18',
+    'rdflib >= 4.2.1',
+    'ruamel.yaml >= 0.12.18',
+    'clint >= 0.5.1',
+    'requests >= 2.11.1',
+]
+
 setup(
     name = mupub.__title__,
     version = mupub.__version__,
@@ -36,11 +44,5 @@ setup(
             'mupub = mupub.__main__:main',
         ],
     },
-    install_requires = [
-        'pypng >= 0.0.18',
-        'rdflib >= 4.2.1',
-        'ruamel.yaml >= 0.12.18',
-        'clint==0.5.1',
-        'requests >= 2.11.1',
-    ],
+    install_requires=install_requires,
 )
