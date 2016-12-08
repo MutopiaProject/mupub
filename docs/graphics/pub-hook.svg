@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="25cm" height="31cm" viewBox="-54 117 499 607" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #ffffff" x="118" y="118" width="64.35" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="118" y="118" width="64.35" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="150.175" y="139.9">
+      <tspan x="150.175" y="139.9">GitHub</tspan>
+    </text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="128" y1="142.9" x2="172.35" y2="142.9"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="248" y="118" width="63.75" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="248" y="118" width="63.75" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="279.875" y="139.9">
+      <tspan x="279.875" y="139.9">MuSite</tspan>
+    </text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="258" y1="142.9" x2="301.75" y2="142.9"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="150.175" y1="154" x2="150.175" y2="192"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="150.175" y1="232" x2="150.175" y2="269"/>
+    <rect style="fill: #ffffff" x="143.175" y="192" width="14" height="40"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="143.175" y="192" width="14" height="40"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="279.874" y1="163" x2="279.874" y2="190.909"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="279.874" y1="270.909" x2="279.874" y2="273"/>
+    <rect style="fill: #ffffff" x="272.874" y="190.909" width="14" height="80"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="272.874" y="190.909" width="14" height="80"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="255.875" y1="201.068" x2="157.175" y2="202"/>
+    <polygon style="fill: #000000" points="255.922,206.068 271.874,200.917 255.828,196.069 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="255.922,206.068 271.874,200.917 255.828,196.069 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="216.362" y="217.55">push hook</text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="126.175" y1="201.992" x2="7.875" y2="201.936"/>
+    <polygon style="fill: #000000" points="126.173,206.992 142.175,202 126.177,196.992 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="126.173,206.992 142.175,202 126.177,196.992 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="71.895" y="218.53">Merge pull</text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="286.874" y1="210.908" x2="360.46" y2="210.908"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="360.46" y1="210.908" x2="360.46" y2="256.082"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="303.874" y1="256.082" x2="360.46" y2="256.082"/>
+    <polygon style="fill: #000000" points="303.874,251.082 287.874,256.082 303.874,261.082 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="303.874,251.082 287.874,256.082 303.874,261.082 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="344.406" y="274.036">Update SiteMap</text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="279.874" y1="270.909" x2="279.874" y2="287.75"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="279.874" y1="367.75" x2="279.874" y2="384.75"/>
+    <rect style="fill: #ffffff" x="272.874" y="287.75" width="14" height="80"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="272.874" y="287.75" width="14" height="80"/>
+  </g>
+  <g>
+    <rect style="fill: #d8e5e5" x="-52" y="119" width="105.75" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #000000" x="-52" y="119" width="105.75" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="0.875" y="140.9">
+      <tspan x="0.875" y="140.9">BuildMachine</tspan>
+    </text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="-42" y1="143.9" x2="43.75" y2="143.9"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="0.875" y1="155" x2="0.875" y2="177"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="0.875" y1="217" x2="0.875" y2="227"/>
+    <rect style="fill: #d8e5e5" x="-6.125" y="177" width="14" height="40"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-6.125" y="177" width="14" height="40"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="7.875" y1="386.75" x2="125" y2="386.75"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="125" y1="386.75" x2="125" y2="423.75"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="24.875" y1="423.75" x2="125" y2="423.75"/>
+    <polygon style="fill: #000000" points="24.875,418.75 8.875,423.75 24.875,428.75 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="24.875,418.75 8.875,423.75 24.875,428.75 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="66.5" y="402.75">Build</text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="0.875" y1="217" x2="0.875" y2="266.75"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="0.875" y1="586.75" x2="0.875" y2="688.75"/>
+    <rect style="fill: #d8e5e5" x="-6.125" y="266.75" width="14" height="320"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="-6.125" y="266.75" width="14" height="320"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="255.874" y1="307.686" x2="7.875" y2="306.75"/>
+    <polygon style="fill: #000000" points="255.855,312.686 271.874,307.746 255.893,302.686 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="255.855,312.686 271.874,307.746 255.893,302.686 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="138" y="298.75">update/status</text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" x1="24.8749" y1="346.814" x2="272.874" y2="347.75"/>
+    <polygon style="fill: #000000" points="24.8937,341.814 8.87499,346.754 24.856,351.814 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="24.8937,341.814 8.87499,346.754 24.856,351.814 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="140" y="337.75">JSON w/pending data</text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="352" y="371.75" width="92.6" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="352" y="371.75" width="92.6" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="398.3" y="393.65">
+      <tspan x="398.3" y="393.65">DataServer</tspan>
+    </text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="362" y1="396.65" x2="434.6" y2="396.65"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="398.3" y1="418.398" x2="398.3" y2="446.398"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="398.3" y1="486.398" x2="398.3" y2="497.398"/>
+    <rect style="fill: #ffffff" x="391.3" y="446.398" width="14" height="40"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="391.3" y="446.398" width="14" height="40"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="384.595" y1="466.405" x2="7.875" y2="466.75"/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="371.952,471.416 387.947,466.401 371.943,461.416 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="201" y="483.074">Synchronize</text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="279.874" y1="365.805" x2="279.874" y2="496.379"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="279.874" y1="656.379" x2="279.874" y2="723.055"/>
+    <rect style="fill: #ffffff" x="272.874" y="496.379" width="14" height="160"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="272.874" y="496.379" width="14" height="160"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="255.874" y1="506.403" x2="7.875" y2="506.75"/>
+    <polygon style="fill: #000000" points="255.881,511.403 271.874,506.38 255.867,501.403 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="255.881,511.403 271.874,506.38 255.867,501.403 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="133" y="522.815">update/dbupdate</text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="398.3" y1="485.102" x2="398.3" y2="517.102"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="398.3" y1="577.102" x2="398.3" y2="694.102"/>
+    <rect style="fill: #ffffff" x="391.3" y="517.102" width="14" height="60"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="391.3" y="517.102" width="14" height="60"/>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="374.3" y1="536.984" x2="286.874" y2="536.379"/>
+    <polygon style="fill: #000000" points="374.266,541.984 390.3,537.095 374.335,531.984 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="374.266,541.984 390.3,537.095 374.335,531.984 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="338" y="524.74">Read RDF</text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" x1="303.874" y1="566.497" x2="391.3" y2="567.102"/>
+    <polygon style="fill: #000000" points="303.908,561.497 287.874,566.386 303.839,571.497 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="303.908,561.497 287.874,566.386 303.839,571.497 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="340" y="584.74">RDF data</text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="286.874" y1="596.379" x2="366" y2="596.379"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="366" y1="596.379" x2="366" y2="632.75"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="303.874" y1="632.75" x2="366" y2="632.75"/>
+    <polygon style="fill: #000000" points="303.874,627.75 287.874,632.75 303.874,637.75 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="303.874,627.75 287.874,632.75 303.874,637.75 "/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="326.437" y="624.565">Update DB</text>
+  </g>
+</svg>

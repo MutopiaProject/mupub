@@ -87,6 +87,105 @@ regards to locating the appropriate file containing the header.
     simplify the creation of a complex piece.
 
 
+.. _auto-pieceid:
+
+Automating ID assignment
+------------------------
+
+The easiest way to describe this is to provide a UML sequence diagram
+that outlines the steps and then textually walk through the sequence.
+
+.. image:: graphics/pub-hook.svg
+   :width: 60 %
+   :align: center
+
+The major players are,
+
+  - The `BuildMachine` which is used for any location where a build
+    might take place; a home workstation, an AWS AMI, etc.
+  - `GitHub`, where are contribution and submissions are staged and
+    processed as pull requests.
+  - `MuSite`, the web-based site.
+  - The `DataServer`, the location where all built assets are stored.
+
+**Processing the pull request** is the start of the sequence processes
+which causes a merge of the branch containing the contribution. A
+`webhook` is attached to the GitHub repository so that when items are
+committed a push notification is sent to our web server (`MuSite`).
+The web site responds to this request by updating (or creating) a row
+in the ``AssetMap`` database table. This table is used to map the hard
+assets on disk storage to pieces described in the database. Whether
+the row in the ``AssetMap`` table is created or updated it always sets
+its `published` flag to false, indicating that this asset requires a
+build.
+
+**A note on AssetMap Design:** It would be helpful here to review the
+``AssetMap`` database table and its role in this sequence.
+
+.. image:: graphics/piece-assetmap.svg
+   :width: 80 %
+   :align: center
+
+An ``AssetMap`` has a 1:1 relationship to a ``Piece``. It is an
+association, not an aggregate relationship, so that an ``AssetMap``
+instance can exist without a ``Piece``. This relationship is used to
+allow new assets to come into existence by first being entered into
+the database as an *unpublished* asset with no associated ``Piece``.
+The design emphasizes the notion that either instance can exist
+without the other but neither can function fully without the
+association. An ``AssetMap`` without a ``Piece`` is typically a newly
+contributed piece waiting for the build process to complete, and a
+``Piece`` could exist without an ``AssetMap`` but would lack the
+ability to locate its physical assets.
+
+**Determining the new ID:** The second full sequence on the
+BuildMachine is a basic publish sequence. An *update/status* message
+is sent as a URL to ``MuSite`` which responds with a |JSON| data structure
+containing all the relevant data for determining an integer value for
+the next mutopia ID. The following is an actual structure returned
+after a pull request for the piece titled, "in_may_piano" by the
+composer with the mutopia-formatted name of "BehrF", ::
+
+  {"LastID": 2154, "pending": ["BehrF/in_may_piano"]}
+
+At the time this piece was pulled into the MutopiaProject archive, the
+last assigned identifier had the value of 2154 and the new pending
+piece is located in the folder "BehrF/in_may_piano". Armed with this
+information we can safely assign the value 2155 to this piece. This
+|JSON| data can easily be read by python code, ::
+
+  import requests
+
+  SITE='http://musite-dev.us-west-2.elasticbeanstalk.com/'
+
+  request = requests.get(SITE+'update/status/')
+  status_data = request.json()
+
+  for val in ['LastID', 'pending',]:
+      print('{0} = {1}'.format(val,status_data[val]))
+
+The results for this are, ::
+
+  LastID = 2154
+  pending = ['BehrF/in_may_piano']
+
+**Continuing with the sequence diagram,** a full build for the pending
+piece is done on the build machine. Part of this process updates the
+Mutopia header with the new id and may also include other edits
+required along the way. These are committed to the master on the
+``BuildMachine`` and then pushed to ``GitHub``. [#f1]_ For simplicity this
+step is not shown here. Once the build is complete the assets are
+synchronized with the ``DataServer`` in a folder hierarchy that
+matches the build machine.
+
+**The final step** is a request to update the database of the website.
+This management command will walk through each row in the ``AssetMap``
+table that is marked unpublished, read their associated RDF file, and
+update the database with that information. Once this is done, new
+files that didn't previously have a row in the ``Piece`` table are now
+visible on the website.
+
+
 Building assets
 ---------------
 
@@ -143,3 +242,12 @@ only requirement for building the preview image is that it is done
 prior to building the RDF because the size and width are required. The
 changelog is generated after all source files have been committed to
 GIT.
+
+
+.. rubric:: Footnotes
+
+.. [#f1] This GitHub push will cause webhooks to run but it will
+         result in a no-op since this piece is already marked as
+         unpublished. There is really no way to know *a priori* what
+         is in a push so the resulting activity is carefully written
+         to recognize when an update is not needed.

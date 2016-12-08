@@ -35,3 +35,7 @@
 .. |sphinx| raw:: html
 
    <a href="http://sphinx-doc.org/">Sphinx</a>
+
+.. |JSON| raw:: html
+
+   <a href="https://en.wikipedia.org/wiki/JSON">JSON</a>
