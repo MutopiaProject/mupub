@@ -12,7 +12,8 @@ import re
 import requests
 import sqlite3
 from clint.textui import prompt, validators, colored, puts
-from mupub.config import CONFIG_DICT, CONFIG_DIR, DBPATH, save
+import mupub
+from mupub.config import CONFIG_DICT, CONFIG_DIR, DBPATH #, save
 from mupub.utils import ConfigDumpAction
 
 logger = logging.getLogger(__name__)
@@ -52,23 +53,6 @@ def _q_int(category, key, qstr):
         return None
 
 
-_REMOTE_DESCRIPTION="""
-For the purpose of header verification, portions of the database
-driving the web site are used to seed a small local database.
-"""
-
-def database_init():
-    """Initialize configuration in the database category.
-
-    """
-    print(_REMOTE_DESCRIPTION)
-    _q_int('default_db', 'port', 'Database port')
-    _q_str('default_db', 'name', 'Database name')
-    _q_str('default_db', 'user', 'Database user name')
-    _q_str('default_db', 'host', 'Database host')
-    _q_str('default_db', 'password', 'Database password')
-
-
 def _dbcopy(src_conn, dst_conn, select_q, insert_q):
     with src_conn.cursor() as cursor:
         cursor.execute(select_q)
@@ -81,7 +65,7 @@ def _db_sync(local_conn):
 
     # Use the site's db_hook to request a dump of the minimal values
     # we'll need to do simple verification.
-    site = CONFIG_DICT['site_url'].strip()
+    site = CONFIG_DICT['defaults']['site_url'].strip()
     if site[len(site)-1] != '/':
         site = site + '/'
     try:
@@ -92,13 +76,24 @@ def _db_sync(local_conn):
             for val in dbdata[tname]:
                 local_conn.execute(_INSERT.format(tname,cname), (val,))
     except requests.exceptions.ConnectionError as exc:
-        puts(colored.red('Failed to connect to %s' % CONFIG_DICT['site_url']))
+        puts(colored.red('Failed to connect to %s' % site))
         puts(colored.red('Fix the site_url config variable in %s' % CONFIG_DIR))
         logger.exception(exc)
         raise exc
 
 
-def sync_local_db():
+def init_config():
+    _q_str('defaults',
+           'site_url',
+           'Full MutopiaProject URL')
+    _q_str('defaults',
+           'local_db',
+           'Local (SQLite3) database path')
+    for k in CONFIG_DICT['lilypond'].keys():
+        _q_str('lilypond', k, 'Compiler for LilyPond '+k)
+
+
+def init_db():
     schema_initialized = os.path.exists(DBPATH)
     conn = sqlite3.connect(DBPATH)
     try:
@@ -115,7 +110,7 @@ def sync_local_db():
         logger.exception('In sync_local_db: %s', exc)
 
 
-def init(dump, sync_only):
+def init(dump):
     """The init entry point.
 
     Queries for the basic configuration needed to adequately run all
@@ -130,14 +125,9 @@ def init(dump, sync_only):
 
     """
     logger.debug('init command starting.')
-    if not sync_only:
-        try:
-            database_init()
-            save()
-        except KeyboardInterrupt:
-            puts(colored.red('\nConfiguration aborted, not saved.'))
-
-    sync_local_db()
+    init_config()
+    init_db()
+    mupub.config.save()
 
 
 def main(args):
@@ -147,11 +137,6 @@ def main(args):
 
     """
     parser = argparse.ArgumentParser(prog='mupub init')
-    parser.add_argument(
-        '--sync-only',
-        action='store_true',
-        help='Synchronize remote and local databases.'
-    )
     parser.add_argument(
         '--dump',
         action=ConfigDumpAction,

@@ -19,15 +19,9 @@ site_url: http://127.0.0.1:8000/
 """
 
 _CONFIG_DEFAULT = """
-site_url: http://musite-dev.us-west-2.elasticbeanstalk.com/
-default_db:
-  host: mu-devo.chgf8mujp4sf.us-west-2.rds.amazonaws.com
-  user: muuser
-  name: mudb
-  password: ChopinFTW
-  port: 5432
-
-local_db: mu-min-db.db
+defaults:
+  site_url: http://musite-dev.us-west-2.elasticbeanstalk.com/
+  local_db: mu-min-db.db
 
 lilypond:
   V2_8: 2.8.8-1
@@ -89,4 +83,4 @@ def save(config_file=_CONFIG_FNM):
 
 # load configuration when imported
 CONFIG_DICT = load()
-DBPATH = os.path.join(CONFIG_DIR, CONFIG_DICT['local_db'])
+DBPATH = os.path.join(CONFIG_DIR, CONFIG_DICT['defaults']['local_db'])
