@@ -136,7 +136,7 @@ def init(dump):
 def verify_init():
     try:
         mupub.test_config()
-        return
+        return True
     except mupub.BadConfiguration:
         # Handled expected exception
         puts(colored.red('Initialization required to continue'))

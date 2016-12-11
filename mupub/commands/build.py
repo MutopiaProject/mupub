@@ -131,6 +131,10 @@ def lily_build(database, infile, header):
 def build(database, infile, header_file, collect_only):
     logger.debug('build command starting')
     base, lyfile = mupub.utils.resolve_input()
+
+    if not mupub.commands.init.verify_init():
+        return
+
     if len(infile) < 1:
         infile.append(lyfile)
 
