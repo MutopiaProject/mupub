@@ -125,9 +125,38 @@ def init(dump):
 
     """
     logger.debug('init command starting.')
-    init_config()
-    init_db()
-    mupub.config.save()
+    try:
+        init_config()
+        init_db()
+        mupub.config.save()
+    except KeyboardInterrupt:
+        pass
+
+
+def verify_init():
+    try:
+        mupub.test_config()
+        return
+    except mupub.BadConfiguration:
+        # Handled expected exception
+        puts(colored.red('Initialization required to continue'))
+
+    try:
+        do_init = prompt.query('Initialize now?',
+                               default='no',
+                               validators=[mupub.utils.BooleanValidator()])
+    except KeyboardInterrupt:
+        puts(colored.yellow('\nFine, but you will need to initialize eventually.'))
+        return False
+
+    if do_init:
+        puts(colored.green('Starting initialization'))
+        init(False)
+        return True
+    else:
+        puts(colored.yellow('You will need to init to continue.'))
+
+    return False
 
 
 def main(args):

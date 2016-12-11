@@ -18,6 +18,9 @@ def check(infile, header_file):
     """Check sanity for a given input file.
     """
     logger.debug('check command starting')
+    if not mupub.commands.init.verify_init():
+        return
+
     base, infile = mupub.utils.resolve_input(infile)
     if not infile:
         logger.debug('File resolution failed')

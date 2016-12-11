@@ -6,7 +6,7 @@ import os
 import argparse
 import ruamel.yaml as yaml
 import mupub.config
-
+from clint.textui.validators import ValidationError
 
 def _find_files(folder, outlist):
     for entry in os.scandir(path=folder):
@@ -96,3 +96,27 @@ class EnvDefault(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values)
+
+
+_BOOLEANS = {'y': True,
+             'yes': True,
+             'true': True,
+             '1': True,
+             'n': False,
+             'no': False,
+             'false': False,
+             '0': False
+}
+
+class BooleanValidator(object):
+    message = 'Enter a valid boolean.'
+
+    def __init__(self, message=None):
+        if message is not None:
+            self.message = message
+
+    def __call__(self, value):
+        try:
+            return _BOOLEANS[value.strip().lower()]
+        except KeyError:
+            raise ValidationError(self.message)
