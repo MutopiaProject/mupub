@@ -13,7 +13,7 @@ import requests
 import sqlite3
 from clint.textui import prompt, validators, colored, puts
 import mupub
-from mupub.config import CONFIG_DICT, CONFIG_DIR, DBPATH #, save
+from mupub.config import CONFIG_DICT, CONFIG_DIR, getDBPath #, save
 from mupub.utils import ConfigDumpAction
 
 logger = logging.getLogger(__name__)
@@ -76,9 +76,8 @@ def _db_sync(local_conn):
             for val in dbdata[tname]:
                 local_conn.execute(_INSERT.format(tname,cname), (val,))
     except requests.exceptions.ConnectionError as exc:
-        puts(colored.red('Failed to connect to %s' % site))
-        puts(colored.red('Fix the site_url config variable in %s' % CONFIG_DIR))
-        logger.exception(exc)
+        logger.error('Failed to connect to %s' % site)
+        logger.warn('Fix the site_url config variable in %s' % CONFIG_DIR)
         raise exc
 
 
@@ -94,8 +93,9 @@ def init_config():
 
 
 def init_db():
-    schema_initialized = os.path.exists(DBPATH)
-    conn = sqlite3.connect(DBPATH)
+    db_path = getDBPath()
+    schema_initialized = os.path.exists(db_path)
+    conn = sqlite3.connect(db_path)
     try:
         with conn:
             if not schema_initialized:
@@ -105,8 +105,7 @@ def init_db():
                         ''.join(fields).strip()))
             _db_sync(conn)
     except Exception as exc:
-        puts(colored.yellow('Exception caught, rolling back changes.'))
-        puts(colored.yellow('Exception was %s' % exc))
+        logger.warning('Exception caught, rolling back changes.')
         logger.exception('In sync_local_db: %s', exc)
 
 
@@ -124,13 +123,15 @@ def init(dump):
                  argument is present but not used by this routine.
 
     """
-    logger.debug('init command starting.')
+    logger.info('init command starting.')
     try:
         init_config()
-        init_db()
         mupub.config.save()
+        init_db()
+        return True
     except KeyboardInterrupt:
         pass
+    return False
 
 
 def verify_init():
@@ -139,7 +140,7 @@ def verify_init():
         return True
     except mupub.BadConfiguration:
         # Handled expected exception
-        puts(colored.red('Initialization required to continue'))
+        logging.warn('You need to run the init command before continuing.')
 
     try:
         do_init = prompt.query('Initialize now?',
@@ -150,11 +151,7 @@ def verify_init():
         return False
 
     if do_init:
-        puts(colored.green('Starting initialization'))
-        init(False)
-        return True
-    else:
-        puts(colored.yellow('You will need to init to continue.'))
+        return init(False)
 
     return False
 

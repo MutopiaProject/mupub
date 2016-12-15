@@ -1,0 +1,7 @@
+-r requirements.txt
+
+# developer packages
+coverage==4.2
+pylint==1.6.4
+pretend==1.0.8
+#sphinx==1.4.6

@@ -108,17 +108,9 @@ def build_one(infile, lily_path, lpversion, do_preview):
         build_preview(base_params, lpversion, infile)
 
 
-def lily_build(database, infile, header):
-    # The database name should be a name in the configuration file.
-    # It would be difficult to make this a choice selection in the
-    # argument parser so just check early and exit if necessary.
-    if database not in CONFIG_DICT:
-        logger.debug('%s not in configuration.', database)
-        puts(colored.red('Invalid database name - ' + database))
-        return
-
+def lily_build(infile, header):
     lpversion = mupub.LyVersion(header.get_value('lilypondVersion'))
-    locator = mupub.LyLocator(str(lpversion))
+    locator = mupub.LyLocator(str(lpversion), progress_bar=True)
     lily_path = locator.working_path()
 
     # Build each score, doing a preview on the first one only.
@@ -128,15 +120,20 @@ def lily_build(database, infile, header):
         do_preview = False
 
 
-def build(database, infile, header_file, collect_only):
-    logger.debug('build command starting')
+def build(infile, header_file, collect_only):
+    logger.info('build command starting')
     base, lyfile = mupub.utils.resolve_input()
 
     if not mupub.commands.init.verify_init():
         return
 
     if len(infile) < 1:
-        infile.append(lyfile)
+        if lyfile:
+            infile.append(lyfile)
+        else:
+            logger.error('Failed to resolve any input files.')
+            logger.info('Make sure your working directory is correct.')
+            return
 
     # if a header file was given, use that for reading the header,
     # else infile.
@@ -154,7 +151,7 @@ def build(database, infile, header_file, collect_only):
         return
 
     if not collect_only:
-        lily_build(database, infile, header)
+        lily_build(infile, header)
 
     # rename all .midi files to .mid
     for mid in glob.glob('*.midi'):
@@ -179,11 +176,6 @@ def main(args):
 
     """
     parser = argparse.ArgumentParser(prog='mupub build')
-    parser.add_argument(
-        '--database',
-        default='default_db',
-        help='Database to use (defined in config)'
-    )
     parser.add_argument(
         'infile',
         nargs='*',

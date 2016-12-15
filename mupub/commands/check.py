@@ -8,23 +8,22 @@ import logging
 import os
 import sys
 import sqlite3
-from clint.textui import colored, puts
+from clint.textui import colored, puts, indent
 import mupub
-from mupub.config import CONFIG_DICT, DBPATH
+from mupub.config import CONFIG_DICT, getDBPath
 
 logger = logging.getLogger(__name__)
 
 def check(infile, header_file):
     """Check sanity for a given input file.
     """
-    logger.debug('check command starting')
+    base, infile = mupub.utils.resolve_input(infile)
+    logger.info('check command starting for %s.' % infile)
     if not mupub.commands.init.verify_init():
         return
 
-    base, infile = mupub.utils.resolve_input(infile)
     if not infile:
-        logger.debug('File resolution failed')
-        puts(colored.red('Failed to resolve input file'))
+        logger.warning('File resolution failed')
         return
 
     if header_file:
@@ -35,24 +34,33 @@ def check(infile, header_file):
         header = mupub.find_header(infile)
 
     if not header:
-        logger.debug('No header found?')
-        puts(colored.red('failed to find header'))
+        logger.warning('No header found?')
         return
 
-    with sqlite3.connect(DBPATH) as conn:
+    with sqlite3.connect(getDBPath()) as conn:
         validator = mupub.DBValidator(conn)
-        if not validator.validate_header(header, True):
-            puts(colored.red('{} failed validation'.format(infile)))
+        v_failures = validator.validate_header(header)
+        if len(v_failures) > 0:
+            puts(colored.red('{} failed validation on:'.format(infile)))
+            with indent(4):
+                for fail in v_failures:
+                    puts(colored.red(fail))
             return
 
         lp_version = header.get_value('lilypondVersion')
-        puts(colored.green('{} is valid'.format(infile)))
-        puts(colored.green('This file uses LilyPond version '
-                               + lp_version))
-        locator = mupub.LyLocator(lp_version)
-        path = locator.working_path()
+        if not lp_version:
+            logger.warning('No LilyPond version found in input file.')
+            return
 
-        puts(colored.green('LilyPond compiler will be ' + path))
+        try:
+            locator = mupub.LyLocator(lp_version, progress_bar=True)
+            path = locator.working_path()
+            puts(colored.green('LilyPond compiler will be ' + path))
+        except mupub.BadConfiguration as bc:
+            logger.warning(bc)
+            return
+
+    logger.info('%s is valid' % infile)
 
 
 def main(args):
@@ -69,6 +77,7 @@ def main(args):
         help='lilypond file that contains the header'
     )
 
+    mupub.config.test_config()
     args = parser.parse_args(args)
 
     check(**vars(args))

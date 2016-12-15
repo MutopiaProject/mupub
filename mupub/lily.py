@@ -9,7 +9,7 @@ import os
 import subprocess
 import tarfile
 import requests
-from clint.textui import progress, colored, puts
+from clint.textui import progress
 import mupub
 
 # The location of LilyPond categorized binaries
@@ -69,6 +69,8 @@ class LyVersion():
 class LyInstaller(metaclass=abc.ABCMeta):
     """Abstract class, defines protocol for installers.
     """
+    def __init__(self, progress_bar=False):
+        self.progress_bar = progress_bar
 
     @abc.abstractmethod
     def do_install(self, target, bintop):
@@ -130,12 +132,19 @@ class LyInstaller(metaclass=abc.ABCMeta):
         """
         request = requests.get(script_url, stream=True)
         with open(output_path, 'wb') as out_script:
-            total_len = int(request.headers.get('content-length'))
-            for chunk in progress.bar(request.iter_content(chunk_size=1024),
-                                      expected_size=(total_len/1024) + 1):
-                if chunk:
-                    out_script.write(chunk)
-                    out_script.flush()
+            if self.progress_bar:
+                total_len = int(request.headers.get('content-length'))
+                for chunk in progress.bar(request.iter_content(chunk_size=1024),
+                                          expected_size=(total_len/1024) + 1):
+                    if chunk:
+                        out_script.write(chunk)
+                        out_script.flush()
+            else:
+                for chunk in request.iter_content(chunk_size=1024):
+                    if chunk:
+                        out_script.write(chunk)
+                        out_script.flush()
+                        
 
 
     # cpu_type needs to be one of,
@@ -159,6 +168,9 @@ class LyInstaller(metaclass=abc.ABCMeta):
 
 class LinuxInstaller(LyInstaller):
 
+    def __init__(self, progress_bar):
+        super().__init__(progress_bar)
+
     def do_install(self, target, bintop):
         """Concrete method of abstract parent.
 
@@ -170,16 +182,15 @@ class LinuxInstaller(LyInstaller):
         """
         binscript = 'lilypond-{0}.{1}.sh'.format(target, bintop)
         local_script = os.path.join(LYCACHE, binscript)
-        puts(colored.yellow('downloading build script'))
+        logger.info('Downloading build script')
         self.download('/'.join([BINURL, bintop, binscript,]),
                       local_script)
         # execute script after downloading
         prefix = '--prefix=' + os.path.join(LYCACHE, target)
         command = ['/bin/sh', local_script, '--batch', prefix]
-        puts(colored.yellow('installing ...'))
+        logger.info('Installing with %s' % prefix)
         subprocess.run(command, shell=False)
-        puts(colored.yellow('Done. First run will initialize font tables.'))
-        logger.debug('(Linux) Installed %s', binscript)
+        logger.info('(Linux) Installed %s', binscript)
 
 
 class MacInstaller(LyInstaller):
@@ -208,19 +219,19 @@ class LyLocator():
 
     Requesting the working path may attempt a LilyPond installation.
     """
-    def __init__(self, lp_version):
+    def __init__(self, lp_version, progress_bar=False):
         self.version = LyVersion(lp_version)
         sys_info = os.uname()
         sysname = sys_info.sysname.lower()
         if sysname in ['linux', 'freebsd']:
             self.app_path = ['bin', 'lilypond',]
-            self.installer = LinuxInstaller()
+            self.installer = LinuxInstaller(progress_bar)
         elif sysname == 'darwin':
             self.app_path = ['LilyPond.app',
                              'Contents',
                              'Resources',
                              'bin',]
-            self.installer = MacInstaller()
+            self.installer = MacInstaller(progress_bar)
         else:
             raise mupub.BadConfiguration(sysname + ' is not supported')
 
@@ -233,7 +244,6 @@ class LyLocator():
         :rtype: str
 
         """
-
         for folder in os.listdir(LYCACHE):
             if os.path.isdir(os.path.join(LYCACHE, folder)):
                 candidate = LyVersion(folder)

@@ -4,9 +4,3 @@ requests==2.11.1
 clint==0.5.1
 pypng==0.0.18
 ruamel.yaml==0.12.18
-
-# developer packages
-coverage==4.2
-pylint==1.6.4
-pretend==1.0.8
-#sphinx==1.4.6

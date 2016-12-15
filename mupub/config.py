@@ -84,13 +84,14 @@ def save(config_file=_CONFIG_FNM):
 
 # load configuration when imported
 CONFIG_DICT = load()
-DBPATH = os.path.join(CONFIG_DIR, CONFIG_DICT['defaults']['local_db'])
 
+def getDBPath():
+    return os.path.join(CONFIG_DIR, CONFIG_DICT['defaults']['local_db'])
 
 def test_config():
     if not os.path.exists(CONFIG_DIR):
         raise mupub.BadConfiguration('Configuration folder not found.')
     if not os.path.exists(_CONFIG_FNM):
         raise mupub.BadConfiguration('Configuration file not found.')
-    if not os.path.exists(DBPATH):
+    if not os.path.exists(getDBPath()):
         raise mupub.BadConfiguration('Local database not found.')

@@ -11,7 +11,7 @@ def tag(header_file, id):
         _,header_file = mupub.utils.resolve_input()
         logger.info('tag target is %s.' % header_file)
 
-    logger.debug('tag command starting with %s' % header_file)
+    logger.info('tag command starting with %s' % header_file)
     mupub.tag_file(header_file, id)
 
 

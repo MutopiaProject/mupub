@@ -20,5 +20,5 @@ class CheckTest(TestCase):
     def test_validate(self):
         """Can validate files"""
         header = mupub.find_header('SorF/O5/sor-op5-5', PREFIX)
-        failed_count = mupub.Validator.basic_checks(header)
-        self.assertEqual(failed_count, 0)
+        fails = mupub.Validator.basic_checks(header)
+        self.assertEqual(len(fails), 0)

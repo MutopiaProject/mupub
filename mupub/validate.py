@@ -3,7 +3,9 @@
 
 import abc
 from mupub.header import REQUIRED_FIELDS
-from clint.textui import colored, puts
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Validator(metaclass=abc.ABCMeta):
     """Abstract class that defines header validation protocols.
@@ -25,7 +27,7 @@ class Validator(metaclass=abc.ABCMeta):
         return False
 
     @classmethod
-    def basic_checks(cls, header, verbose=False):
+    def basic_checks(cls, header):
         """Perform basic checks on a header.
 
         Simple check to make sure that required fields are present.
@@ -35,32 +37,26 @@ class Validator(metaclass=abc.ABCMeta):
         :rtype: int
 
         """
-
+        failures = []
         failed_count = 0
         for required_field in REQUIRED_FIELDS:
             item = header.get_field(required_field)
             if not item:
-                if verbose:
-                    message = 'missing header keyword: {}'
-                    puts(colored.red(message.format(required_field)))
-                failed_count += 1
+                failures.append(required_field)
 
         # license check is done separately to accomodate for copyright
         # synonym.
         if header.get_field('copyright'):
-            if verbose:
-                puts(colored.yellow(('copyright will be updated to license')))
+            logger.debug('Setting copyright field to license')
             header.set_field('license', header.get_field('copyright'))
         else:
             if not header.get_field('license'):
-                if verbose:
-                    puts(colored.red('no license or copyright found'))
-                failed_count += 1
+                failures.append('license')
 
-        return failed_count
+        return failures
 
 
-    def validate_header(self, header, verbose=False):
+    def validate_header(self, header):
         """Validate a header.
 
         If basic checks are good, several fields are checked against
@@ -73,26 +69,17 @@ class Validator(metaclass=abc.ABCMeta):
 
         """
 
-        failures = self.basic_checks(header, verbose)
-        if failures > 0:
-            # No use bothering with further tests.
-            return False
+        failures = self.basic_checks(header)
         if not self.validate_composer(header.get_field('composer')):
-            if verbose:
-                puts(colored.red('Invalid composer field: ' 
-                                 + header.get_field('composer')))
-            return False
+            failures.append('composer')
+
         if not self.validate_style(header.get_field('style')):
-            if verbose:
-                puts(colored.red('Invalid style field: '
-                                 + header.get_field('style')))
-            return False
+            failures.append('style')
+
         if not self.validate_license(header.get_field('license')):
-            if verbose:
-                puts(colored.red('Invalid license field: '
-                                 + header.get_field('license')))
-            return False
-        return True
+            failures.append('license')
+
+        return failures
 
 
 class DBValidator(Validator):
