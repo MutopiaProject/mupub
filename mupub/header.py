@@ -11,7 +11,7 @@ import os
 import os.path
 import logging
 from abc import ABCMeta, abstractmethod
-from rdflib import Namespace, URIRef, Graph, Literal
+import mupub.rdfu
 
 _HEADER_PAT = re.compile(r'\\header', flags=re.UNICODE)
 _HTAG_PAT = re.compile(r'\s*(\w+)\s*=\s*\"(.*)\"', flags=re.UNICODE)
@@ -327,43 +327,16 @@ class Header(object):
         return True
 
 
-    def make_rdf_graph(self, assets):
-        """Create an RDF Graph from header and additional build assets.
-
-        :param assets: A dictionary containing name:value pairs
-                       describing assets for publication.
-        :returns: A graph instance
-        :rtype: rdflib.Graph
-
-        """
-
-        mp = Namespace("http://www.mutopiaproject.org/piece-data/0.1/")
-        graph = Graph()
-        piece = URIRef('.')
-        graph.bind('mp', mp)
-        for field in ADDITIONAL_FIELDS:
-            obj = self.get_field(field)
-            if obj is None:
-                obj = ''
-            graph.add((piece, mp[field], Literal(obj)))
-
-        # Add special tags
-        graph.add((piece, mp['for'], Literal(self.get_field('instrument'))))
-        graph.add((piece, mp['id'], Literal(self.get_value('footer'))))
-        cc_name = self.get_field('license')
-        if not cc_name:
-            cc_name = self.get_field('copyright')
-            if not cc_name:
-                cc_name = self.get_field('licence')
-        graph.add((piece, mp['licence'], Literal(cc_name)))
-
-        for key in assets.keys():
-            graph.add((piece, mp[key], Literal(assets[key])))
-
-        return graph
+    def resolve_license(self):
+        for synonym in ['license', 'licence', 'copyright']:
+            lic = self.get_field(synonym)
+            if lic:
+                return lic
+        # Give up.
+        return None
 
 
-    def write_rdf(self, path, assets):
+    def write_rdf(self, path, assets=None):
         """Write the RDF to an XML file.
 
         :param str path: File path to write.
@@ -371,8 +344,20 @@ class Header(object):
                        asset names.
 
         """
-        graph = self.make_rdf_graph(assets)
-        graph.serialize(destination=path, format='xml')
+        rdf = mupub.MuRDF()
+        for rfield in REQUIRED_FIELDS:
+            rdf.update_description(rfield, self.get_field(rfield))
+        for afield in ADDITIONAL_FIELDS:
+            rdf.update_description(afield, self.get_field(afield))
+
+        # special cases
+        rdf.update_description('license', self.resolve_license())
+        rdf.update_description('for', self.get_field('instrument'))
+
+        if assets:
+            for name,value in assets.items():
+                rdf.update_description(name, value)
+        rdf.write_xml(path)
 
 
 _LILYENDS = ('.ly', '.ily', '.lyi',)

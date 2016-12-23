@@ -1,5 +1,4 @@
 # application packages
-rdflib==4.2.1
 requests==2.11.1
 clint==0.5.1
 pypng==0.0.18

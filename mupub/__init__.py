@@ -42,3 +42,4 @@ from .header import find_header
 from .lily import LyLocator, LyVersion
 from .validate import Validator, DBValidator
 from .tagedit import tag_header, tag_file
+from .rdfu import NS, MuRDF

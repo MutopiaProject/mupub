@@ -79,14 +79,6 @@ def build_preview(base_params, lpversion, infile):
     subprocess.run(command, stdout=subprocess.PIPE)
 
 
-def build_rdf(header, base, assets):
-    if os.path.exists(base+'-lys'):
-        rdf_path = rdf_path[:rdf_path.rfind('.')] + '-lys.rdf'
-    else:
-        rdf_path = base + '.rdf'
-    header.write_rdf(rdf_path, assets)
-
-
 def build_one(infile, lily_path, lpversion, do_preview):
     """Build a single lilypond file.
 
