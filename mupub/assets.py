@@ -77,20 +77,28 @@ def collect_assets(basefnm):
     assets['pdfFileLet'] = _zip_maybe(basefnm, '-let.pdf', '-let-pdfs.zip')
 
     # process the preview image
-    preview_name = basefnm + '-preview.png'
-    if not os.path.exists(preview_name):
+    preview_name = ''
+    svgfiles = glob.glob('*.preview.svg')
+    if len(svgfiles) > 0:
+        preview_name = basefnm+'-preview.svg'
+        os.rename(svgfiles[0], preview_name)
+        assets['pngWidth'] = '0'
+        assets['pngHeight'] = '0'
+
+    if preview_name == '':
         pngfiles = glob.glob('*.preview.png')
         if len(pngfiles) > 0:
-            # On multiple PNG files, use the first one
+            preview_name = basefnm+'-preview.png'
             os.rename(pngfiles[0], preview_name)
-        else:
-            raise mupub.IncompleteBuild('No preview image found.')
+            with open(preview_name, 'rb') as png_file:
+                png_reader = png.Reader(file=png_file)
+                width, height, _, _ = png_reader.read()
+                assets['pngWidth'] = str(width)
+                assets['pngHeight'] = str(height)
+
+    if preview_name == '':
+        raise mupub.IncompleteBuild('No preview image found.')
 
     assets['pngFile'] = preview_name
-    with open(preview_name, 'rb') as png_file:
-        png_reader = png.Reader(file=png_file)
-        width, height, _, _ = png_reader.read()
-        assets['pngWidth'] = str(width)
-        assets['pngHeight'] = str(height)
 
     return assets

@@ -304,6 +304,14 @@ class Header(object):
         return None
 
 
+    def resolve_license(self):
+        for synonym in ['license', 'licence', 'copyright']:
+            lic = self.get_field(synonym)
+            if lic:
+                return lic
+        return None
+
+
     def is_valid(self):
         """A check for a header validity.
 
@@ -314,26 +322,15 @@ class Header(object):
         :return: True if the all required fields are present.
 
         """
-
+        # Return false if any required fields are missing.
         for field in REQUIRED_FIELDS:
             if self.get_field(field) is None:
                 return False
 
-        # License or copyright (legacy) should be there.
-        # If copyright, we have to fix that up later.
-        if self.get_field('license') == '' or self.get_field('copyright') == '':
+        if self.resolve_license() is None:
             return False
 
         return True
-
-
-    def resolve_license(self):
-        for synonym in ['license', 'licence', 'copyright']:
-            lic = self.get_field(synonym)
-            if lic:
-                return lic
-        # Give up.
-        return None
 
 
     def write_rdf(self, path, assets=None):
@@ -351,8 +348,9 @@ class Header(object):
             rdf.update_description(afield, self.get_field(afield))
 
         # special cases
-        rdf.update_description('license', self.resolve_license())
+        rdf.update_description('licence', self.resolve_license())
         rdf.update_description('for', self.get_field('instrument'))
+        rdf.update_description('id', self.get_field('footer'))
 
         if assets:
             for name,value in assets.items():

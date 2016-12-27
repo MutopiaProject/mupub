@@ -62,16 +62,19 @@ def build_preview(base_params, lpversion, infile):
 
     """
 
-    preview_params = ['-dno-include-book-title-preview',
-                      '-dresolution=101',
-                      '--format=png',]
+    preview_params = ['-dno-include-book-title-preview',]
 
+    supports_svg = True
     if lpversion < mupub.LyVersion('2.14'):
+        base_params.append('-dresolution=101'),
         base_params.append('--preview')
         base_params.append('--no-print')
+        base_params.append('--format=png')
+        supports_svg = False
     else:
         base_params.append('-dno-print-pages'),
         base_params.append('-dpreview')
+        base_params.append('-dbackend=svg')
 
     command = base_params + preview_params
     command.append(infile)
@@ -157,6 +160,7 @@ def build(infile, header_file, collect_only):
     _remove_if_exists(base+'.ps')
     _remove_if_exists(base+'.png')
     _remove_if_exists(base+'.preview.png')
+    _remove_if_exists(base+'.preview.svg')
     _remove_if_exists(base+'.preview.eps')
     logger.debug('Publishing build complete.')
 

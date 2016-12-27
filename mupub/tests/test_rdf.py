@@ -4,7 +4,6 @@
 import os.path
 from unittest import TestCase
 import mupub
-from rdflib import Namespace, URIRef, ConjunctiveGraph, Literal
 
 
 TEST_DATA = 'data'

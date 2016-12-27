@@ -7,7 +7,8 @@ import os
 from clint.textui import colored, puts
 
 _DEATHROW = [
-    '*.png',
+    '*.preview.*',
+    '*-preview.*',
     '*.mid',
     '*.midi',
     '*-mids.zip',

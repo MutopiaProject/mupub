@@ -33,10 +33,10 @@ _RDF = NS(RDF_NS)
 _MU_KEYS = ['title', 'composer', 'opus',
             'lyricist', 'for', 'date', 'style',
             'metre', 'arranger', 'source',
-            'license',
+            'licence',
             'lyFile', 'midFile',
-            'psFileA4', 'pdfFileA4'
-            'psFileLet', 'pdfFileLet'
+            'psFileA4', 'pdfFileA4',
+            'psFileLet', 'pdfFileLet',
             'pngFile', 'pngHeight', 'pngWidth',
             'id',
             'maintainer', 'maintainerEmail', 'maintainerWeb',
