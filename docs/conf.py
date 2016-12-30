@@ -3,10 +3,14 @@ import sys
 from datetime import datetime
 
 sys.path.insert(0, os.path.abspath('..'))
-extensions = []
-extensions.append('sphinx.ext.autodoc')
-extensions.append('sphinx.ext.viewcode')
-extensions.append('sphinx.ext.intersphinx')
+
+import mupub
+
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
+]
 
 templates_path = ['_templates']
 source_suffix = '.rst'
@@ -19,8 +23,10 @@ year = datetime.now().year
 copyright = u'%d, The Mutopia Project' % year
 author = 'Glen Larsen'
 
-version = '1'
-release = '1.1'
+# The short X.Y version.
+version = '.'.join(mupub.__version__.split('.')[:2])
+# The full version, including alpha/beta/rc tags.
+release = mupub.__version__
 
 language = None
 
