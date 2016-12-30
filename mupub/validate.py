@@ -1,6 +1,8 @@
 """Various mechanisms for validating a header.
 """
 
+__docformat__ = 'reStructuredText'
+
 import abc
 from mupub.header import REQUIRED_FIELDS
 import logging
@@ -13,17 +15,18 @@ class Validator(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def validate_composer(self, composer):
-        """Validate a composer"""
+        """Validate a composer."""
         return False
 
     @abc.abstractmethod
     def validate_style(self, style):
-        """Validate a style"""
+        """Validate a style."""
         return False
 
+    # 'license' is a python builtin
     @abc.abstractmethod
-    def validate_license(self, license_name): # 'license' is a python builtin
-        """Validate a license"""
+    def validate_license(self, license_name):
+        """Validate a license."""
         return False
 
     @classmethod
@@ -64,7 +67,8 @@ class Validator(metaclass=abc.ABCMeta):
         between tables will work correctly.
 
         :param header: dict of header fields
-        :returns: True if required fields are present and have valid content.
+        :returns: True if required fields are present and have valid
+                  content.
         :rtype: bool
 
         """

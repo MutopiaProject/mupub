@@ -197,7 +197,8 @@ class SchemeLoader(Loader):
 class RawLoader(Loader):
     """
     A RawLoader is used to import a file that isn't wrapped
-    with a \\header tag and its braces; just a raw set of key:value pairs.
+    with a \\header tag and its braces; just a raw set of key:value
+    pairs.
 
     """
     def load(self, infile):
@@ -215,7 +216,7 @@ class RawLoader(Loader):
 class Header(object):
     """
     A Header contains a table that can be loaded with any type of
-    Loader. Once instantiated, multiple calls to loadTable will call
+    Loader. Once instantiated, multiple calls to load_table will call
     the loader's ``load()`` method and update the table.
 
     """

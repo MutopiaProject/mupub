@@ -8,7 +8,8 @@ import re
 import datetime
 from stat import S_ISDIR
 
-# mutopia base variable is set to "$HOME/Mutopia" if MUTOPIA_BASE not set
+# mutopia base variable is set to "$HOME/Mutopia" if MUTOPIA_BASE not
+# set.
 MUTOPIA_BASE = os.getenv('MUTOPIA_BASE',
                          os.path.join(os.getenv('HOME'), 'Mutopia'))
 FTP_BASE = os.path.join(MUTOPIA_BASE, 'ftp')

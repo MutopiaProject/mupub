@@ -1,4 +1,4 @@
-""" Interactions with LilyPond
+""" Interactions with LilyPond.
 """
 
 __docformat__ = 'reStructuredText'

@@ -4,6 +4,7 @@ This is tailored for the MutopiaProject but has a few generic
 mechanisms that can be applied to other projects using RDF.
 
 """
+
 __docformat__ = 'reStructuredText'
 
 import xml.etree.ElementTree as ET

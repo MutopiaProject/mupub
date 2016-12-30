@@ -40,7 +40,8 @@ def resolve_input(infile=None):
     working directory.
 
     :param str infile:
-    :returns: base (usually containing folder name) and infile, as strings.
+    :returns: base (usually containing folder name) and infile, as
+              strings.
     :rtype: Tuple
 
     """

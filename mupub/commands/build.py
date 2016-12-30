@@ -1,4 +1,10 @@
 """Publishing module, implementing the build entry point.
+
+This command is entered using the mupub command and may be as simple as, ::
+
+  $ mupub build
+
+
 """
 
 import argparse
@@ -23,7 +29,7 @@ def _stripped_base(infile):
     return basefnm[:basefnm.rfind('.')]
 
 
-def build_scores(base_params, infile):
+def _build_scores(base_params, infile):
     """Build scores in the required page sizes.
 
     :param base_params: List of LilyPond command and params.
@@ -54,7 +60,7 @@ def build_scores(base_params, infile):
             os.rename(ps_fnm, sized_ps)
 
 
-def build_preview(base_params, lpversion, infile):
+def _build_preview(base_params, lpversion, infile):
     """Build a preview file
 
     :param base_params: Starting list of LilyPond command and parameters.
@@ -82,7 +88,7 @@ def build_preview(base_params, lpversion, infile):
     subprocess.run(command, stdout=subprocess.PIPE)
 
 
-def build_one(infile, lily_path, lpversion, do_preview):
+def _build_one(infile, lily_path, lpversion, do_preview):
     """Build a single lilypond file.
 
     :param infile: LilyPond file to build, might be None
@@ -98,12 +104,12 @@ def build_one(infile, lily_path, lpversion, do_preview):
 
     base_params = [lily_path, '-dno-point-and-click',]
 
-    build_scores(base_params, infile)
+    _build_scores(base_params, infile)
     if do_preview:
-        build_preview(base_params, lpversion, infile)
+        _build_preview(base_params, lpversion, infile)
 
 
-def lily_build(infile, header):
+def _lily_build(infile, header):
     lpversion = mupub.LyVersion(header.get_value('lilypondVersion'))
     locator = mupub.LyLocator(str(lpversion), progress_bar=True)
     lily_path = locator.working_path()
@@ -111,11 +117,23 @@ def lily_build(infile, header):
     # Build each score, doing a preview on the first one only.
     do_preview = True
     for ly_file in infile:
-        build_one(ly_file, lily_path, lpversion, do_preview)
+        _build_one(ly_file, lily_path, lpversion, do_preview)
         do_preview = False
 
 
 def build(infile, header_file, collect_only):
+    """Build one or more |LilyPond| files, generate publication assets.
+
+    :param infile: The |LilyPond| file(s) to build.
+    :param header_file: The file containing the header information.
+    :param collect_only: Skip building, just collect assets and build RDF.
+
+    This command presumes your current working directory is the
+    location where the contributed source files live in the
+    MutopiaProject hierarchy. A successful build will create all
+    necessary assets for publication.
+
+    """
     logger.info('build command starting')
     base, lyfile = mupub.utils.resolve_input()
 
@@ -146,7 +164,7 @@ def build(infile, header_file, collect_only):
         return
 
     if not collect_only:
-        lily_build(infile, header)
+        _lily_build(infile, header)
 
     # rename all .midi files to .mid
     for mid in glob.glob('*.midi'):

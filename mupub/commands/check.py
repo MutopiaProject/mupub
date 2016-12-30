@@ -1,4 +1,4 @@
-"""Implementation of check entry point for mupub
+"""The check entry point for mupub
 """
 
 __docformat__ = 'reStructuredText'
@@ -14,10 +14,21 @@ from mupub.config import CONFIG_DICT, getDBPath
 
 logger = logging.getLogger(__name__)
 
+
 def check(infile, header_file):
-    """Check sanity for a given input file.
+    """Check sanity for a given contributed file.
+
+    :param [str] infile: Input file list.
+    :param str header_file: The file containing the header.
+
+    The routine does not return True or False, but simply reports
+    information on various checks made to the input files. This should
+    be run prior to any build.
+
     """
+
     base, infile = mupub.utils.resolve_input(infile)
+
     logger.info('check command starting for %s.' % infile)
     if not mupub.commands.init.verify_init():
         return
@@ -55,7 +66,7 @@ def check(infile, header_file):
         try:
             locator = mupub.LyLocator(lp_version, progress_bar=True)
             path = locator.working_path()
-            puts(colored.green('LilyPond compiler will be ' + path))
+            puts(colored.green('LilyPond compiler will be '+path))
         except mupub.BadConfiguration as bc:
             logger.warning(bc)
             return

@@ -1,4 +1,8 @@
-""" mupub configuration module
+"""A module to localize configuration elements.
+
+A default logging configuration is defined here so that a reasonable
+run can be accomplished.
+
 """
 
 __docformat__ = 'reStructuredText'
@@ -13,6 +17,8 @@ CONFIG_DIR = os.path.join(os.environ.get('HOME'), '.mupub')
 _CONFIG_FNM = os.path.join(CONFIG_DIR, 'config.yml')
 
 class UTCFormatter(logging.Formatter):
+    """Set the logging time formatter for UTC.
+    """
     converter = time.gmtime
 
 """
@@ -86,9 +92,17 @@ def save(config_file=_CONFIG_FNM):
 CONFIG_DICT = load()
 
 def getDBPath():
+    """Return database path from configuration.
+    """
     return os.path.join(CONFIG_DIR, CONFIG_DICT['defaults']['local_db'])
 
+
 def test_config():
+    """Test that a minimally valid configuration exists.
+
+    :return: True on good configuration, False otherwise.
+
+    """
     if not os.path.exists(CONFIG_DIR):
         raise mupub.BadConfiguration('Configuration folder not found.')
     if not os.path.exists(_CONFIG_FNM):

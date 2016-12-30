@@ -1,9 +1,9 @@
-"""mupub module
+"""mupub module. This is only a test...
 """
 
 __all__ = (
     '__title__', '__summary__', '__version__',
-    '__author__', '__license__', '__copyright__'
+    '__author__', '__license__', '__copyright__',
 )
 
 
@@ -31,6 +31,7 @@ from .commands.build import build
 from .commands.check import check
 from .commands.init import init
 from .commands.tag import tag
+from .commands.clean import clean
 from .config import CONFIG_DICT, CONFIG_DIR, getDBPath
 from .config import UTCFormatter, test_config
 from .core import MUTOPIA_BASE, FTP_BASE, URL_BASE

@@ -46,3 +46,5 @@ Contents
    design
    developer
    archive-naming
+
+   api/modules.rst

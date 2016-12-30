@@ -1,7 +1,20 @@
-"""Module for various asset-related functions.
+"""Module for managing assets in a build.
+
+Assets are products of publication. For the MutopiaProject, these are
+sheet music, midi, and |LilyPond| source files. Many of the publications
+are relatively simple and are accomplished with a single source file
+yielding a set of PDF and MIDI files. Many works are submitted as a
+set of |LilyPond| files. Symphonies with many instruments, sonnets
+with several parts, and duets, are examples of this. Contributors may
+choose to simplify their work by submitting the work in several files.
+
+This module implements the important function of compressing (if
+necessary) large multi-file compositions.
+
 """
 
 __docformat__ = 'reStructuredText'
+
 
 import glob
 import gzip
@@ -53,15 +66,17 @@ def _zip_maybe(basefnm, tail, ziptail):
 
 
 def collect_assets(basefnm):
-    """After a build, collect all assets into their publishable components.
+    """After a build, collect all assets into their publishable
+    components.
 
     Once the piece has been built by LilyPond, the assets are
     collected into other possible forms.
 
-     - multiple LilyPond files are zipped together
-     - multiple midi files are zipped
-     - all PostScript files are zipped
-     - multiple PDF files are zipped
+     - multiple LilyPond files are zipped together.
+     - multiple midi files are zipped.
+     - all PostScript files are zipped.
+     - multiple PDF files are zipped.
+     - preview image details are determined.
 
     :param str basefnm: base filename used for asset naming.
     :returns: asset dictionary, useful for RDF creation.

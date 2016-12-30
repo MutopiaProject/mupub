@@ -1,8 +1,4 @@
-"""mupub initialization and configuration module
-
-Query for configuration parameters, saving them in the config file
-when done.
-
+"""Initialization and configuration module.
 """
 
 import argparse
@@ -81,7 +77,7 @@ def _db_sync(local_conn):
         raise exc
 
 
-def init_config():
+def _init_config():
     _q_str('defaults',
            'site_url',
            'Full MutopiaProject URL')
@@ -92,7 +88,7 @@ def init_config():
         _q_str('lilypond', k, 'Compiler for LilyPond '+k)
 
 
-def init_db():
+def _init_db():
     db_path = getDBPath()
     schema_initialized = os.path.exists(db_path)
     conn = sqlite3.connect(db_path)
@@ -112,22 +108,36 @@ def init_db():
 def init(dump):
     """The init entry point.
 
-    Queries for the basic configuration needed to adequately run all
-    publishing functions of this application.
-
-    As this is an entry point with its own arguments, all arguments
-    are passed into the routine --- as arguments are added, they must
-    also be added here.
-
     :param dump: dump argument was specified and handled by now, the
                  argument is present but not used by this routine.
 
+    This command should be executed before any builds or checks.
+
+    Init queries for the basic configuration needed to adequately run
+    all publishing functions of this application. The default path for
+    the configuration parameter file is ``$HOME/.mupub/config.yml``.
+    If that folder doesn't exist, it is created.
+
+    The configuration folder will be used to store the cache of
+    |LilyPond| compilers as well as a small database used for
+    verification. This database is updated by requesting information
+    from the URL from the site specified in the configuration.
+
+    Init can be run at any time. If a database is already present it
+    is updated with current data (composers, instruments, etc.) from
+    the website.
+
     """
+
+    # As this is an entry point with its own arguments, all arguments
+    # are passed into the routine --- as arguments are added, they must
+    # also be added here.
+
     logger.info('init command starting.')
     try:
-        init_config()
+        _init_config()
         mupub.config.save()
-        init_db()
+        _init_db()
         return True
     except KeyboardInterrupt:
         pass
@@ -135,6 +145,17 @@ def init(dump):
 
 
 def verify_init():
+    """Verify configuration.
+
+    :returns: True if a valid configuration exists, False otherwise.
+    :rtype: boolean
+
+    Tests the configuration and prompts you to run an :py:func:`init`
+    command. This is a public routine that may be called from other
+    commands to check the validity of installation.
+
+    """
+
     try:
         mupub.test_config()
         return True

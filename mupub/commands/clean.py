@@ -22,10 +22,10 @@ _DEATHROW = [
 ]
 
 def clean(verbose, dry_run):
-    """Clean all manifest files.
+    """Clean all built assets.
 
     :param verbose: Display additional information about deletions.
-    :param dry_run: Don't actuall delete.
+    :param dry_run: List delete candidates but don't delete.
 
     """
     for deadset in _DEATHROW:
