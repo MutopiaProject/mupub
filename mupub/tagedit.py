@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""tagedit module, routines for editing tags in a LilyPond header
+"""Routines for editing tags in a LilyPond header
 """
 
 from datetime import date
@@ -38,8 +38,8 @@ class LilyURL():
     def get_url(self):
         """Retrieve the copyright as LilyPond markup.
 
-        :returns: An string appropriate for the copyright tag.
-        :rtype: str
+        :returns: A string appropriate for the copyright tag.
+        :rtype: string
 
         """
         if self.is_pd:
@@ -138,11 +138,11 @@ def get_copyright(cc_name, date):
 
     :param str cc_name: The name of the copyright. It must match a
                  dictionary key in _LICENSES.
-    :param date: The date for the copyright, typically from the
+    :param datetime.date: The date for the copyright, typically from the
                  mutopia identifier (footer) string
     :returns: A complete copyright for insertion into a LilyPond header.
     :rtype: string
-
+    
     """
     if cc_name not in _LICENSES:
         # ... probably need to raise an exception here ...
@@ -166,7 +166,7 @@ def _net_braces(line):
 def _augmented_table(table, muid):
     """Return a table of mutopia-specific elements from the header.
 
-    :param table: The header key:value pairs.
+    :param dict table: The header key:value pairs.
     :param muid: The mutopia id (from the footer)
     :returns: A table of extra header definitions for publishing.
     :rtype: dict
@@ -197,8 +197,8 @@ def tag_header(infile, outfile, htable, muid):
 
     :param File infile: The input file.
     :param File outfile: The output file.
-    :param htable: The header key:value pairs from the input file.
-    :param muid: The mutopia integer identifier.
+    :param dict htable: The header key:value pairs from the input file.
+    :param int muid: The mutopia integer identifier.
     :returns: The htable passed on input.
     :rtype: dict
 

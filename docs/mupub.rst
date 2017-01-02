@@ -1,8 +1,8 @@
 .. include:: subs.txt
 
 
-mupub package
-=============
+mupub API
+=========
 
 **Mupub** is structured as a script (:py:mod:`mupub.commands`
 subpackage) supported by the main :py:mod:`mupub` library package. The
@@ -27,6 +27,14 @@ Subpackages
 .. toctree::
 
     mupub.commands
+
+
+mupub.__main__ module
+---------------------
+
+.. automodule:: mupub.__main__
+    :members:
+    :undoc-members:
 
 
 mupub.assets module
@@ -102,6 +110,8 @@ mupub.utils module
 mupub.validate module
 ---------------------
 
-.. automodule:: mupub.validate
+.. autoclass:: mupub.Validator
     :members:
-    :undoc-members:
+
+.. autoclass:: mupub.DBValidator
+    :members:

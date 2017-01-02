@@ -37,6 +37,7 @@ exclude_patterns = ['_build']
 pygments_style = 'sphinx'
 todo_include_todos = False
 
+
 # -- Options for HTML output ----------------------------------------------
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'

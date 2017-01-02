@@ -7,5 +7,5 @@ Project.
 .. toctree::
    :maxdepth: 4
 
-   users-guide
    mupub
+   users-guide

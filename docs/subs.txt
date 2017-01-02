@@ -39,3 +39,11 @@
 .. |JSON| raw:: html
 
    <a href="https://en.wikipedia.org/wiki/JSON">JSON</a>
+
+.. |wheel| raw:: html
+
+   <a href="https://wheel.readthedocs.io/en/latest/">wheel</a>
+
+.. |YAML| raw:: html
+
+   <a href="https://en.wikipedia.org/wiki/YAML">YAML</a>

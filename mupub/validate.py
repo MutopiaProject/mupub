@@ -33,11 +33,11 @@ class Validator(metaclass=abc.ABCMeta):
     def basic_checks(cls, header):
         """Perform basic checks on a header.
 
-        Simple check to make sure that required fields are present.
-
-        :param header: dict of header fields
+        :param mupub.Header header: table header fields
         :returns: Number of failures discovered
         :rtype: int
+
+        Simple check to make sure that required fields are present.
 
         """
         failures = []
@@ -62,14 +62,13 @@ class Validator(metaclass=abc.ABCMeta):
     def validate_header(self, header):
         """Validate a header.
 
+        :param header: dict of header fields
+        :returns: A list of valid elements missing in the header.
+        :rtype: [str]
+
         If basic checks are good, several fields are checked against
         the database. The database check will make sure the references
         between tables will work correctly.
-
-        :param header: dict of header fields
-        :returns: True if required fields are present and have valid
-                  content.
-        :rtype: bool
 
         """
 
@@ -87,7 +86,12 @@ class Validator(metaclass=abc.ABCMeta):
 
 
 class DBValidator(Validator):
-    """Concrete class that defines a Validator that uses a database.
+    """Concrete class that defines a Validator that uses a database
+    for validation.
+
+    For performance, the check is done by requesting the count of
+    elements to match in that element's associated DB table.
+
     """
 
     def __init__(self, connection):
@@ -101,7 +105,7 @@ class DBValidator(Validator):
         :rtype: bool
 
         """
-        query = 'select count(*) from composers where composer=?;'
+        query = 'SELECT count(*) FROM composers WHERE composer=?;'
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, (composer,))
@@ -120,7 +124,7 @@ class DBValidator(Validator):
         :rtype: bool
 
         """
-        query = 'select count(*) from styles where style=?'
+        query = 'SELECT count(*) FROM styles WHERE style=?'
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, (style,))
@@ -139,7 +143,7 @@ class DBValidator(Validator):
         :rtype: bool
 
         """
-        query = 'select count(*) from licenses where license=?'
+        query = 'SELECT count(*) FROM licenses WHERE license=?'
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, (license_name,))

@@ -62,6 +62,18 @@ class MuRDF:
 
 
     def update_description(self, name, value):
+        """Update a description element in the RDF.
+
+        This is an update not an insert so it expects to find `name`
+        in the description of the RDF.
+
+        :param str name: The name of an existing node in 
+            description.
+        :param str value: The new value of the named node.
+        :returns: True if node is found and updated.
+        :rtype: boolean
+
+        """
         node = self.description.find(_MP(name))
         if node is None:
             return False
@@ -73,12 +85,12 @@ class MuRDF:
     def indent(cls, elem, level=0):
         """Indent xml tree in place.
 
-        From effbot (Fredrik Lundh)
-
-        :param elem: ElementTree to indent
-        :param level: level for indent (recursive routine)
+        :param xml.etree.ElementTree elem: RDF to indent.
+        :param int level: level for indent (recursive routine).
 
         """
+        # also from effbot (Fredrik Lundh)
+
         i = "\n" + level*"  "
         if len(elem):
             if not elem.text or not elem.text.strip():

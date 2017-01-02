@@ -20,10 +20,11 @@ The activity of publishing is the primary focus of this project.
 
   - **Building the assets** that will go into the archive. These include,
 
-    + PDF files in A4 and US Letter sizes
-    + MIDI
-    + An RDF for general cataloging.
-    + PostScript files
+    - PDF files in A4 and US Letter sizes
+    - MIDI
+    - An RDF for general cataloging.
+    - PostScript files
+    - Preview images
 
   - **Synchronizing with the data server** to move the new assets to
     the data store.
@@ -47,4 +48,4 @@ Contents
    developer
    archive-naming
 
-   api/modules.rst
+   modules

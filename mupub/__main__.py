@@ -1,5 +1,4 @@
-"""
-The main console script entry point.
+"""The main console script entry point.
 
 """
 
@@ -15,7 +14,15 @@ _LOGFORMAT = '%(asctime)s - %(name)s %(levelname)s - %(message)s'
 _DATEFORMAT = '%Y-%m-%d %H:%M:%S'
 
 def main():
-    """Dispatch with system arguments. """
+    """Dispatch with system arguments.
+
+    This private module defines the main entry point for the command
+    script. Its function is to define a default file logging mechanism
+    for the application and then call :py:func:`dispatch()
+    <mupub.cli.dispatch>` to redirect processing to the appropriate
+    command.
+
+    """
 
     # load the deafult logging from the config file
     if 'logging' in CONFIG_DICT:
@@ -31,9 +38,9 @@ def main():
     rotating_handler.setFormatter(formatter)
     rotating_handler.setLevel(logging.DEBUG)
     logger.addHandler(rotating_handler)
-        
+
     return dispatch(sys.argv[1:])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.exit(main())

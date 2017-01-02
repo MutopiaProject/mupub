@@ -1,4 +1,4 @@
-.. include:: ../subs.txt
+.. include:: subs.txt
 
 mupub.commands package
 ======================

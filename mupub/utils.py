@@ -17,7 +17,8 @@ def _find_files(folder, outlist):
             outlist.append(os.path.join(folder, entry.name))
         elif entry.is_dir():
             # recurse to get files under this folder
-            outlist = _find_files(os.path.join(folder, entry.name), outlist)
+            outlist = _find_files(os.path.join(folder, entry.name),
+                                  outlist)
     return outlist
 
 
@@ -26,7 +27,7 @@ def find_files(folder):
 
     :param str folder: The top-most folder.
     :returns: list of files under folder
-    :rtype: list of strings
+    :rtype: [str]
 
     """
     return _find_files(folder, [])
@@ -35,16 +36,25 @@ def find_files(folder):
 def resolve_input(infile=None):
     """Determine the file naming components for mutopia.
 
-    A convenience routine to determine the base name for a mutopia
-    piece. If no entry is given it is determined from the current
-    working directory.
-
-    :param str infile:
+    :param str infile: A candidate input file.
     :returns: base (usually containing folder name) and infile, as
               strings.
     :rtype: Tuple
 
+    A convenience routine to determine the base name for a mutopia
+    piece. The mechanism assumes the user's current working directory
+    is appropriate to the build being acted on. The algorithm then
+    works on the naming convention:
+
+      - If infile==None, determine base and infile from the current
+        working directory. This will allow for the possibility of the
+        actual files to be in an ``-lys`` subfolder.
+
+      - If infile is given, return the basename of the current working
+        folder and infile as a tuple.
+
     """
+
     base = os.path.basename(os.getcwd())
     if not infile:
         if os.path.exists(base+'.ly'):
@@ -109,15 +119,19 @@ _BOOLEANS = {'y': True,
              '0': False
 }
 
+
 class BooleanValidator(object):
-    message = 'Enter a valid boolean.'
+    """A mechanism to validate valid boolean input.
+    """
+
+    _message = 'Enter a valid boolean.'
 
     def __init__(self, message=None):
         if message is not None:
-            self.message = message
+            self._message = message
 
     def __call__(self, value):
         try:
             return _BOOLEANS[value.strip().lower()]
         except KeyError:
-            raise ValidationError(self.message)
+            raise ValidationError(self._message)

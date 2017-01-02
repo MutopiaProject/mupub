@@ -105,11 +105,14 @@ def _init_db():
         logger.exception('In sync_local_db: %s', exc)
 
 
-def init(dump):
+def init(dump, sync_only):
     """The init entry point.
 
-    :param dump: dump argument was specified and handled by now, the
-                 argument is present but not used by this routine.
+    :param dump: If specified, it is handled by an argparse action
+        routine and so is ignored here.
+
+    :param sync_only: Only synchronize the database with the
+        configured server.
 
     This command should be executed before any builds or checks.
 
@@ -135,8 +138,9 @@ def init(dump):
 
     logger.info('init command starting.')
     try:
-        _init_config()
-        mupub.config.save()
+        if not sync_only:
+            _init_config()
+            mupub.config.save()
         _init_db()
         return True
     except KeyboardInterrupt:
@@ -188,6 +192,12 @@ def main(args):
         '--dump',
         action=ConfigDumpAction,
         nargs=0,
+        help='Print configuration and exit.',
+    )
+    parser.add_argument(
+        '--sync-only',
+        action='store_true',
+        help='Perform only the database update',
     )
     args = parser.parse_args(args)
 
