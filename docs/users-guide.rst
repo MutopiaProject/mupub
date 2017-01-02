@@ -252,3 +252,169 @@ see what it would do without actually doing it,
       -h, --help  show this help message and exit
       --verbose   Louder.
       --dry-run   Show what would be done but don't do it.
+
+
+Examples
+--------
+
+Installation
+~~~~~~~~~~~~
+
+.. code-block:: text
+
+  glenl@lola:Concerto_No3$ python3 -m pip install ~/work/mupub/dist/mupub-0.3.0-py2.py3-none-any.whl --user
+  Processing /home/glenl/work/mupub/dist/mupub-0.3.0-py2.py3-none-any.whl
+  Requirement already satisfied: clint>=0.5.1 in /home/glenl/.local/lib/python3.5/site-packages (from mupub==0.3.0)
+  Requirement already satisfied: pypng>=0.0.18 in /home/glenl/.local/lib/python3.5/site-packages (from mupub==0.3.0)
+  Requirement already satisfied: setuptools>=0.7.0 in /usr/lib/python3/dist-packages (from mupub==0.3.0)
+  Requirement already satisfied: ruamel.yaml>=0.12.18 in /home/glenl/.local/lib/python3.5/site-packages (from mupub==0.3.0)
+  Requirement already satisfied: requests>=2.11.1 in /home/glenl/.local/lib/python3.5/site-packages (from mupub==0.3.0)
+  Requirement already satisfied: args in /home/glenl/.local/lib/python3.5/site-packages (from clint>=0.5.1->mupub==0.3.0)
+  Installing collected packages: mupub
+  Successfully installed mupub-0.3.0
+  glenl@lola:Concerto_No3$ which mupub
+  /home/glenl/.local/bin/mupub
+  glenl@lola:Concerto_No3$ mupub --version
+  mupub version 0.3.0
+
+
+Build
+~~~~~
+
+This is a recent update to |LilyPond| 2.19.46 and output shows the
+compiler resolves to 2.19.51 as expected. Also, because this naming is
+correct and it is a single piece, it is possible to accomplish a build
+with a simple build directives (no other parameters). I've truncated
+long lines from ``Interpreting music...`` for brevity.
+
+.. code-block:: text
+
+  glenl@lola:Concerto_No3$ pwd
+  /home/glenl/work/mu/ftp/BeethovenLv/O37/Concerto_No3
+  glenl@lola:Concerto_No3$ mupub check
+  LilyPond compiler will be /home/glenl/.mupub/lycache/2.19.51-1/bin/lilypond
+  glenl@lola:Concerto_No3$ mupub build
+  Building score, page size = a4
+  GNU LilyPond 2.19.51
+  Processing `Concerto_No3-lys/Concerto_No3.ly'
+  Parsing...
+  Interpreting music...[8][16] ...
+  Preprocessing graphical objects...
+  Interpreting music...
+  MIDI output to `Concerto_No3.midi'...
+  Finding the ideal number of pages...
+  Fitting music on 102 or 103 pages...
+  Drawing systems...
+  Layout output to `/tmp/lilypond-LMtloT'...
+  Copying to `Concerto_No3.ps'...
+  Converting to `Concerto_No3.pdf'...
+  Deleting `/tmp/lilypond-LMtloT'...
+  Success: compilation successfully completed
+  Building score, page size = letter
+  GNU LilyPond 2.19.51
+  Processing `Concerto_No3-lys/Concerto_No3.ly'
+  Parsing...
+  Interpreting music...[8][16] ...
+  Preprocessing graphical objects...
+  Interpreting music...
+  MIDI output to `Concerto_No3.midi'...
+  Finding the ideal number of pages...
+  Fitting music on 102 or 103 pages...
+  Drawing systems...
+  Layout output to `/tmp/lilypond-iEntMb'...
+  Copying to `Concerto_No3.ps'...
+  Converting to `Concerto_No3.pdf'...
+  Deleting `/tmp/lilypond-iEntMb'...
+  Success: compilation successfully completed
+  Building preview and midi
+  GNU LilyPond 2.19.51
+  Processing `Concerto_No3-lys/Concerto_No3.ly'
+  Parsing...
+  Interpreting music...[8][16] ...
+  Preprocessing graphical objects...
+  Interpreting music...
+  MIDI output to `Concerto_No3.midi'...
+  Finding the ideal number of pages...
+  Fitting music on 102 or 103 pages...
+  Drawing systems...
+  Layout output to `Concerto_No3.preview.svg'...
+  Success: compilation successfully completed
+  Creating RDF file
+  glenl@lola:Concerto_No3$ ls -1
+  Concerto_No3-a4.pdf
+  Concerto_No3-a4.ps.gz
+  Concerto_No3-let.pdf
+  Concerto_No3-let.ps.gz
+  Concerto_No3-lys
+  Concerto_No3-lys.zip
+  Concerto_No3.mid
+  Concerto_No3-preview.svg
+  Concerto_No3.rdf
+
+Generated RDF
+~~~~~~~~~~~~~
+
+.. code-block:: xml
+
+  <?xml version='1.0' encoding='UTF-8'?>
+  <rdf:RDF xmlns:mp="http://www.mutopiaproject.org/piece-data/0.1/"
+           xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:about=".">
+      <mp:title>Piano Concerto No. 3 in C Minor (1st Movement: Allegro con brio)</mp:title>
+      <mp:composer>BeethovenLv</mp:composer>
+      <mp:opus>Op. 37</mp:opus>
+      <mp:lyricist />
+      <mp:for>Piano and Orchestra</mp:for>
+      <mp:date>19th Century</mp:date>
+      <mp:style>Classical</mp:style>
+      <mp:metre />
+      <mp:arranger />
+      <mp:source>Breitkopf and Hartel (1862-1865)</mp:source>
+      <mp:licence>Public Domain</mp:licence>
+      <mp:lyFile>Concerto_No3-lys.zip</mp:lyFile>
+      <mp:midFile>Concerto_No3.mid</mp:midFile>
+      <mp:psFileA4>Concerto_No3-a4.ps.gz</mp:psFileA4>
+      <mp:pdfFileA4>Concerto_No3-a4.pdf</mp:pdfFileA4>
+      <mp:psFileLet>Concerto_No3-let.ps.gz</mp:psFileLet>
+      <mp:pdfFileLet>Concerto_No3-let.pdf</mp:pdfFileLet>
+      <mp:pngFile>Concerto_No3-preview.svg</mp:pngFile>
+      <mp:pngHeight>0</mp:pngHeight>
+      <mp:pngWidth>0</mp:pngWidth>
+      <mp:id>Mutopia-2016/12/29-899</mp:id>
+      <mp:maintainer>Stelios Samelis</mp:maintainer>
+      <mp:maintainerEmail />
+      <mp:maintainerWeb />
+      <mp:moreInfo />
+      <mp:lilypondVersion>2.19.46</mp:lilypondVersion>
+    </rdf:Description>
+  </rdf:RDF>
+
+
+Listing of zipped source files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: text
+
+  glenl@lola:Concerto_No3$ unzip -l Concerto_No3-lys.zip
+  Archive:  Concerto_No3-lys.zip
+    Length      Date    Time    Name
+  ---------  ---------- -----   ----
+      15502  2017-01-02 13:06   Concerto_No3-lys/pianotwo.ly
+       7664  2017-01-02 13:06   Concerto_No3-lys/clarinetti.ly
+       8863  2017-01-02 13:06   Concerto_No3-lys/oboi.ly
+       9788  2017-01-02 13:06   Concerto_No3-lys/violinotwo.ly
+       8487  2017-01-02 13:06   Concerto_No3-lys/flauti.ly
+       9942  2017-01-02 13:06   Concerto_No3-lys/violinoone.ly
+       5966  2017-01-02 13:06   Concerto_No3-lys/cornies.ly
+       2683  2017-01-02 13:06   Concerto_No3-lys/Concerto_No3.ly
+       7094  2017-01-02 13:06   Concerto_No3-lys/bassi.ly
+       9671  2017-01-02 13:06   Concerto_No3-lys/fagotti.ly
+       2610  2017-01-02 13:06   Concerto_No3-lys/timpani.ly
+       7692  2017-01-02 13:06   Concerto_No3-lys/viola.ly
+      18924  2017-01-02 13:06   Concerto_No3-lys/pianoone.ly
+       3710  2017-01-02 13:06   Concerto_No3-lys/trombe.ly
+  ---------                     -------
+     118596                     14 files
+  glenl@lola:Concerto_No3$
+
+

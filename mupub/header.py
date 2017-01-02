@@ -80,24 +80,21 @@ class Loader(metaclass=ABCMeta):
 
 
 class LYLoader(Loader):
-    """
-    Simple, fast, line-oriented type of Loader for LilyPond files.
-
-    Lines are skipped until the header tag is found, scanning stops
-    when the closing brace is found. It reads the key-value pairs and
-    returns a hash table containing them.
-
-    Does not handle LilyPond block comments in the header block.
-
-    Raises an InvalidEncoding exception if the file is not properly
-    formatted in UTF-8.
+    """Simple, fast, line-oriented type of Loader for LilyPond files.
     """
     def load(self, infile):
         """Load a LilyPond file
 
         :param str infile: LilyPond input file
+        :raises: InvalidEncodingException
         :returns: table of header key / values
         :rtype: dict
+
+        Lines are skipped until the header tag is found, scanning stops
+        when the closing brace is encountered. The headers key-value
+        pairs are built into a table and returned to the caller.
+
+        Does not handle LilyPond block comments in the header block.
 
         """
         logger = logging.getLogger(__name__)
@@ -305,7 +302,7 @@ class Header(object):
         return None
 
 
-    def resolve_license(self):
+    def _resolve_license(self):
         for synonym in ['license', 'licence', 'copyright']:
             lic = self.get_field(synonym)
             if lic:
@@ -328,7 +325,7 @@ class Header(object):
             if self.get_field(field) is None:
                 return False
 
-        if self.resolve_license() is None:
+        if self._resolve_license() is None:
             return False
 
         return True
@@ -349,7 +346,7 @@ class Header(object):
             rdf.update_description(afield, self.get_field(afield))
 
         # special cases
-        rdf.update_description('licence', self.resolve_license())
+        rdf.update_description('licence', self._resolve_license())
         rdf.update_description('for', self.get_field('instrument'))
         rdf.update_description('id', self.get_field('footer'))
 

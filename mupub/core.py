@@ -20,8 +20,8 @@ _FOOT_PAT = re.compile('Mutopia-([0-9/]+)-([0-9]+)$')
 def id_from_footer(footer):
     """Parse the footer containing the mutopia id.
 
-    :param str footer: The footer header element
-    :return: A tuple (publish date, mutopia id), parsed from footer
+    :param str footer: The footer element from the |LilyPond| header.
+    :returns: publish date and mutopia id parsed from footer.
     :rtype: tuple, (date, id)
     :throws: ValueError if invalid date
 

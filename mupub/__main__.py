@@ -22,6 +22,8 @@ def main():
     <mupub.cli.dispatch>` to redirect processing to the appropriate
     command.
 
+    More information is available in the :doc:`users-guide`.
+
     """
 
     # load the deafult logging from the config file

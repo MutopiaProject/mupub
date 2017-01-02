@@ -26,8 +26,8 @@ def _registered_commands(group='mupub.registered_commands'):
     dictionary.
 
     :param str group: The group in setup.py to iterate.
-    :returns: A dict containing command-name:command pairs.
-
+    :return: A table containing command-name:command pairs.
+    :rtype: dict
     """
 
     registered_commands = pkg_resources.iter_entry_points(group=group)
@@ -38,10 +38,10 @@ def dispatch(argv):
     """Dispatch to command with arguments.
 
     The main entry point calls this routine to dispatch to one of the
-    various commands. Once the command is deciphered (from the
-    registered commands in ``setup.py``), that command is loaded and
-    control passes to that command with the remainder of the
-    arguments.
+    various commands. Once the command is deciphered from the
+    registered commands in ``setup.py``, control passes to that
+    command with the remainder of the arguments.
+
     """
     registered_commands = _registered_commands()
     parser = argparse.ArgumentParser(
