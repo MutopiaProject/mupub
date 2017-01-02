@@ -12,6 +12,26 @@ more cohesive and flexible application with more opportunities for
 automation.
 
 
+Installing a release
+--------------------
+This is a command line tool that will be distributed using standard
+python3 mechanisms. The distribution will be in the form of a
+compressed wheel file with the release version embedded in it. Check
+the releases from the release link above, download, and install.
+
+For example with the first release, mupub-0.3.0, select the link for
+download and install with ``pip``. Python3.x must be installed on your
+system.
+
+.. code-block:: bash
+
+  $ python3 -m pip install mupub-0.3.0-py2.py3-none-any.whl --user
+
+Make sure you use the ``--user`` command to install everything
+locally. There is help from the command line and documentation with
+examples in the documentation link above.
+
+
 Development setup
 -----------------
 
@@ -52,35 +72,3 @@ the ``workon`` command and leave it using ``deactivate``, ::
 Peruse the ``Makefile`` for useful development targets. You may need
 to use the `install` target to create the command-line utility to test
 the application CLI.
-
-
-Installing a release
---------------------
-This is a command line tool that will be distributed using standard
-python3 mechanisms. The distribution will be in the form of a
-compressed file with the release version embedded in it. For example, ::
-
-  (mupub) glenl@lola:mupub$ ls dist
-  mupub-0.2.2.tar.gz
-
-
-Installation can be accomplished with the following set of commands on
-the example distribution, ::
-  
-  $ mkdir tmp && cd tmp
-  $ zcat ../mupub-0.2.2.tar.gz | tar xvf -
-  $ cd mupub-0.2.2
-  $ # install library
-  $ python3 -m setup install --user
-  $ # install command script
-  $ python3 -m pip install mupub --user
-  $ cd .. && rm -rf tmp
-
-Note the ``--user`` flag on the install and pip commands to install locally without
-requiring a privileged account. You can see the results of the
-installation with, ::
-
-  $ which mupub
-  /home/glenl/.local/bin/mupub
-  $ mupub --version
-  mupub version 0.2.2
