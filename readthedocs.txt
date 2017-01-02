@@ -1,1 +1,5 @@
-sphinx==1.4.6
+sphinx==1.5.1
+requests==2.11.1
+clint==0.5.1
+pypng==0.0.18
+ruamel.yaml==0.12.18
