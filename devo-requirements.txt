@@ -4,5 +4,5 @@
 coverage==4.2
 pylint==1.6.4
 #pretend==1.0.8
-sphinx==1.5.1
+sphinx==1.5.2
 sphinx-rtd-theme==0.1.9

@@ -3,7 +3,6 @@ requirements:
 
 # devo requirements will support documentation, coverage, etc.
 devo_requirements:
-	python -m pip install -r requirements.txt
 	python -m pip install -r devo-requirements.txt
 
 test:

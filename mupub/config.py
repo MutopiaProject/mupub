@@ -29,16 +29,7 @@ _CONFIG_DEFAULT = """
 defaults:
   site_url: http://musite-dev.us-west-2.elasticbeanstalk.com/
   local_db: mu-min-db.db
-
-lilypond:
-  V2_8: 2.8.8-1
-  V2_10: 2.10.33-1
-  V2_12: 2.12.3-1
-  V2_14: 2.14.2-1
-  V2_16: 2.16.2-1
-  V2_17: 2.17.97-1
-  V2_18: 2.18.2-1
-  V2_19: 2.19.51-1
+  download_url: http://download.linuxaudio.org/lilypond/binaries/
 
 # Simple logging to the console
 logging:

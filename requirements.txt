@@ -1,5 +1,6 @@
 # application packages
-requests==2.11.1
+beautifulsoup4==4.5.3
 clint==0.5.1
 pypng==0.0.18
-ruamel.yaml==0.12.18
+requests==2.11.1
+ruamel.yaml==0.12.11

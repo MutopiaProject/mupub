@@ -41,13 +41,13 @@ class ConfigTest(TestCase):
 
     def test_list_config(self):
         """list configuration tests"""
-        list_conf = yaml.load(LIST_CONFIG)
+        list_conf = yaml.load(LIST_CONFIG, Loader=yaml.Loader)
         self.assertEqual(len(list_conf['version']), 3)
 
 
     def test_iterate(self):
         """Iterating configuration entries"""
-        mu_conf = yaml.load(BASIC_CONFIG)
+        mu_conf = yaml.load(BASIC_CONFIG, Loader=yaml.Loader)
         count = 0
         for item in mu_conf['mutopia']:
             count += 1

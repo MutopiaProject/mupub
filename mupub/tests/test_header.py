@@ -115,9 +115,14 @@ class HeaderTest(TestCase):
     def test_versions(self):
         """Test LilyPond version matching"""
         lyv_2 = mupub.LyVersion('2.16.2')
-        lyv_3 = mupub.LyVersion('2.16.3')
+        lyv_3 = mupub.LyVersion('2.16.2')
         lyv_4 = mupub.LyVersion('2.19.0')
+        lyv_5 = mupub.LyVersion('2.16.2-1')
+        self.assertTrue(lyv_4 > lyv_2)
         self.assertTrue(lyv_3 == lyv_2)
         self.assertTrue(lyv_3.matches(lyv_2))
-        self.assertFalse(lyv_3.full_match(lyv_2))
-        self.assertTrue(lyv_4 > lyv_2)
+        # test boolean inversion
+        self.assertFalse(lyv_4 == lyv_2)
+        self.assertTrue(lyv_4 != lyv_2)
+        # test that it ignores any trailing value
+        self.assertTrue(lyv_5 == lyv_2)

@@ -66,7 +66,10 @@ def check(infile, header_file):
         try:
             locator = mupub.LyLocator(lp_version, progress_bar=True)
             path = locator.working_path()
-            puts(colored.green('LilyPond compiler will be '+path))
+            if path:
+                puts(colored.green('LilyPond compiler will be %s' % path))
+            else:
+                puts(colored.red('Failed to determine (or install) compiler.'))
         except mupub.BadConfiguration as bc:
             logger.warning(bc)
             return
