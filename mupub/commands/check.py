@@ -5,12 +5,9 @@ __docformat__ = 'reStructuredText'
 
 import argparse
 import logging
-import os
-import sys
 import sqlite3
 from clint.textui import colored, puts, indent
 import mupub
-from mupub.config import CONFIG_DICT, getDBPath
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +24,7 @@ def check(infile, header_file):
 
     """
 
-    base, infile = mupub.utils.resolve_input(infile)
+    base, infile = mupub.resolve_input(infile)
 
     logger.info('check command starting for %s.' % infile)
     if not mupub.commands.init.verify_init():
@@ -48,7 +45,7 @@ def check(infile, header_file):
         logger.warning('No header found?')
         return
 
-    with sqlite3.connect(getDBPath()) as conn:
+    with sqlite3.connect(mupub.getDBPath()) as conn:
         validator = mupub.DBValidator(conn)
         v_failures = validator.validate_header(header)
         if len(v_failures) > 0:

@@ -4,13 +4,11 @@
 import argparse
 import logging
 import os
-import re
 import requests
 import sqlite3
+import sys
 from clint.textui import prompt, validators, colored, puts
 import mupub
-from mupub.config import CONFIG_DICT, CONFIG_DIR, getDBPath #, save
-from mupub.utils import ConfigDumpAction
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +22,7 @@ _TABLES = [
 ]
 
 def _q_str(category, key, qstr):
-    table = CONFIG_DICT[category]
+    table = mupub.CONFIG_DICT[category]
     default = table.get(key, '')
     try:
         val = prompt.query(qstr, default=default)
@@ -36,7 +34,7 @@ def _q_str(category, key, qstr):
 
 
 def _q_int(category, key, qstr):
-    table = CONFIG_DICT[category]
+    table = mupub.CONFIG_DICT[category]
     default = table.get(key, 0)
     try:
         val = int(prompt.query(qstr,
@@ -61,7 +59,7 @@ def _db_sync(local_conn):
 
     # Use the site's db_hook to request a dump of the minimal values
     # we'll need to do simple verification.
-    site = CONFIG_DICT['defaults']['site_url'].strip()
+    site = mupub.CONFIG_DICT['common']['site_url'].strip()
     if site[len(site)-1] != '/':
         site = site + '/'
     try:
@@ -73,23 +71,21 @@ def _db_sync(local_conn):
                 local_conn.execute(_INSERT.format(tname,cname), (val,))
     except requests.exceptions.ConnectionError as exc:
         logger.error('Failed to connect to %s' % site)
-        logger.warn('Fix the site_url config variable in %s' % CONFIG_DIR)
+        logger.warn('Fix the site_url config variable in %s' % mupub.CONFIG_DIR)
         raise exc
 
 
 def _init_config():
-    _q_str('defaults',
+    _q_str('common',
            'site_url',
            'Full MutopiaProject URL')
-    _q_str('defaults',
+    _q_str('common',
            'local_db',
-           'Local (SQLite3) database path')
-    for k in CONFIG_DICT['lilypond'].keys():
-        _q_str('lilypond', k, 'Compiler for LilyPond '+k)
+           'Local (SQLite3) database name')
 
 
 def _init_db():
-    db_path = getDBPath()
+    db_path = mupub.getDBPath()
     schema_initialized = os.path.exists(db_path)
     conn = sqlite3.connect(db_path)
     try:
@@ -140,8 +136,8 @@ def init(dump, sync_only):
     try:
         if not sync_only:
             _init_config()
-            mupub.config.save()
         _init_db()
+        mupub.saveConfig()
         return True
     except KeyboardInterrupt:
         pass
@@ -190,8 +186,7 @@ def main(args):
     parser = argparse.ArgumentParser(prog='mupub init')
     parser.add_argument(
         '--dump',
-        action=ConfigDumpAction,
-        nargs=0,
+        action='store_true',
         help='Print configuration and exit.',
     )
     parser.add_argument(
@@ -201,6 +196,8 @@ def main(args):
     )
     args = parser.parse_args(args)
 
-    if not args.dump:
+    if args.dump:
+        print(len(mupub.CONFIG_DICT))
+        mupub.CONFIG_DICT.write(sys.stdout)
+    else:
         init(**vars(args))
-    #else: dumping is handled in an action routine

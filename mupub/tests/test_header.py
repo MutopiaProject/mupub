@@ -120,7 +120,8 @@ class HeaderTest(TestCase):
         lyv_5 = mupub.LyVersion('2.16.2-1')
         self.assertTrue(lyv_4 > lyv_2)
         self.assertTrue(lyv_3 == lyv_2)
-        self.assertTrue(lyv_3.matches(lyv_2))
+        self.assertTrue(lyv_3.match(lyv_2))
+        self.assertTrue(lyv_3.strmatch(lyv_2))
         # test boolean inversion
         self.assertFalse(lyv_4 == lyv_2)
         self.assertTrue(lyv_4 != lyv_2)

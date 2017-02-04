@@ -14,7 +14,6 @@ import os
 import subprocess
 from clint.textui import colored, puts
 import mupub
-from mupub.config import CONFIG_DICT
 
 logger = logging.getLogger(__name__)
 

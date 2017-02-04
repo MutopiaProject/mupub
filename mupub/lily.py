@@ -91,10 +91,7 @@ class LyVersion():
         if not self.is_valid():
             return None
 
-        defaults = mupub.CONFIG_DICT['defaults']
-        binurl = defaults.get('download_url',
-                              'http://download.linuxaudio.org/lilypond/binaries/'
-        )
+        binurl = mupub.CONFIG_DICT['common']['download_url']
 
         req = requests.get(binurl)
         compiler_page = BeautifulSoup(req.content,

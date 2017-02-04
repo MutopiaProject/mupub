@@ -4,9 +4,9 @@ __docformat__ = 'reStructuredText'
 
 import os
 import argparse
-import ruamel.yaml as yaml
-import mupub.config
+import sys
 from clint.textui.validators import ValidationError
+import mupub
 
 def _find_files(folder, outlist):
     for entry in os.scandir(path=folder):
@@ -65,26 +65,6 @@ def resolve_input(infile=None):
                 infile = candidate
 
     return base,infile
-
-
-class ConfigDumpAction(argparse.Action):
-    """Dump the configuration to stdout.
-
-    An argparse action to dump configuration values.
-
-    """
-
-    def __init__(self, option_strings, dest, **kwargs):
-        super(ConfigDumpAction, self).__init__(
-            option_strings,
-            dest,
-            **kwargs)
-
-    def __call__(self, parser, namespace, values, option_string=None):
-        setattr(namespace, self.dest, True)
-        print(yaml.dump(mupub.config.CONFIG_DICT,
-                        Dumper=yaml.RoundTripDumper)
-        )
 
 
 class EnvDefault(argparse.Action):

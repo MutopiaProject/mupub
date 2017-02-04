@@ -10,82 +10,82 @@ __docformat__ = 'reStructuredText'
 import os
 import logging
 import time
-import ruamel.yaml as yaml
+import configparser
 import mupub
-
-CONFIG_DIR = os.path.join(os.environ.get('HOME'), '.mupub')
-_CONFIG_FNM = os.path.join(CONFIG_DIR, 'config.yml')
 
 class UTCFormatter(logging.Formatter):
     """Set the logging time formatter for UTC.
     """
     converter = time.gmtime
 
-"""
-site_url: http://127.0.0.1:8000/
-"""
+CONFIG_DIR = os.path.join(os.environ.get('HOME'), '.mupub')
+_CONFIG_FNM = os.path.join(CONFIG_DIR, 'config.cfg')
 
 _CONFIG_DEFAULT = """
-defaults:
-  site_url: http://musite-dev.us-west-2.elasticbeanstalk.com/
-  local_db: mu-min-db.db
-  download_url: http://download.linuxaudio.org/lilypond/binaries/
+[common]
+  site_url = http://musite-dev.us-west-2.elasticbeanstalk.com/
+  local_db = mu-min-db.db
+  download_url = http://download.linuxaudio.org/lilypond/binaries/
 
-# Simple logging to the console
-logging:
-  version: 1
-  disable_existing_loggers: False
-  formatters:
-    simple:
-      format: '%(levelname)s - %(message)s'
-  handlers:
-    console:
-      class: logging.StreamHandler
-      formatter: simple
-      level: INFO
-  root:
-    handlers: [console]
+[loggers]
+  keys = root,simple
+
+[handlers]
+  keys = consoleHandler
+
+[formatters]
+  keys = simpleFormatter
+
+[logger_root]
+  level = DEBUG
+  handlers = consoleHandler
+
+[logger_simple]
+  level = INFO
+  handlers = consoleHandler
+
+[handler_consoleHandler]
+  class = StreamHandler
+  level = INFO
+  formatter = simpleFormatter
+  args = (sys.stdout,)
+
+[formatter_simpleFormatter]
+  format = %(levelname)s - %(message)s
+  datefmt = UTCFormatter
 """
 
+def _configure():
+    config = configparser.RawConfigParser()
+    if not os.path.isdir(CONFIG_DIR):
+        os.mkdir(CONFIG_DIR)
+    if os.path.exists(_CONFIG_FNM):
+        config.read_file(open(_CONFIG_FNM))
+    else:
+        config.read_string(_CONFIG_DEFAULT)
+        with open(_CONFIG_FNM, 'w') as configfile:
+            config.write(configfile,
+                         space_around_delimiters=True)
 
-def load(config_file=_CONFIG_FNM):
-    """Load a configuration file into a dictionary
+    return config
 
-    :param str config_file: file name from which to load
-        configuration.
-    :return: configuration data
-    :rtype: dict
 
+# load configuration on import
+CONFIG_DICT = _configure()
+
+
+def saveConfig():
+    """Convenience routine to save the configuration.
     """
-    try:
-        with open(config_file, 'r') as ymlfile:
-            return yaml.load(ymlfile, Loader=yaml.RoundTripLoader)
-    except FileNotFoundError:
-        return yaml.load(_CONFIG_DEFAULT)
+    with open(_CONFIG_FNM, 'w') as configfile:
+        CONFIG_DICT.write(configfile,
+                          space_around_delimiters=True)
 
-
-def save(config_file=_CONFIG_FNM):
-    """Save configuration dictionary to a file.
-
-    :param str config_file: file name in which to save configuration.
-
-    """
-    if os.path.dirname(config_file):
-        os.makedirs(os.path.dirname(config_file), exist_ok=True)
-    if os.path.exists(config_file):
-        backup = config_file + '~'
-        os.replace(config_file, backup)
-    with open(config_file, 'w') as infile:
-        yaml.dump(CONFIG_DICT, infile, Dumper=yaml.RoundTripDumper)
-
-
-# load configuration when imported
-CONFIG_DICT = load()
 
 def getDBPath():
     """Return database path from configuration.
     """
-    return os.path.join(CONFIG_DIR, CONFIG_DICT['defaults']['local_db'])
+    return os.path.join(CONFIG_DIR, CONFIG_DICT['common']['local_db'])
 
 
 def test_config():
@@ -100,3 +100,5 @@ def test_config():
         raise mupub.BadConfiguration('Configuration file not found.')
     if not os.path.exists(getDBPath()):
         raise mupub.BadConfiguration('Local database not found.')
+    if len(CONFIG_DICT) == 0:
+        raise mupub.BadConfiguration('Configuration was not loaded.')

@@ -17,7 +17,7 @@ During development of an upcoming release, the MINOR number may be
 incremented.
 
 """
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 __author__ = 'Glen Larsen and mutopia contributors'
 __author_email__= 'glenl.glx@gmail.com'
@@ -33,7 +33,7 @@ from .commands.init import init
 from .commands.tag import tag
 from .commands.clean import clean
 from .config import CONFIG_DICT, CONFIG_DIR, getDBPath
-from .config import UTCFormatter, test_config
+from .config import UTCFormatter, test_config, saveConfig
 from .core import MUTOPIA_BASE, FTP_BASE, URL_BASE
 from .core import id_from_footer
 from .exceptions import BadConfiguration, IncompleteBuild
@@ -44,3 +44,4 @@ from .lily import LyLocator, LyVersion
 from .validate import Validator, DBValidator
 from .tagedit import tag_header, tag_file
 from .rdfu import NS, MuRDF
+from .utils import resolve_input
