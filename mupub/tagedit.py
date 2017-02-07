@@ -20,6 +20,8 @@ _PD_SUBS_FMT = """\"Placed in the \" \
 \" by the typesetter \"\
 """
 
+logger = logging.getLogger(__name__)
+
 # LilyURL is a simple holder of copyright information that will be
 # used in a header's copyright line.
 class LilyURL():
@@ -309,5 +311,4 @@ def tag_file(header_file, id):
     else:
         # Unlikely to get here --- if this doesn't exist an exception
         # should have been raised --- but just in case.
-        logger = logging.getLogger(__name__)
         logger.error('Something went wrong processing %s' % header_file)

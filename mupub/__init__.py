@@ -33,7 +33,7 @@ from .commands.init import init
 from .commands.tag import tag
 from .commands.clean import clean
 from .config import CONFIG_DICT, CONFIG_DIR, getDBPath
-from .config import UTCFormatter, test_config, saveConfig
+from .config import test_config, saveConfig
 from .core import MUTOPIA_BASE, FTP_BASE, URL_BASE
 from .core import id_from_footer
 from .exceptions import BadConfiguration, IncompleteBuild

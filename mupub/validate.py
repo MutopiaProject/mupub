@@ -50,7 +50,7 @@ class Validator(metaclass=abc.ABCMeta):
         # license check is done separately to accomodate for copyright
         # synonym.
         if header.get_field('copyright'):
-            logger.debug('Setting copyright field to license')
+            logger.warning('Setting copyright field to license')
             header.set_field('license', header.get_field('copyright'))
         else:
             if not header.get_field('license'):

@@ -21,7 +21,7 @@ _DEATHROW = [
     '*.log',
 ]
 
-def clean(verbose, dry_run):
+def clean(dry_run):
     """Clean all built assets.
 
     :param verbose: Display additional information about deletions.
@@ -45,11 +45,6 @@ def main(args):
 
     """
     parser = argparse.ArgumentParser(prog='mupub build')
-    parser.add_argument(
-        '--verbose',
-        action='store_true',
-        help='Louder.'
-    )
     parser.add_argument(
         '--dry-run',
         action='store_true',

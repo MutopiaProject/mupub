@@ -9,53 +9,31 @@ __docformat__ = 'reStructuredText'
 
 import os
 import logging
-import time
 import configparser
 import mupub
 
-class UTCFormatter(logging.Formatter):
-    """Set the logging time formatter for UTC.
-    """
-    converter = time.gmtime
-
 CONFIG_DIR = os.path.join(os.environ.get('HOME'), '.mupub')
-_CONFIG_FNM = os.path.join(CONFIG_DIR, 'config.cfg')
+_CONFIG_FNM = os.path.join(CONFIG_DIR, 'mu-config.cfg')
 
 _CONFIG_DEFAULT = """
 [common]
   site_url = http://musite-dev.us-west-2.elasticbeanstalk.com/
   local_db = mu-min-db.db
   download_url = http://download.linuxaudio.org/lilypond/binaries/
-
-[loggers]
-  keys = root,simple
-
-[handlers]
-  keys = consoleHandler
-
-[formatters]
-  keys = simpleFormatter
-
-[logger_root]
-  level = DEBUG
-  handlers = consoleHandler
-
-[logger_simple]
-  level = INFO
-  handlers = consoleHandler
-
-[handler_consoleHandler]
-  class = StreamHandler
-  level = INFO
-  formatter = simpleFormatter
-  args = (sys.stdout,)
-
-[formatter_simpleFormatter]
-  format = %(levelname)s - %(message)s
-  datefmt = UTCFormatter
+[logging]
+  log_to_file = True
+  logfilename = mupub-errors.log
+  loglevel = INFO
 """
 
 def _configure():
+    # A null handler is added to quite the internal logging for simple
+    # library usage. See :py:func:`__main__() <mupub.__main__>` for
+    # how loggers are added for command-line purposes.
+    logging.getLogger('mupub').addHandler(logging.NullHandler())
+
+    # On the first use, a default configuration is added in the user's
+    # home folder.
     config = configparser.RawConfigParser()
     if not os.path.isdir(CONFIG_DIR):
         os.mkdir(CONFIG_DIR)
@@ -72,7 +50,6 @@ def _configure():
 
 # load configuration on import
 CONFIG_DICT = _configure()
-
 
 def saveConfig():
     """Convenience routine to save the configuration.

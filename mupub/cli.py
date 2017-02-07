@@ -2,6 +2,7 @@
 """
 
 import argparse
+import logging
 import pkg_resources
 import sys
 import textwrap
@@ -51,9 +52,14 @@ def dispatch(argv):
         epilog='Use mupub <command> --help for specific command help',
 )
     parser.add_argument(
-        '-v', '--version',
+        '--version',
         action='version',
         version='%(prog)s version {0}'.format(mupub.__version__)
+    )
+    parser.add_argument(
+        '--verbose',
+        action='store_true',
+        help='louder'
     )
     parser.add_argument(
         'command',
@@ -66,6 +72,9 @@ def dispatch(argv):
     )
 
     args = parser.parse_args(argv)
+    if args.verbose:
+        mu_logger = logging.getLogger('mupub')
+        mu_logger.setLevel(logging.DEBUG)
 
     main = registered_commands[args.command].load()
 

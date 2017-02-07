@@ -3,15 +3,55 @@
 """
 
 import logging
-from logging.config import dictConfig
 import os.path
 import sys
 from mupub.cli import dispatch
-from mupub import CONFIG_DICT, UTCFormatter, CONFIG_DIR
+import mupub
 from logging.handlers import RotatingFileHandler
 
-_LOGFORMAT = '%(asctime)s - %(name)s %(levelname)s - %(message)s'
-_DATEFORMAT = '%Y-%m-%d %H:%M:%S'
+_FILEFMT = '%(asctime)s %(levelname)s %(name)s %(message)s'
+_CONSOLEFMT = '%(levelname)-8s %(name)-12s %(message)s'
+_DATEFMT = '%Y-%m-%d %H:%M:%S'
+
+
+def _configure_logging():
+    if 'logging' not in mupub.CONFIG_DICT.sections():
+        return
+    logdict = mupub.CONFIG_DICT['logging']
+
+    # Set the module logger to the lowest reasonable level (DEBUG)
+    mupub_logger = logging.getLogger('mupub')
+    mupub_logger.setLevel(logging.DEBUG)
+
+    # Check configuration for an alternate level.
+    level = logdict.get('loglevel', 'INFO')
+    n_level = getattr(logging, level.upper(), None)
+    if not isinstance(n_level, int):
+        n_level = logging.DEBUG
+
+    if logdict.getboolean('log_to_file', True):
+        # Add a rotating logfile handler
+        logpath = os.path.join(mupub.CONFIG_DIR,
+                               logdict.get('logfilename',
+                                           'mupub-errors.log'))
+        file_handler = RotatingFileHandler(logpath,
+                                           maxBytes=1024*100,
+                                           backupCount=3)
+        # Logging is always INFO level
+        file_handler.setLevel(logging.INFO)
+        logform = logging.Formatter(fmt=_FILEFMT,
+                                    datefmt=_DATEFMT)
+        file_handler.setFormatter(logform)
+        mupub_logger.addHandler(file_handler)
+
+    # Console logging is set to the configured level.
+    console = logging.StreamHandler()
+    console.setLevel(n_level)
+    console_form = logging.Formatter(fmt=_CONSOLEFMT,
+                                     datefmt=_DATEFMT)
+    console.setFormatter(console_form)
+    mupub_logger.addHandler(console)
+
 
 def main():
     """Dispatch with system arguments.
@@ -26,20 +66,7 @@ def main():
 
     """
 
-    # load the deafult logging from the config file
-    if 'logging' in CONFIG_DICT:
-        dictConfig(CONFIG_DICT['logging'])
-
-    # add a logfile handler
-    logger = logging.getLogger('mupub')
-    logpath = os.path.join(CONFIG_DIR, 'mupub-errors.log')
-    rotating_handler = RotatingFileHandler(logpath,
-                                           maxBytes=1024*100,
-                                           backupCount=3)
-    formatter = logging.Formatter(fmt=_LOGFORMAT, datefmt=_DATEFORMAT)
-    rotating_handler.setFormatter(formatter)
-    rotating_handler.setLevel(logging.DEBUG)
-    logger.addHandler(rotating_handler)
+    _configure_logging()
 
     return dispatch(sys.argv[1:])
 

@@ -18,7 +18,6 @@ import mupub
 LYCACHE = os.path.join(mupub.CONFIG_DIR, 'lycache')
 COMPFMT = 'lilypond-.*\.sh'
 RE_SCRIPT = re.compile('lilypond-([\d\.\-]+)\..*\.sh')
-RE_VERSION = re.compile('(\d+)\.(\d+)\.(\d+)(-\d+)?')
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +31,7 @@ def _cached_compilers():
     return cache
 
 
+RE_VERSION = re.compile('(\d+)\.(\d+)\.(\d+)(-\d+)?')
 class LyVersion():
     """LilyPond version class.
 
@@ -42,36 +42,43 @@ class LyVersion():
     def __init__(self, lp_version):
         self.version = lp_version
         self.sortval = 0
+        self.trailer = 0
         vmatch = RE_VERSION.match(lp_version)
         if vmatch:
             self.sortval += int(vmatch.group(1))*100000
             self.sortval += int(vmatch.group(2))*100
             self.sortval += int(vmatch.group(3))
+            # When a match is made to the fourth group, the trailing
+            # dashed integer, it is stored but not used during
+            # compares.
             if vmatch.group(4):
                 self.trailer = int(vmatch.group(4)[1:])
-            else:
-                self.trailer = 0
 
     def is_valid(self):
+        """Validity test, must have parsed to an internal sort value."""
         return self.sortval != 0
 
     def __str__(self):
         return self.version
 
     def __gt__(self, other):
+        """Evaluate this > other using internal integer sortval."""
         return self.sortval > other.sortval
 
     def __eq__(self, other):
+        """Evaluate this == other using internal integer sortval."""
         return self.sortval == other.sortval
 
     def match(self, other):
-        """Check for match against another LyVersion object."""
+        """Evaluate this == other using a simple string match."""
         return self.sortval == other.sortval
 
     def strmatch(self, other):
+        """Compare strings, not the internal sort value."""
         return self.version == other.version
 
     def cache_folder(self):
+        """Return path to top of compiler's folder."""
         return os.path.join(LYCACHE, self.version)
 
 
@@ -225,7 +232,8 @@ class LinuxInstaller(LyInstaller):
             logger.info('(Linux) Installed %s', str(lyversion))
             return True
         except subprocess.CalledProcessError as cpe:
-            logger.warn('Installation failed, return code=%d' % cpe.returncode)
+            logger.warning('Installation failed, return code=%d'
+                           % cpe.returncode)
             return False
 
 

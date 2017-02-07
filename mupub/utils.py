@@ -67,28 +67,6 @@ def resolve_input(infile=None):
     return base,infile
 
 
-class EnvDefault(argparse.Action):
-    """Get values from environment variable.
-
-    A custom argparse action that checks the environment for the value
-    of an argument in the parser.
-
-    """
-    def __init__(self, env, required=True, default=None, **kwargs):
-        default = os.environ.get(env, default)
-        self.env = env
-        if default:
-            required = False
-        super(EnvDefault, self).__init__(
-            default=default,
-            required=required,
-            **kwargs
-        )
-
-    def __call__(self, parser, namespace, values, option_string=None):
-        setattr(namespace, self.dest, values)
-
-
 _BOOLEANS = {'y': True,
              'yes': True,
              'true': True,
@@ -98,7 +76,6 @@ _BOOLEANS = {'y': True,
              'false': False,
              '0': False
 }
-
 
 class BooleanValidator(object):
     """A mechanism to validate valid boolean input.
