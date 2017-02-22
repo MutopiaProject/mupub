@@ -203,28 +203,30 @@ build.
 
 LilyPond compiler cache
 ```````````````````````
-Attempting automated installations of |lilypond| is probably not worth
-the risk. The activity diagram proposes a mechanism that attempts an
-automated workaround in the event the version in the file does not
-match a compiler in our cache.
+Music submitted for publication may require a variety of |lilypond|
+compilers --- users may be using default versions for their operating
+systems, experimenting with advanced releases, or may not be
+comfortable with upgrading from older releases. The goal of the
+compiler cache is to maintain a library of releases that we can use
+against the majority of submissions.
 
-The publisher will maintain a cache of the last |lilypond| release of
-each major version. That is, the cache wouldn't maintain all the
-2.19.* releases, only the most recent (2.19.48 at the time of this
-document). The same for the remaining releases,
+This is done in a relatively simple manner. A set of folders (the
+"compiler cache") will be maintained by the software that will be
+named according to the version string required in the submission.
+During a build the version of the input file is identified and the
+appropriate compiler is determined. If the compiler is not in the
+cache, it is retrieved from the |lilypond| compiler download area.
+This scheme infers these requirements,
 
-  - 2.18.2.1
-  - 2.17.97-1
-  - 2.16.2.1
-  - 2.14.2-1
-  - 2.10.33-1
-  - 2.8.8-1
+  - The LilyPond download site must have compilers that support the
+    operating system of the ``mupub`` build machine.
 
-**Use case:** A file is submitted that specifies |lilypond| 2.19.16.
-Since that particular compiler is not in the cache, the environment is
-set to the latest 2.19 compiler, 2.19.48. If the build fails, either
-piece must be converted or the 2.19.16 compiler must be installed
-manually in the cache.
+  - ``mupub`` must identify its operating system and be able to match
+    it to the available compiler on the download site.
+
+  - It may be necessary to upgrade a LilyPond in the event a matching
+    compiler is not available. (This feature is not a requirement in
+    the initial release.)
 
 
 Build order

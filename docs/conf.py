@@ -42,33 +42,16 @@ todo_include_todos = False
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-if not on_rtd:
-    #html_theme = 'alabaster'
+if on_rtd:
+    musite_path = 'http://mudev-documentation.readthedocs.io/en/latest/'
+else:
     html_theme = 'sphinx_rtd_theme'
-    # alabaster has interesting options to set.
-    if html_theme == 'alabaster':
-        html_theme_options = {
-            'logo': 'mutopia-logo.svg',
-            'logo_name': False,
-            'fixed_sidebar': True,
-        }
-        html_sidebars = {
-            '**': [
-                'about.html',
-                'navigation.html',
-                'relations.html',
-                'searchbox.html',
-            ]
-        }
-        html_logo = 'graphics/mutopia-logo.svg'
-
+    musite_path = os.path.abspath('../../musite/docs/_build/html')
 
 html_favicon = 'graphics/favicon.ico'
 
 html_static_path = ['_static', 'graphics', ]
 
-#musite_path = os.path.abspath('../../musite/docs/_build/html')
-#musite_path = 'http://mudev-documentation.readthedocs.io/en/latest/'
 intersphinx_mapping = { 'python': ('https://docs.python.org/3', None),
-#                        'musite': (musite_path, None),
+                        'musite': (musite_path, None),
 }

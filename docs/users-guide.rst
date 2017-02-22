@@ -73,7 +73,8 @@ the individual commands in more detail.
 
     optional arguments:
       -h, --help            show this help message and exit
-      -v, --version         show program's version number and exit
+      --version             show program's version number and exit
+      --verbose             louder
 
     Use mupub <command> --help for specific command help
 
@@ -250,7 +251,6 @@ see what it would do without actually doing it,
 
     optional arguments:
       -h, --help  show this help message and exit
-      --verbose   Louder.
       --dry-run   Show what would be done but don't do it.
 
 
@@ -416,5 +416,3 @@ Listing of zipped source files
   ---------                     -------
      118596                     14 files
   glenl@lola:Concerto_No3$
-
-
