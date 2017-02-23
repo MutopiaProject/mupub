@@ -4,8 +4,10 @@
 __docformat__ = 'reStructuredText'
 
 import abc
-from mupub.header import REQUIRED_FIELDS
+import mupub
 import logging
+import os
+import sqlite3
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +44,7 @@ class Validator(metaclass=abc.ABCMeta):
         """
         failures = []
         failed_count = 0
-        for required_field in REQUIRED_FIELDS:
+        for required_field in mupub.REQUIRED_FIELDS:
             item = header.get_field(required_field)
             if not item:
                 failures.append(required_field)
@@ -152,3 +154,26 @@ class DBValidator(Validator):
         finally:
             cursor.close()
         return False
+
+
+def in_repository(path='.'):
+    """Return True if path is in MutopiaProject archive hierarchy.
+
+    Finds the `ftp` folder in the absolute path of the given path,
+    then checks to see if the folder directly beneath that is a valid
+    composer.
+
+    :param path: Hierarchy to check.
+    :returns: True if within a valid archive
+    :rtype: Boolean
+
+    """
+    here = os.path.abspath(path).split(os.sep)
+    try:
+        composer = here[here.index('ftp') + 1]
+        with sqlite3.connect(mupub.getDBPath()) as conn:
+            validator = mupub.DBValidator(conn)
+            return validator.validate_composer(composer)
+    except ValueError:
+        pass
+    return False

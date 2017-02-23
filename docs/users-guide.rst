@@ -94,11 +94,12 @@ Before using the tool, it is necessary to build a basic configuration.
 Running the ``init`` command will initialize a configuration file and
 initialize a small database.
 
-  - The configuration file is written in |YAML| and the user can
-    edit it after initializing.
+  - The configuration file is written using the internal python
+    :py:mod:`configparser`. It can be edited after initializing.
 
   - A small database is created and populated using a command that
-    requests information from the configured website.
+    requests information from the configured website. This database
+    can be synchronized with the website at any time.
 
   - The default logging is a rotating file configuration. The
     definition can be expanded to include console output as well.
@@ -121,7 +122,30 @@ to re-run the ``init`` command with,
    $ mupub init --sync-only
 
 This will perform only the database synchronization without prompting
-for database changes.
+for database changes. This should be done whenever any of the checked
+items are changed and only takes a few seconds.
+
+
+Configuration file
+..................
+
+A bare-bones configuration file is created when ``init`` on its first
+run. It can be recreated by deleting the existing configuration file
+and re-running ``init``. ::
+
+    [common]
+      site_url = http://musite-dev.us-west-2.elasticbeanstalk.com/
+      local_db = mu-min-db.db
+      download_url = http://download.linuxaudio.org/lilypond/binaries/
+    [logging]
+      loglevel = WARN
+      log_to_file = True
+      logfilename = mupub-errors.log
+
+
+The ``loglevel`` is the desired level for console logging, file
+logging is always at the ``INFO`` level. See
+:py:meth:`~logging.Logger.setLevel` for a list of supported levels.
 
 
 .. _check-command:
@@ -240,9 +264,9 @@ Clean Command
 It is likely that you will encounter issues during the build and you
 may need to iterate the build process. Doing a build-edit-build cycle
 is typically not a problem but for an official build it is a good idea
-to start with a clean slate. All this command does is erase any build
-files. The command allows a dry-run to allow you to run the command to
-see what it would do without actually doing it,
+to start with a clean slate. This command will erase any build files
+that you have previously created. The command allows a ``dry-run`` to
+list the commands it will run without executing them.
 
 .. code-block:: text
 
@@ -253,9 +277,6 @@ see what it would do without actually doing it,
       -h, --help  show this help message and exit
       --dry-run   Show what would be done but don't do it.
 
-
-Examples
---------
 
 Installation
 ~~~~~~~~~~~~

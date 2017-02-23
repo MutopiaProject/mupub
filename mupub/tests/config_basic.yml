@@ -1,6 +1,0 @@
-# a comment
-mutopia:
-  # and indented comment
-  github_repo: my-repo
-  local_repo: local-stuff
-  newthing: ta-da

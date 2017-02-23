@@ -52,6 +52,6 @@ html_favicon = 'graphics/favicon.ico'
 
 html_static_path = ['_static', 'graphics', ]
 
-intersphinx_mapping = { 'python': ('https://docs.python.org/3', None),
+intersphinx_mapping = { 'python': ('https://docs.python.org/3.4', None),
                         'musite': (musite_path, None),
 }

@@ -41,7 +41,7 @@ from .header import Loader, LYLoader, VersionLoader, SchemeLoader
 from .header import RawLoader, Header
 from .header import find_header
 from .lily import LyLocator, LyVersion
-from .validate import Validator, DBValidator
+from .validate import Validator, DBValidator, in_repository
 from .tagedit import tag_header, tag_file
 from .rdfu import NS, MuRDF
 from .utils import resolve_input

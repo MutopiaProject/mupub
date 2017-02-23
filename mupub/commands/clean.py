@@ -3,8 +3,12 @@
 
 import argparse
 import glob
+import logging
 import os
 from clint.textui import colored, puts
+import mupub
+
+logger = logging.getLogger(__name__)
 
 _DEATHROW = [
     '*.preview.*',
@@ -21,6 +25,7 @@ _DEATHROW = [
     '*.log',
 ]
 
+
 def clean(dry_run):
     """Clean all built assets.
 
@@ -28,14 +33,17 @@ def clean(dry_run):
     :param dry_run: List delete candidates but don't delete.
 
     """
+    if not mupub.in_repository('.'):
+        logger.warn('Cannot clean in non-repository folder')
+        return
+
     for deadset in _DEATHROW:
         for deadfile in glob.iglob(deadset):
             if dry_run:
                 puts(colored.yellow('would delete {}'.format(deadfile)))
             else:
                 os.unlink(deadfile)
-                if verbose:
-                    puts(colored.green('deleted {}'.format(deadfile)))
+                logger.debug('deleted %s' % deadfile)
 
 
 def main(args):
