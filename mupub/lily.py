@@ -228,7 +228,7 @@ class LinuxInstaller(LyInstaller):
         command = ['/bin/sh', local_script, '--batch', prefix]
         logger.info('Installing with %s' % prefix)
         try:
-            subprocess.run(command, shell=False, check=True)
+            subprocess.check_call(command)
             logger.info('(Linux) Installed %s', str(lyversion))
             return True
         except subprocess.CalledProcessError as cpe:

@@ -45,7 +45,7 @@ def _build_scores(base_params, infile):
         command = base_params + build_params
         command.append('-dpaper-size="{}"'.format(psize))
         command.append(infile)
-        subprocess.run(command, stdout=subprocess.PIPE)
+        subprocess.check_output(command)
 
         # rename the pdf and ps files to include their page size
         pdf_fnm = basefnm + '.pdf'
@@ -84,7 +84,7 @@ def _build_preview(base_params, lpversion, infile):
     command = base_params + preview_params
     command.append(infile)
     puts(colored.green('Building preview and midi'))
-    subprocess.run(command, stdout=subprocess.PIPE)
+    subprocess.check_output(command)
 
 
 def _build_one(infile, lily_path, lpversion, do_preview):
