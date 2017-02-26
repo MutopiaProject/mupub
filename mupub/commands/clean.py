@@ -8,8 +8,6 @@ import os
 from clint.textui import colored, puts
 import mupub
 
-logger = logging.getLogger(__name__)
-
 _DEATHROW = [
     '*.preview.*',
     '*-preview.*',
@@ -29,10 +27,10 @@ _DEATHROW = [
 def clean(dry_run):
     """Clean all built assets.
 
-    :param verbose: Display additional information about deletions.
     :param dry_run: List delete candidates but don't delete.
 
     """
+    logger = logging.getLogger(__name__)
     if not mupub.in_repository('.'):
         logger.warn('Cannot clean in non-repository folder')
         return

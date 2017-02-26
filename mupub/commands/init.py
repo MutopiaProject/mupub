@@ -10,7 +10,6 @@ import sys
 from clint.textui import prompt, validators, colored, puts
 import mupub
 
-logger = logging.getLogger(__name__)
 
 # The local database definition: table names and fields, basically
 # simple storage as hash tables.
@@ -57,6 +56,8 @@ def _dbcopy(src_conn, dst_conn, select_q, insert_q):
 _INSERT = 'INSERT OR IGNORE INTO {0} ({1}) VALUES (?)'
 def _db_sync(local_conn):
 
+    logger = logging.getLogger(__name__)
+
     # Use the site's db_hook to request a dump of the minimal values
     # we'll need to do simple verification.
     site = mupub.CONFIG_DICT['common']['site_url'].strip()
@@ -85,6 +86,7 @@ def _init_config():
 
 
 def _init_db():
+    logger = logging.getLogger(__name__)
     db_path = mupub.getDBPath()
     schema_initialized = os.path.exists(db_path)
     conn = sqlite3.connect(db_path)
@@ -132,6 +134,7 @@ def init(dump, sync_only):
     # are passed into the routine --- as arguments are added, they must
     # also be added here.
 
+    logger = logging.getLogger(__name__)
     logger.info('init command starting.')
     try:
         if not sync_only:
@@ -156,6 +159,7 @@ def verify_init():
 
     """
 
+    logger = logging.getLogger(__name__)
     try:
         mupub.test_config()
         return True

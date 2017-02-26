@@ -15,9 +15,6 @@ import subprocess
 from clint.textui import colored, puts
 import mupub
 
-logger = logging.getLogger(__name__)
-
-
 def _remove_if_exists(path):
     if os.path.exists(path):
         os.unlink(path)
@@ -133,6 +130,7 @@ def build(infile, header_file, collect_only):
     necessary assets for publication.
 
     """
+    logger = logging.getLogger(__name__)
     logger.info('build command starting')
     base, lyfile = mupub.utils.resolve_input()
 

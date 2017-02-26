@@ -9,8 +9,6 @@ import sqlite3
 from clint.textui import colored, puts, indent
 import mupub
 
-logger = logging.getLogger(__name__)
-
 
 def check(infile, header_file):
     """Check sanity for a given contributed file.
@@ -23,6 +21,7 @@ def check(infile, header_file):
     be run prior to any build.
 
     """
+    logger = logging.getLogger(__name__)
 
     base, infile = mupub.resolve_input(infile)
 
