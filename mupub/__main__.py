@@ -2,10 +2,8 @@
 
 """
 
-import os.path
 import sys
 from mupub.cli import dispatch
-import mupub
 
 
 def main():
