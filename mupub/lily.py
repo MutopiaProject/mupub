@@ -19,7 +19,6 @@ LYCACHE = os.path.join(mupub.CONFIG_DIR, 'lycache')
 COMPFMT = 'lilypond-.*\.sh'
 RE_SCRIPT = re.compile('lilypond-([\d\.\-]+)\..*\.sh')
 
-logger = logging.getLogger(__name__)
 
 def _cached_compilers():
     cache = []
@@ -215,6 +214,8 @@ class LinuxInstaller(LyInstaller):
         :param lyversion: LilyPond version
 
         """
+        logger = logging.getLogger(__name__)
+
         install_script = lyversion.get_install_script('-'.join(self.system_details()))
         if not install_script:
             return False
@@ -229,7 +230,7 @@ class LinuxInstaller(LyInstaller):
         logger.info('Installing with %s' % prefix)
         try:
             subprocess.check_call(command)
-            logger.info('(Linux) Installed %s', str(lyversion))
+            logger.info('(Linux) Installed %s' % str(lyversion))
             return True
         except subprocess.CalledProcessError as cpe:
             logger.warning('Installation failed, return code=%d'

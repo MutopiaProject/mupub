@@ -9,8 +9,6 @@ import logging
 import os
 import sqlite3
 
-logger = logging.getLogger(__name__)
-
 class Validator(metaclass=abc.ABCMeta):
     """Abstract class that defines header validation protocols.
     """
@@ -42,6 +40,9 @@ class Validator(metaclass=abc.ABCMeta):
         Simple check to make sure that required fields are present.
 
         """
+
+        logger = logging.getLogger(__name__)
+
         failures = []
         failed_count = 0
         for required_field in mupub.REQUIRED_FIELDS:

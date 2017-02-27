@@ -20,7 +20,6 @@ _PD_SUBS_FMT = """\"Placed in the \" \
 \" by the typesetter \"\
 """
 
-logger = logging.getLogger(__name__)
 
 # LilyURL is a simple holder of copyright information that will be
 # used in a header's copyright line.
@@ -144,7 +143,7 @@ def get_copyright(cc_name, date):
                  mutopia identifier (footer) string
     :returns: A complete copyright for insertion into a LilyPond header.
     :rtype: string
-    
+
     """
     if cc_name not in _LICENSES:
         # ... probably need to raise an exception here ...
@@ -282,9 +281,10 @@ def tag_file(header_file, id):
     :param str header_file: input LilyPond file name
     :param int id: The mutopia identifier
     """
+    logger = logging.getLogger(__name__)
     htable = mupub.LYLoader().load(header_file)
     if not htable:
-        logger.info('No header found for %s.', header_file)
+        logger.info('No header found for %s.' % header_file)
         return
 
     # Create and write the temporary tagged file.

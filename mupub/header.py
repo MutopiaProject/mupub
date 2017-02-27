@@ -126,7 +126,7 @@ class LYLoader(Loader):
                 net_braces += _net_braces(line)
                 if net_braces < 1:
                     break
-            logger.debug('Header loading discovered %s header lines', lines)
+            logger.debug('Header loading discovered %s header lines' % lines)
 
         return table
 
