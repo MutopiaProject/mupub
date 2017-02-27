@@ -38,7 +38,7 @@ from .core import MUTOPIA_BASE, FTP_BASE, URL_BASE
 from .core import id_from_footer
 from .exceptions import BadConfiguration, IncompleteBuild
 from .header import Loader, LYLoader, VersionLoader, SchemeLoader
-from .header import RawLoader, Header
+from .header import RawLoader, Header, REQUIRED_FIELDS
 from .header import find_header
 from .lily import LyLocator, LyVersion
 from .validate import Validator, DBValidator, in_repository
