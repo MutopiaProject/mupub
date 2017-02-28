@@ -6,7 +6,7 @@ from unittest import TestCase
 import logging
 
 TEST_DATA = 'data'
-PREFIX = os.path.join(os.path.dirname(__file__), TEST_DATA, 'mu')
+PREFIX = os.path.join(os.path.dirname(__file__), TEST_DATA, 'mu', 'ftp')
 
 class LogThisTestCase(type):
     def __new__(cls, name, bases, dct):
