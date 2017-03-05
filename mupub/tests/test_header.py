@@ -4,8 +4,8 @@
 import os.path
 import sys
 from unittest import TestCase
-from .tutils import PREFIX
 import mupub
+import mupub.tests.tutils as tutils
 
 TEST_DATA = 'data'
 
@@ -108,7 +108,7 @@ class HeaderTest(TestCase):
 
     def test_find(self):
         """Find headers"""
-        hdr = mupub.find_header('SorF/O5/sor-op5-5', PREFIX)
+        hdr = mupub.find_header('SorF/O5/sor-op5-5', tutils.PREFIX)
         self.assertEqual(hdr.get_field('composer'), 'SorF')
 
 
@@ -127,3 +127,14 @@ class HeaderTest(TestCase):
         self.assertTrue(lyv_4 != lyv_2)
         # test that it ignores any trailing value
         self.assertTrue(lyv_5 == lyv_2)
+
+
+    def test_bad_header(self):
+        test_db = tutils.getTestDB()
+        header = mupub.Header(mupub.LYLoader())
+        path = os.path.join(os.path.dirname(__file__),
+                            TEST_DATA,
+                            'bad-header.ly')
+        header.load_table(path)
+        fails = mupub.DBValidator(test_db).validate_header(header)
+        self.assertTrue(len(fails) > 0, 'Found failures in bad-header')

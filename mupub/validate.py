@@ -169,12 +169,14 @@ def in_repository(path='.'):
     :rtype: Boolean
 
     """
-    here = os.path.abspath(path).split(os.sep)
-    try:
-        composer = here[here.index('ftp') + 1]
-        with sqlite3.connect(mupub.getDBPath()) as conn:
-            validator = mupub.DBValidator(conn)
-            return validator.validate_composer(composer)
-    except ValueError:
-        pass
+    here = os.path.abspath(path)
+    if os.path.exists(here):
+        try:
+            here = here.split(os.sep)
+            composer = here[here.index('ftp') + 1]
+            with sqlite3.connect(mupub.getDBPath()) as conn:
+                validator = mupub.DBValidator(conn)
+                return validator.validate_composer(composer)
+        except ValueError:
+            pass
     return False
