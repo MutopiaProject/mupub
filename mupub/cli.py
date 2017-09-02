@@ -19,7 +19,6 @@ This is a command-line utility for managing the publication of
 Mutopia Project contributions. All unctionality is provided by
 commands within this utility:
 
-    init  - Initialize workspace. Creates $HOME/.mupub
     check - Reviews the contributed piece for validity.
     tag   - Modifies the header with MutopiaProject fields.
     build - Builds a complete set of output files for publication.

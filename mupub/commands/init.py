@@ -4,21 +4,11 @@
 import argparse
 import logging
 import os
-import requests
 import sqlite3
 import sys
 from clint.textui import prompt, validators, colored, puts
 import mupub
 
-
-# The local database definition: table names and fields, basically
-# simple storage as hash tables.
-_TABLES = [
-    ('instruments', 'instrument'),
-    ('styles', 'style'),
-    ('composers', 'composer'),
-    ('licenses', 'license'),
-]
 
 def _q_str(category, key, qstr):
     table = mupub.CONFIG_DICT[category]
@@ -46,43 +36,48 @@ def _q_int(category, key, qstr):
         return None
 
 
-def _dbcopy(src_conn, dst_conn, select_q, insert_q):
-    with src_conn.cursor() as cursor:
-        cursor.execute(select_q)
-        for selection in cursor:
-            dst_conn.execute(insert_q, selection)
-
-
+# Licenses are not available from datafiles so they are initialized
+# with these values. See _db_sync().
+_LICENSES = [
+    'Creative Commons Attribution 2.5',
+    'Creative Commons Attribution 3.0',
+    'Creative Commons Attribution 4.0',
+    'Creative Commons Attribution-ShareAlike',
+    'Creative Commons Attribution-ShareAlike 2.0',
+    'Creative Commons Attribution-ShareAlike 2.5',
+    'Creative Commons Attribution-ShareAlike 3.0',
+    'Creative Commons Attribution-ShareAlike 4.0',
+    'Public Domain',
+]
+# The local database definition, tuples are (table-name,key-name):
+_TABLES = [
+    ('instruments', 'instrument'),
+    ('styles', 'style'),
+    ('composers', 'composer'),
+    ('licenses', 'license'),
+]
 _INSERT = 'INSERT OR IGNORE INTO {0} ({1}) VALUES (?)'
-def _db_sync(local_conn):
+def _db_update(conn, datadir, target, table_name=None):
+    if not table_name:
+        table_name = target+'s'
+    with open(os.path.join(datadir, table_name+'.dat'), 'r') as infile:
+        cursor = conn.cursor()
+        sql_insert = _INSERT.format(table_name, target)
+        for line in infile:
+            cursor.execute(sql_insert, (line.strip(),))
+            _ = infile.readline() # toss description line
 
+
+def _db_sync(local_conn):
     logger = logging.getLogger(__name__)
 
-    # Use the site's db_hook to request a dump of the minimal values
-    # we'll need to do simple verification.
-    site = mupub.CONFIG_DICT['common']['site_url'].strip()
-    if site[len(site)-1] != '/':
-        site = site + '/'
-    try:
-        request = requests.get(site+'db_hook')
-        dbdata = request.json()
-
-        for tname,cname in _TABLES:
-            for val in dbdata[tname]:
-                local_conn.execute(_INSERT.format(tname,cname), (val,))
-    except requests.exceptions.ConnectionError as exc:
-        logger.error('Failed to connect to %s' % site)
-        logger.warn('Fix the site_url config variable in %s' % mupub.CONFIG_DIR)
-        raise exc
-
-
-def _init_config():
-    _q_str('common',
-           'site_url',
-           'Full MutopiaProject URL')
-    _q_str('common',
-           'local_db',
-           'Local (SQLite3) database name')
+    lice_insert = _INSERT.format('licenses','license')
+    for lice in _LICENSES:
+        local_conn.execute(lice_insert, (lice,))
+    datadir = os.path.expanduser(mupub.CONFIG_DICT['common']['datafiles'].strip())
+    _db_update(local_conn, datadir, 'composer')
+    _db_update(local_conn, datadir, 'style')
+    _db_update(local_conn, datadir, 'instrument')
 
 
 def _init_db():
@@ -103,6 +98,12 @@ def _init_db():
         logger.exception('In sync_local_db: %s', exc)
 
 
+def _init_config():
+    _q_str('common',
+           'datafiles',
+           'Location of MutopiaWeb project datafiles')
+
+
 def init(dump, sync_only):
     """The init entry point.
 
@@ -116,7 +117,7 @@ def init(dump, sync_only):
 
     Init queries for the basic configuration needed to adequately run
     all publishing functions of this application. The default path for
-    the configuration parameter file is ``$HOME/.mupub/config.yml``.
+    the configuration parameter file is ``$HOME/.mupub/config.cfg``.
     If that folder doesn't exist, it is created.
 
     The configuration folder will be used to store the cache of
@@ -135,12 +136,13 @@ def init(dump, sync_only):
     # also be added here.
 
     logger = logging.getLogger(__name__)
-    logger.info('init command starting.')
     try:
         if not sync_only:
             _init_config()
+            mupub.saveConfig()
+            logger.info('configuration saved')
+        logger.info('starting initialization')
         _init_db()
-        mupub.saveConfig()
         return True
     except KeyboardInterrupt:
         pass

@@ -23,7 +23,6 @@ setup(
     packages = ['mupub', 'mupub.commands'],
     entry_points = {
         'mupub.registered_commands': [
-            'init = mupub.commands.init:main',
             'check = mupub.commands.check:main',
             'tag = mupub.commands.tag:main',
             'build = mupub.commands.build:main',

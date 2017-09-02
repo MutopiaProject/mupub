@@ -12,11 +12,12 @@ import logging
 import configparser
 import mupub
 
-CONFIG_DIR = os.path.join(os.environ.get('HOME'), '.mupub')
+CONFIG_DIR = os.path.expanduser('~/.mupub')
 _CONFIG_FNM = os.path.join(CONFIG_DIR, 'mu-config.cfg')
 
 _CONFIG_DEFAULT = """
 [common]
+  datafiles = ~/MutopiaWeb/datafiles
   local_db = mu-min-db.db
   download_url = http://download.linuxaudio.org/lilypond/binaries/
 [logging]
