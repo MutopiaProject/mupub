@@ -17,7 +17,6 @@ _CONFIG_FNM = os.path.join(CONFIG_DIR, 'mu-config.cfg')
 
 _CONFIG_DEFAULT = """
 [common]
-  site_url = http://musite-dev.us-west-2.elasticbeanstalk.com/
   local_db = mu-min-db.db
   download_url = http://download.linuxaudio.org/lilypond/binaries/
 [logging]

@@ -34,10 +34,10 @@ setup(
         ],
     },
     install_requires=[
-        'setuptools>=0.7.0',
-        'beautifulsoup4>=4.5.3',
+        'setuptools',
+        'beautifulsoup4>=4.5',
         'pypng>=0.0.18',
-        'clint>=0.5.1',
-        'requests>=2.11.1',
+        'clint>=0.5',
+        'requests>=2.11',
     ],
 )
