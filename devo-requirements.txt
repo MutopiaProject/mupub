@@ -1,8 +1,8 @@
 -r requirements.txt
 
 # developer packages
-coverage==4.2
-pylint==1.6.4
+coverage==4.4.1
+pylint==1.7.2
 #pretend==1.0.8
 sphinx==1.5.2
 sphinx-rtd-theme==0.1.9
