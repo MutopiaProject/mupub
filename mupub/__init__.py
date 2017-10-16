@@ -36,7 +36,7 @@ from .config import CONFIG_DICT, CONFIG_DIR, getDBPath
 from .config import test_config, saveConfig
 from .core import MUTOPIA_BASE, FTP_BASE, URL_BASE
 from .core import id_from_footer
-from .exceptions import BadConfiguration, IncompleteBuild
+from .exceptions import BadConfiguration, IncompleteBuild, TagProcessException
 from .header import Loader, LYLoader, VersionLoader, SchemeLoader
 from .header import RawLoader, Header, REQUIRED_FIELDS
 from .header import find_header

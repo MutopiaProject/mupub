@@ -3,6 +3,7 @@
 
 import argparse
 import logging
+from clint.textui import colored, puts
 import mupub
 
 
@@ -18,7 +19,10 @@ def tag(header_file, new_id):
         logger.info('tag target is %s.' % header_file)
 
     logger.info('tag command starting with %s' % header_file)
-    mupub.tag_file(header_file, new_id)
+    try:
+        mupub.tag_file(header_file, new_id)
+    except mupub.TagProcessException:
+        puts(colored.yellow('Tagging aborted, no changes made.'))
 
 
 def main(args):
@@ -35,7 +39,7 @@ def main(args):
     parser.add_argument(
         '--id',
         type=int,
-        dest=new_id,
+        dest='new_id',
         default=0,
         help='Force identifier to this value (danger!)'
     )
