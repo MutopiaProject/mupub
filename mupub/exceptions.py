@@ -8,3 +8,6 @@ class BadConfiguration(Exception):
 
 class IncompleteBuild(Exception):
     pass
+
+class TagProcessException(Exception):
+    pass

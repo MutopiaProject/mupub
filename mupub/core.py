@@ -16,8 +16,8 @@ FTP_BASE = os.path.join(MUTOPIA_BASE, 'ftp')
 URL_BASE = 'http://www.mutopiaproject.org'
 
 
-_FOOT_PAT = re.compile('Mutopia-([0-9/]+)-([0-9]+)$')
-def id_from_footer(footer):
+_FOOT_PAT = re.compile('Mutopia-([0-9/]+)-(.*)$')
+def id_from_footer(footer, strict=True):
     """Parse the footer containing the mutopia id.
 
     :param str footer: The footer element from the |LilyPond| header.
@@ -33,6 +33,14 @@ def id_from_footer(footer):
     if fmat:
         (year,month,day) = fmat.group(1).split('/')
         date = datetime.date(int(year), int(month), int(day))
-        return (date, int(fmat.group(2)))
+        its_id = 0
+        try:
+            its_id = int(fmat.group(2))
+        except ValueError as ve:
+            # handle caught exception
+            if strict:
+                raise ve('Failed strict Mutopia ID parse - {}'.format(footer))
+
+        return (date, its_id)
 
     raise ValueError('Badly formed footer - {}'.format(footer))

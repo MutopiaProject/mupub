@@ -8,6 +8,7 @@ import os
 import re
 from string import Template
 import tempfile
+from clint.textui import prompt, validators, colored, puts
 import mupub
 
 _HEADER_PAT = re.compile(r'\\header')
@@ -164,6 +165,21 @@ def _net_braces(line):
     return line.count('{') - line.count('}')
 
 
+def _validate_id(mu_id):
+    if mu_id != 0:
+        return mu_id
+
+    try:
+        mu_id = int(prompt.query('Numeric ID for this piece',
+                                 default=str(mu_id),
+                                 validators=[validators.IntegerValidator()]))
+    except EOFError:
+        print('\n')
+        raise mupub.TagProcessException('ID request aborted')
+
+    return mu_id
+
+
 def _augmented_table(table, muid):
     """Return a table of mutopia-specific elements from the header.
 
@@ -173,15 +189,21 @@ def _augmented_table(table, muid):
     :rtype: dict
 
     """
+    logger = logging.getLogger(__name__)
+
     tagtable = dict()
 
-    # Figure out the proper mutopia id. The default is what the user
-    # specified on the command line.
-    mu_id = muid
+    # Figure out the proper mutopia id.
     if 'footer' in table:
-        pubdate,mu_id = mupub.core.id_from_footer(table['footer'])
+        pubdate,mu_id = mupub.core.id_from_footer(table['footer'], False)
+        if muid == 0:
+            if mu_id != muid:
+                logger.warning('Forcing id change: {0} to {1}.'.format(mu_id,muid))
+            muid = mu_id
     else:
         pubdate = date.today()
+
+    mu_id = _validate_id(muid)
 
     # Any header editing at this point, existing or new contribution,
     # will get today's date.
@@ -193,13 +215,13 @@ def _augmented_table(table, muid):
     return tagtable
 
 
-def tag_header(infile, outfile, htable, muid):
+def tag_header(infile, outfile, htable, new_id=0):
     """Tag the outfile with mutopia publishing elements from infile
 
     :param File infile: The input file.
     :param File outfile: The output file.
     :param dict htable: The header key:value pairs from the input file.
-    :param int muid: The mutopia integer identifier.
+    :param int new_id: Identifier to use in this header
     :returns: The htable passed on input.
     :rtype: dict
 
@@ -216,7 +238,8 @@ def tag_header(infile, outfile, htable, muid):
         htable['license'] = '\"{0}\"'.format(htable['copyright'])
         new_tags.append('license')
 
-    htable.update(_augmented_table(htable, muid))
+    htable.update(_augmented_table(htable, new_id))
+
     lines = infile.readlines()
     indent = '  '
     for infline in lines:
@@ -268,7 +291,7 @@ def tag_header(infile, outfile, htable, muid):
     return htable
 
 
-def tag_file(header_file, id):
+def tag_file(header_file, new_id=0):
     """Tag the given header file.
 
     The tagging process happens in this sequence:
@@ -279,7 +302,7 @@ def tag_file(header_file, id):
         temporary file into its place.
 
     :param str header_file: input LilyPond file name
-    :param int id: The mutopia identifier
+    :param int new_id: use this id (probably from command line)
     """
     logger = logging.getLogger(__name__)
     htable = mupub.LYLoader().load(header_file)
@@ -294,7 +317,7 @@ def tag_file(header_file, id):
                                      delete=False) as outfile:
         outfnm = outfile.name
         with open(header_file, mode='r', encoding='utf-8') as infile:
-            mupub.tag_header(infile, outfile, htable, id)
+            mupub.tag_header(infile, outfile, htable, new_id)
 
     if os.path.exists(outfnm):
         # header_file is closed, rename it to a backup file and create

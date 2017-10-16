@@ -5,12 +5,12 @@ import argparse
 import logging
 import mupub
 
+
 def tag(header_file, new_id):
     """Modify the header with a new id and publish date.
 
     :param str header_file: The file containing the header to modify.
-    :param int new_id: The new mutopia index for the piece.
-
+    :param int new_id: New numeric identifier, unique to piece.
     """
     logger = logging.getLogger(__name__)
     if not header_file:
@@ -35,8 +35,9 @@ def main(args):
     parser.add_argument(
         '--id',
         type=int,
+        dest=new_id,
         default=0,
-        help='Integer portion of the Mutopia identifier'
+        help='Force identifier to this value (danger!)'
     )
 
     args = parser.parse_args(args)

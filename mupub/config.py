@@ -18,8 +18,10 @@ _CONFIG_FNM = os.path.join(CONFIG_DIR, 'mu-config.cfg')
 _CONFIG_DEFAULT = """
 [common]
   datafiles = ~/MutopiaWeb/datafiles
+  repository = ~/MutopiaProject
   local_db = mu-min-db.db
   download_url = http://download.linuxaudio.org/lilypond/binaries/
+  mutopia_url = http://www.mutopiaproject.org/
 [logging]
   log_to_file = True
   logfilename = mupub-errors.log

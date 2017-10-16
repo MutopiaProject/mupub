@@ -27,6 +27,7 @@ setup(
             'tag = mupub.commands.tag:main',
             'build = mupub.commands.build:main',
             'clean = mupub.commands.clean:main',
+            'init = mupub.commands.init:main',
         ],
         'console_scripts': [
             'mupub = mupub.__main__:main',
@@ -34,9 +35,9 @@ setup(
     },
     install_requires=[
         'setuptools',
-        'beautifulsoup4>=4.5',
+        'beautifulsoup4>=4.6',
         'pypng>=0.0.18',
         'clint>=0.5',
-        'requests>=2.11',
+        'requests>=2.18',
     ],
 )

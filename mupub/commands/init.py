@@ -49,6 +49,7 @@ _LICENSES = [
     'Creative Commons Attribution-ShareAlike 4.0',
     'Public Domain',
 ]
+
 # The local database definition, tuples are (table-name,key-name):
 _TABLES = [
     ('instruments', 'instrument'),
@@ -57,6 +58,7 @@ _TABLES = [
     ('licenses', 'license'),
 ]
 _INSERT = 'INSERT OR IGNORE INTO {0} ({1}) VALUES (?)'
+
 def _db_update(conn, datadir, target, table_name=None):
     if not table_name:
         table_name = target+'s'
@@ -80,18 +82,15 @@ def _db_sync(local_conn):
     _db_update(local_conn, datadir, 'instrument')
 
 
+_CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS {0} ({1} TEXT PRIMARY KEY)'
 def _init_db():
     logger = logging.getLogger(__name__)
     db_path = mupub.getDBPath()
-    schema_initialized = os.path.exists(db_path)
     conn = sqlite3.connect(db_path)
     try:
         with conn:
-            if not schema_initialized:
-                for name, fields in _TABLES:
-                    conn.execute('CREATE TABLE {0} ({1} TEXT PRIMARY KEY)'.format(
-                        name,
-                        ''.join(fields).strip()))
+            for name, fields in _TABLES:
+                conn.execute(_CREATE_TABLE.format(name, ''.join(fields).strip()))
             _db_sync(conn)
     except Exception as exc:
         logger.warning('Exception caught, rolling back changes.')
@@ -102,6 +101,9 @@ def _init_config():
     _q_str('common',
            'datafiles',
            'Location of MutopiaWeb project datafiles')
+    _q_str('common',
+           'repository',
+           'Location of local MutopiaProject git repository')
 
 
 def init(dump, sync_only):
@@ -109,7 +111,6 @@ def init(dump, sync_only):
 
     :param dump: If specified, it is handled by an argparse action
         routine and so is ignored here.
-
     :param sync_only: Only synchronize the database with the
         configured server.
 
@@ -203,7 +204,6 @@ def main(args):
     args = parser.parse_args(args)
 
     if args.dump:
-        print(len(mupub.CONFIG_DICT))
         mupub.CONFIG_DICT.write(sys.stdout)
     else:
         init(**vars(args))
