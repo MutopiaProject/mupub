@@ -7,6 +7,7 @@ import logging
 import os
 import re
 from string import Template
+import sqlite3
 import tempfile
 from clint.textui import prompt, validators, colored, puts
 import mupub
@@ -169,13 +170,17 @@ def _validate_id(mu_id):
     if mu_id != 0:
         return mu_id
 
-    try:
-        mu_id = int(prompt.query('Numeric ID for this piece',
-                                 default=str(mu_id),
-                                 validators=[validators.IntegerValidator()]))
-    except EOFError:
-        print('\n')
-        raise mupub.TagProcessException('ID request aborted')
+    with sqlite3.connect(mupub.getDBPath()) as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT MAX(piece_id) FROM id_tracker')
+        mu_id = cursor.fetchone()[0] + 1
+        try:
+            mu_id = int(prompt.query('Numeric ID for this piece',
+                                     default=str(mu_id),
+                                     validators=[validators.IntegerValidator()]))
+        except EOFError:
+            print('\n')
+            raise mupub.TagProcessException('ID request aborted')
 
     return mu_id
 
@@ -195,15 +200,27 @@ def _augmented_table(table, muid):
 
     # Figure out the proper mutopia id.
     if 'footer' in table:
-        pubdate,mu_id = mupub.core.id_from_footer(table['footer'], False)
+        try:
+            pubdate,mu_id = mupub.core.id_from_footer(table['footer'], False)
+        except ValueError:
+            # Must be a user-mangled id, assume new entry
+            logger.warn('Ignoring footer ("%s") assuming new entry.' % table['footer'])
+            pubdate = date.today()
+            mu_id = 0
+
         if muid == 0:
             if mu_id != muid:
-                logger.warning('Forcing id change: {0} to {1}.'.format(mu_id,muid))
+                logger.warn('Forcing id change: {0} to {1}.'.format(mu_id,muid))
+            else:
+                conn = sqlite3.connect(mupub.getDBPath())
+                conn.execute('')
             muid = mu_id
     else:
         pubdate = date.today()
 
     mu_id = _validate_id(muid)
+    if 'license' not in table:
+        table['license'] = table['copyright']
 
     # Any header editing at this point, existing or new contribution,
     # will get today's date.
@@ -213,6 +230,12 @@ def _augmented_table(table, muid):
     tagtable['tagline'] = '##f'
 
     return tagtable
+
+
+def _mark_tag_as_used(mu_id):
+    pubdate,piece_id = mupub.core.id_from_footer(mu_id)
+    with sqlite3.connect(mupub.getDBPath()) as conn:
+        conn.execute('INSERT OR REPLACE INTO id_tracker (piece_id) VALUES (?)', (piece_id,))
 
 
 def tag_header(infile, outfile, htable, new_id=0):
@@ -230,13 +253,12 @@ def tag_header(infile, outfile, htable, new_id=0):
     header_started = False
     header_done = False
     found_headers = []
-    new_tags = []
 
+    new_tags = dict()
     # Provide for older headers that use copyright instead of license.
     if 'license' not in htable:
         # an old header, assign the license tag to the copyright
-        htable['license'] = '\"{0}\"'.format(htable['copyright'])
-        new_tags.append('license')
+        new_tags['license'] = htable['copyright']
 
     htable.update(_augmented_table(htable, new_id))
 
@@ -281,7 +303,7 @@ def tag_header(infile, outfile, htable, new_id=0):
                 # have a match in _MU_TAGS.
                 for tag in new_tags:
                     outfile.write(indent)
-                    outfile.write('{0} = {1}\n'.format(tag, htable[tag]))
+                    outfile.write('{0} = "{1}"\n'.format(tag, htable[tag]))
                 for tag in _MU_TAGS:
                     outfile.write(indent)
                     outfile.write('{0} = {1}\n'.format(tag, htable[tag]))
@@ -331,6 +353,9 @@ def tag_file(header_file, new_id=0):
                 for line in tmpf:
                     tagged_file.write(line)
         os.unlink(outfnm)
+        # Track this identifier as used
+        _mark_tag_as_used(htable['footer'])
+
     else:
         # Unlikely to get here --- if this doesn't exist an exception
         # should have been raised --- but just in case.

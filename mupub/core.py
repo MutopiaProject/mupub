@@ -16,7 +16,7 @@ FTP_BASE = os.path.join(MUTOPIA_BASE, 'ftp')
 URL_BASE = 'http://www.mutopiaproject.org'
 
 
-_FOOT_PAT = re.compile('Mutopia-([0-9/]+)-(.*)$')
+_FOOT_PAT = re.compile('Mutopia-([0-9/]+)-([0-9]+)')
 def id_from_footer(footer, strict=True):
     """Parse the footer containing the mutopia id.
 

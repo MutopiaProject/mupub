@@ -6,6 +6,10 @@ import logging
 import os
 import sqlite3
 import sys
+import urllib.parse
+from bs4 import BeautifulSoup
+import requests
+import re
 from clint.textui import prompt, validators, colored, puts
 import mupub
 
@@ -57,7 +61,51 @@ _TABLES = [
     ('composers', 'composer'),
     ('licenses', 'license'),
 ]
+
 _INSERT = 'INSERT OR IGNORE INTO {0} ({1}) VALUES (?)'
+
+_CREATE_TRACKER = """CREATE TABLE IF NOT EXISTS
+   id_tracker (
+      piece_id INT PRIMARY KEY,
+      pending INT DEFAULT 1
+   )
+"""
+def _update_tracker(conn):
+    logger = logging.getLogger(__name__)
+    common = mupub.CONFIG_DICT['common']
+
+    logger.info('Looking at %s' % common['mutopia_url'])
+    url = urllib.parse.urljoin(common['mutopia_url'],
+                               'latestadditions.html')
+    req = requests.get(url)
+    latest_page = BeautifulSoup(req.content, 'html.parser')
+    plist = latest_page.find_all(href=re.compile('piece-info\.cgi'))
+    # Build a list of current ids
+    idlist = []
+    for ref in plist:
+        href = urllib.parse.urlparse(ref.get('href'))
+        if href.query:
+            for q in urllib.parse.parse_qsl(href.query):
+                if q[0] == 'id':
+                    idlist.append(q[1])
+
+    cursor = conn.cursor()
+    last_piece = (max(idlist),)
+    # Remove anything older than the latest piece id (but keep latest)
+    cursor.execute('DELETE FROM id_tracker WHERE piece_id < ?', last_piece)
+    # Mark the latest on the server as pending
+    cursor.execute('UPDATE id_tracker set pending=0 WHERE piece_id = ?', last_piece)
+    # Finally, log the pendings as INFO
+    cursor.execute('SELECT piece_id FROM id_tracker WHERE pending')
+    for row in cursor.fetchall():
+        logger.info('%d is pending' % row)
+
+    # We want at least one row in the table, which may happen on the
+    # first initialization.
+    cursor.execute('select count(piece_id) from id_tracker')
+    if cursor.fetchone()[0] == 0:
+        cursor.execute('INSERT INTO id_tracker (piece_id,pending) VALUES (?,0)', last_piece)
+
 
 def _db_update(conn, datadir, target, table_name=None):
     if not table_name:
@@ -80,6 +128,7 @@ def _db_sync(local_conn):
     _db_update(local_conn, datadir, 'composer')
     _db_update(local_conn, datadir, 'style')
     _db_update(local_conn, datadir, 'instrument')
+    _update_tracker(local_conn)
 
 
 _CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS {0} ({1} TEXT PRIMARY KEY)'
@@ -91,6 +140,8 @@ def _init_db():
         with conn:
             for name, fields in _TABLES:
                 conn.execute(_CREATE_TABLE.format(name, ''.join(fields).strip()))
+            # Create table to track id prediction
+            conn.execute(_CREATE_TRACKER)
             _db_sync(conn)
     except Exception as exc:
         logger.warning('Exception caught, rolling back changes.')
@@ -104,6 +155,11 @@ def _init_config():
     _q_str('common',
            'repository',
            'Location of local MutopiaProject git repository')
+    # This probably doesn't have to be a query, but a check should be
+    # made since this table entry wasn't present in alpha releases.
+    common = mupub.CONFIG_DICT['common']
+    if 'mutopia_url' not in common:
+        common['mutopia_url'] = 'http://www.mutopiaproject.org/'
 
 
 def init(dump, sync_only):

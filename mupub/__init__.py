@@ -17,14 +17,14 @@ During development of an upcoming release, the MINOR number may be
 incremented.
 
 """
-__version__ = '0.5.2'
+__version__ = '0.5.3'
 
 __author__ = 'Glen Larsen and mutopia contributors'
 __author_email__= 'glenl.glx@gmail.com'
 __uri__ = 'http://mutopiaproject.org/'
 
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2016 The Mutopia Project'
+__copyright__ = 'Copyright 2017 The Mutopia Project'
 
 from .assets import collect_assets
 from .commands.build import build
