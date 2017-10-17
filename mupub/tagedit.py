@@ -204,13 +204,13 @@ def _augmented_table(table, muid):
             pubdate,mu_id = mupub.core.id_from_footer(table['footer'], False)
         except ValueError:
             # Must be a user-mangled id, assume new entry
-            logger.warn('Ignoring footer ("%s") assuming new entry.' % table['footer'])
+            logger.warning('Ignoring footer ("%s") assuming new entry.' % table['footer'])
             pubdate = date.today()
             mu_id = 0
 
         if muid == 0:
             if mu_id != muid:
-                logger.warn('Forcing id change: {0} to {1}.'.format(mu_id,muid))
+                logger.warning('Forcing id change: {0} to {1}.'.format(mu_id,muid))
             else:
                 conn = sqlite3.connect(mupub.getDBPath())
                 conn.execute('')

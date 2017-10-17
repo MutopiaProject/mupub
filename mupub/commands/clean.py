@@ -32,7 +32,7 @@ def clean(dry_run):
     """
     logger = logging.getLogger(__name__)
     if not mupub.in_repository('.'):
-        logger.warn('Cannot clean in non-repository folder')
+        logger.warning('Cannot clean in non-repository folder')
         return
 
     for deadset in _DEATHROW:

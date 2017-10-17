@@ -61,7 +61,7 @@ def _configure_logging(verbose):
         # Default to DEBUG in the event of a misspelled level
         if not isinstance(n_level, int):
             n_level = logging.DEBUG
-            mupub_logger.warn('%s is an invalid level. Check config.' % level)
+            mupub_logger.warning('%s is an invalid level. Check config.' % level)
 
     console = logging.StreamHandler()
     console.setLevel(n_level)
@@ -102,7 +102,7 @@ def dispatch(argv):
         description=textwrap.dedent(_LONG_DESCRIPTION),
         epilog='Use mupub <command> --help for specific command help',
     )
-    
+
     parser.add_argument(
         '--version',
         action='version',
