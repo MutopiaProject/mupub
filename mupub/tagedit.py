@@ -167,20 +167,21 @@ def _net_braces(line):
 
 
 def _validate_id(mu_id):
-    if mu_id != 0:
-        return mu_id
+    if mu_id == 0:
+        # Try to find the next identifire
+        with sqlite3.connect(mupub.getDBPath()) as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT MAX(piece_id) FROM id_tracker')
+            mu_id = cursor.fetchone()[0] + 1
 
-    with sqlite3.connect(mupub.getDBPath()) as conn:
-        cursor = conn.cursor()
-        cursor.execute('SELECT MAX(piece_id) FROM id_tracker')
-        mu_id = cursor.fetchone()[0] + 1
-        try:
-            mu_id = int(prompt.query('Numeric ID for this piece',
-                                     default=str(mu_id),
-                                     validators=[validators.IntegerValidator()]))
-        except EOFError:
-            print('\n')
-            raise mupub.TagProcessException('ID request aborted')
+    # Prompt the user for validation
+    try:
+        mu_id = int(prompt.query('Numeric ID for this piece (ctrl-d to abort)',
+                                 default=str(mu_id),
+                                 validators=[validators.IntegerValidator()]))
+    except EOFError:
+        print('\n')
+        raise mupub.TagProcessException('ID request aborted')
 
     return mu_id
 
@@ -208,24 +209,28 @@ def _augmented_table(table, muid):
             pubdate = date.today()
             mu_id = 0
 
-        if muid == 0:
-            if mu_id != muid:
-                logger.warning('Forcing id change: {0} to {1}.'.format(mu_id,muid))
+        if mu_id != 0:
+            if muid == 0:
+                muid = mu_id
             else:
-                conn = sqlite3.connect(mupub.getDBPath())
-                conn.execute('')
-            muid = mu_id
+                logger.warning('Forcing id change: {0} to {1}.'.format(mu_id,muid))
+                # use muid as passed, see _validate() for the user confirmation
     else:
         pubdate = date.today()
 
-    mu_id = _validate_id(muid)
+    # muid is either 0 (new or absent/malformed footer in source), an
+    # integer passed on the command line, or the value parsed from the
+    # existing footer. Validate it.
+    muid = _validate_id(muid)
+
+    # Correct license/copyright change.
     if 'license' not in table:
         table['license'] = table['copyright']
 
     # Any header editing at this point, existing or new contribution,
     # will get today's date.
     today = date.today().strftime('%Y/%m/%d')
-    tagtable['footer'] = '"Mutopia-{0}-{1}"'.format(today,mu_id)
+    tagtable['footer'] = '"Mutopia-{0}-{1}"'.format(today,muid)
     tagtable['copyright'] = get_copyright(table['license'], pubdate)
     tagtable['tagline'] = '##f'
 
