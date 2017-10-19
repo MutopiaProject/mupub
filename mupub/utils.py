@@ -6,19 +6,21 @@ import os
 import argparse
 import sys
 from clint.textui.validators import ValidationError
+import stat
 import mupub
 
 def _find_files(folder, outlist):
-    for entry in os.scandir(path=folder):
+    for entry in os.listdir(path=folder):
         # ignore hidden and backup files
-        if entry.name.startswith('.') or entry.name.endswith('~'):
+        if entry.startswith('.') or entry.endswith('~'):
             continue
-        if entry.is_file():
-            outlist.append(os.path.join(folder, entry.name))
-        elif entry.is_dir():
+        path = os.path.join(folder, entry)
+        stflags = os.stat(path).st_mode
+        if stat.S_ISREG(stflags):
+            outlist.append(path)
+        elif stat.S_ISDIR(stflags):
             # recurse to get files under this folder
-            outlist = _find_files(os.path.join(folder, entry.name),
-                                  outlist)
+            outlist = _find_files(path, outlist)
     return outlist
 
 
