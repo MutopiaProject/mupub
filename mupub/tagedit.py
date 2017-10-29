@@ -29,7 +29,7 @@ class LilyURL():
         self.url = url
         self.name = name
         self.is_pd = False
-        if 'Public' in name:
+        if 'public' in name.lower():
             self.is_pd = True
 
     def __str__(self):

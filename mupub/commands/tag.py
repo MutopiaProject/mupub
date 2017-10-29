@@ -45,8 +45,8 @@ def main(args):
     )
     parser.add_argument(
         '--no-query',
-        action='store_true',
-        default=False,
+        action='store_false',
+        default=True,
         dest='query',
         help='Skip verification prompt.'
     )

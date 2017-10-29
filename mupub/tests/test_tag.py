@@ -60,3 +60,13 @@ class TagTest(TestCase):
         htable = mupub.LYLoader().load(header)
         self.assertTrue('mytagline' in htable, 'mytagline should be in table')
         self.assertTrue('subtitle' in htable, 'subtitle should be in table')
+
+
+    def test_pd_subs_correctly(self):
+        target = os.path.join(self.datapath, 'pd-test.ly')
+        header = shutil.copy(target, '.')
+        today = date.today()
+        mupub.tag(header, 0, False)
+        htable = mupub.LYLoader().load(header)
+        self.assertTrue('copyright' in htable)
+        self.assertTrue(htable['copyright'].find('Placed in') > 0)

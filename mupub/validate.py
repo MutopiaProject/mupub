@@ -52,11 +52,18 @@ class Validator(metaclass=abc.ABCMeta):
 
         # license check is done separately to accomodate for copyright
         # synonym.
-        if header.get_field('copyright'):
-            logger.warning('Copyright but no license (tag command will fix this)')
-            header.set_field('license', header.get_field('copyright'))
-        else:
-            if not header.get_field('license'):
+        if not header.get_field('license'):
+            logger.warning('Missing license field.')
+            cc = header.get_field('copyright')
+            if cc:
+                with sqlite3.connect(mupub.getDBPath()) as conn:
+                    validator = mupub.DBValidator(conn)
+                    if validator.validate_license(cc):
+                        logger.warning('license will be assigned to %s when tagged.' % cc)
+                        header.set_field('license', cc)
+                    else:
+                        failures.append('copyright')
+            else:
                 failures.append('license')
 
         return failures
