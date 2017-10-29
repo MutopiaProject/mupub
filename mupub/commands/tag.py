@@ -7,7 +7,7 @@ from clint.textui import colored, puts
 import mupub
 
 
-def tag(header_file, new_id):
+def tag(header_file, new_id, query):
     """Modify the header with a new id and publish date.
 
     :param str header_file: The file containing the header to modify.
@@ -20,7 +20,7 @@ def tag(header_file, new_id):
 
     logger.info('tag command starting with %s' % header_file)
     try:
-        mupub.tag_file(header_file, new_id)
+        mupub.tag_file(header_file, new_id, query)
     except mupub.TagProcessException:
         puts(colored.yellow('Tagging aborted, no changes made.'))
 
@@ -42,6 +42,13 @@ def main(args):
         dest='new_id',
         default=0,
         help='Force identifier to this value (danger!)'
+    )
+    parser.add_argument(
+        '--no-query',
+        action='store_true',
+        default=False,
+        dest='query',
+        help='Skip verification prompt.'
     )
 
     args = parser.parse_args(args)

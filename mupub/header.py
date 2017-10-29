@@ -14,8 +14,8 @@ from abc import ABCMeta, abstractmethod
 import mupub.rdfu
 
 _HEADER_PAT = re.compile(r'\\header', flags=re.UNICODE)
-_HTAG_PAT = re.compile(r'\s*(\w+)\s*=\s*\"(.*)\"', flags=re.UNICODE)
 _VERSION_PAT = re.compile(r'\s*\\version\s+\"([^\"]+)\"')
+_SEP = '='
 
 REQUIRED_FIELDS = [
     'title',
@@ -79,9 +79,20 @@ class Loader(metaclass=ABCMeta):
         return table
 
 
+    @classmethod
+    def parse_tagline(cls, line):
+        parts = line.partition(_SEP)
+        if parts[1] == _SEP:
+            val = parts[2].strip().strip(" \t\"'")
+            return (parts[0].strip(), val,)
+        return (None,None)
+
+
+
 class LYLoader(Loader):
     """Simple, fast, line-oriented type of Loader for LilyPond files.
     """
+
     def load(self, infile):
         """Load a LilyPond file
 
@@ -118,9 +129,10 @@ class LYLoader(Loader):
                         net_braces += _net_braces(line)
                     continue
 
-                hmatch = _HTAG_PAT.search(line)
-                if hmatch:
-                    table[hmatch.group(1)] = hmatch.group(2)
+                # tag = stuff
+                (tag,val) = Loader.parse_tagline(line)
+                if tag:
+                    table[tag] = val
 
                 # stop processing file at the end of the header
                 net_braces += _net_braces(line)
@@ -203,9 +215,9 @@ class RawLoader(Loader):
         with open(infile, mode='r', encoding='utf-8') as lyfile:
             for line in lyfile:
                 line = line.split('%', 1)[0]
-                htag = _HTAG_PAT.search(line)
-                if htag is not None:
-                    table[htag.group(1)] = htag.group(2)
+                (tag,val) = Loader.parse_tagline(line)
+                if tag:
+                    table[tag] = val
 
         return table
 

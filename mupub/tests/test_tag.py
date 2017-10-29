@@ -33,7 +33,7 @@ class TagTest(TestCase):
     def test_tags_untagged_file(self):
         target = os.path.join(self.datapath, 'untagged-file.ly')
         header = shutil.copy(target, '.')
-        mupub.tag(header, 77)
+        mupub.tag(header, 77, False)
         loader = mupub.LYLoader()
         htable = loader.load(header)
         self.assertTrue('footer' in htable, 'Footer should be in table')
@@ -44,9 +44,19 @@ class TagTest(TestCase):
         target = os.path.join(self.datapath, 'prosperpina-old.ly')
         header = shutil.copy(target, '.')
         today = date.today()
-        mupub.tag(header, 0)
+        mupub.tag(header, 0, False)
         htable = mupub.LYLoader().load(header)
         self.assertTrue('footer' in htable, 'Footer should be in table')
         mod_date,_ = mupub.core.id_from_footer(htable['footer'])
         self.assertEqual(today, mod_date, 'date in footer should match today()')
         self.assertTrue('license' in htable, 'Copyright tag not processed')
+
+
+    def test_unquoted(self):
+        target = os.path.join(self.datapath, 'unquoted-header.ly')
+        header = shutil.copy(target, '.')
+        today = date.today()
+        mupub.tag(header, 0, False)
+        htable = mupub.LYLoader().load(header)
+        self.assertTrue('mytagline' in htable, 'mytagline should be in table')
+        self.assertTrue('subtitle' in htable, 'subtitle should be in table')

@@ -13,7 +13,6 @@ from clint.textui import prompt, validators, colored, puts
 import mupub
 
 _HEADER_PAT = re.compile(r'\\header')
-_HTAG_PAT = re.compile(r'^(\W*)(\w+)\s*=\s*\"(.*)\"')
 _MU_TAGS = ['footer', 'copyright', 'tagline']
 
 # All public domain licenses get this format:
@@ -166,7 +165,7 @@ def _net_braces(line):
     return line.count('{') - line.count('}')
 
 
-def _validate_id(mu_id):
+def _validate_id(mu_id, query=True):
     if mu_id == 0:
         # Try to find the next identifire
         with sqlite3.connect(mupub.getDBPath()) as conn:
@@ -174,19 +173,20 @@ def _validate_id(mu_id):
             cursor.execute('SELECT MAX(piece_id) FROM id_tracker')
             mu_id = cursor.fetchone()[0] + 1
 
-    # Prompt the user for validation
-    try:
-        mu_id = int(prompt.query('Numeric ID for this piece (ctrl-d to abort)',
-                                 default=str(mu_id),
-                                 validators=[validators.IntegerValidator()]))
-    except EOFError:
-        print('\n')
-        raise mupub.TagProcessException('ID request aborted')
+    # Prompt the user for validation if requested
+    if query:
+        try:
+            mu_id = int(prompt.query('Numeric ID for this piece (ctrl-d to abort)',
+                                     default=str(mu_id),
+                                     validators=[validators.IntegerValidator()]))
+        except EOFError:
+            print('\n')
+            raise mupub.TagProcessException('ID request aborted')
 
     return mu_id
 
 
-def _augmented_table(table, muid):
+def _augmented_table(table, muid, query=True):
     """Return a table of mutopia-specific elements from the header.
 
     :param dict table: The header key:value pairs.
@@ -221,7 +221,7 @@ def _augmented_table(table, muid):
     # muid is either 0 (new or absent/malformed footer in source), an
     # integer passed on the command line, or the value parsed from the
     # existing footer. Validate it.
-    muid = _validate_id(muid)
+    muid = _validate_id(muid, query)
 
     # Correct license/copyright change.
     if 'license' not in table:
@@ -243,7 +243,7 @@ def _mark_tag_as_used(mu_id):
         conn.execute('INSERT OR REPLACE INTO id_tracker (piece_id) VALUES (?)', (piece_id,))
 
 
-def tag_header(infile, outfile, htable, new_id=0):
+def tag_header(infile, outfile, htable, new_id=0, query=False):
     """Tag the outfile with mutopia publishing elements from infile
 
     :param File infile: The input file.
@@ -265,7 +265,7 @@ def tag_header(infile, outfile, htable, new_id=0):
         # an old header, assign the license tag to the copyright
         new_tags['license'] = htable['copyright']
 
-    htable.update(_augmented_table(htable, new_id))
+    htable.update(_augmented_table(htable, new_id, query))
 
     lines = infile.readlines()
     indent = '  '
@@ -290,13 +290,12 @@ def tag_header(infile, outfile, htable, new_id=0):
 
         # - - - here once the header has started - - -
 
-        hmatch = _HTAG_PAT.match(line)
-        if hmatch:
-            tag = hmatch.group(2)
-            # Defer all "our" tag writing until the end of the header.
+        (tag,val) = mupub.Loader.parse_tagline(line)
+        # Defer all "our" tag writing until the end of the header.
+        if tag:
             if tag not in _MU_TAGS:
                 outfile.write(infline)
-                indent = hmatch.group(1)
+                indent = line[0:line.find(tag)]
         else:
             net_braces += _net_braces(line)
             if net_braces < 1:
@@ -318,7 +317,7 @@ def tag_header(infile, outfile, htable, new_id=0):
     return htable
 
 
-def tag_file(header_file, new_id=0):
+def tag_file(header_file, new_id=0, query=True):
     """Tag the given header file.
 
     The tagging process happens in this sequence:
@@ -344,7 +343,7 @@ def tag_file(header_file, new_id=0):
                                      delete=False) as outfile:
         outfnm = outfile.name
         with open(header_file, mode='r', encoding='utf-8') as infile:
-            mupub.tag_header(infile, outfile, htable, new_id)
+            mupub.tag_header(infile, outfile, htable, new_id, query)
 
     if os.path.exists(outfnm):
         # header_file is closed, rename it to a backup file and create
