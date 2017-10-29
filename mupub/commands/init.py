@@ -224,18 +224,19 @@ def verify_init():
         return True
     except mupub.BadConfiguration:
         # Handled expected exception
-        logging.warn('You need to run the init command before continuing.')
+        puts(colored.red('You need to run the init command before continuing.'))
 
     try:
         do_init = prompt.query('Initialize now?',
                                default='no',
                                validators=[mupub.utils.BooleanValidator()])
-    except KeyboardInterrupt:
-        puts(colored.yellow('\nFine, but you will need to initialize eventually.'))
-        return False
+    except (KeyboardInterrupt, EOFError):
+        do_init = False
 
     if do_init:
-        return init(False)
+        return init(False, False)
+    else:
+        puts(colored.yellow('\nFine, but you will need to initialize eventually.'))
 
     return False
 

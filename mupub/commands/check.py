@@ -76,6 +76,8 @@ def check(infile, header_file):
 def main(args):
     """Check entry point.
     """
+    logger = logging.getLogger(__name__)
+
     parser = argparse.ArgumentParser(prog='mupub check')
     parser.add_argument(
         'infile',
@@ -87,7 +89,6 @@ def main(args):
         help='lilypond file that contains the header'
     )
 
-    mupub.config.test_config()
     args = parser.parse_args(args)
 
     check(**vars(args))
