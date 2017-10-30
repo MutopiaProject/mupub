@@ -148,6 +148,7 @@ def build(infile, header_file, collect_only):
     # if a header file was given, use that for reading the header,
     # else infile.
     if header_file:
+        header_file = mupub.resolve_lysfile(header_file)
         header = mupub.find_header(header_file)
     else:
         header = mupub.find_header(infile[0])

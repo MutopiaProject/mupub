@@ -35,6 +35,13 @@ def find_files(folder):
     return _find_files(folder, [])
 
 
+def resolve_lysfile(infile):
+    if os.path.exists(infile):
+        return infile
+    base,infile = mupub.resolve_input(infile)
+    return os.path.join(base+'-lys', infile)
+
+
 def resolve_input(infile=None):
     """Determine the file naming components for mutopia.
 

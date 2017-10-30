@@ -17,7 +17,7 @@ During development of an upcoming release, the MINOR number may be
 incremented.
 
 """
-__version__ = '0.5.4'
+__version__ = '0.6.0'
 
 __author__ = 'Glen Larsen and mutopia contributors'
 __author_email__= 'glenl.glx@gmail.com'
@@ -44,4 +44,4 @@ from .lily import LyLocator, LyVersion
 from .validate import Validator, DBValidator, in_repository
 from .tagedit import tag_header, tag_file
 from .rdfu import NS, MuRDF
-from .utils import resolve_input
+from .utils import resolve_input,resolve_lysfile

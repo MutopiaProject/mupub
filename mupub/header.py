@@ -122,7 +122,6 @@ class LYLoader(Loader):
             for line in lylines:
                 # attempt to discard comments
                 line = line.split('%', 1)[0]
-                lines += 1
                 if not header_started:
                     if _HEADER_PAT.search(line):
                         header_started = True
@@ -138,6 +137,8 @@ class LYLoader(Loader):
                 net_braces += _net_braces(line)
                 if net_braces < 1:
                     break
+                lines += 1
+
             logger.debug('Header loading discovered %s header lines' % lines)
 
         return table
@@ -343,6 +344,18 @@ class Header(object):
         return True
 
 
+    def missing_fields(self):
+        """Return a list of fields missing in the table.
+        """
+        missing = []
+        for field in REQUIRED_FIELDS:
+            if not self.get_field(field):
+                missing.append(field)
+
+        return missing
+
+
+
     def write_rdf(self, path, assets=None):
         """Write the RDF to an XML file.
 
@@ -370,13 +383,14 @@ class Header(object):
 
 _LILYENDS = ('.ly', '.ily', '.lyi',)
 def find_header(relpath, prefix='.'):
-    """Get header associated with given path and prefx
+    """Get header associated with given path and prefix
 
     :param relpath: file path, relative to compser to find LilyPond files.
     :return: filled Header object, None if no files found in relpath
     :rtype: Header, None if invalid
 
     """
+    logger = logging.getLogger(__name__)
 
     p_to_hdr = os.path.abspath(os.path.join(prefix, relpath))
     if os.path.isdir(p_to_hdr):
@@ -393,6 +407,7 @@ def find_header(relpath, prefix='.'):
         # that may be header assignments in a file included from
         # another file.
         hdr.use(RawLoader())
+        logger.debug('Using raw loader.')
         raw_files = []
         for header in headers:
             if header.lower().startswith(('header', 'mutopia',)):
@@ -405,5 +420,10 @@ def find_header(relpath, prefix='.'):
         hdr.use(VersionLoader())
         hdr.load_table_list(p_to_hdr, headers)
         return hdr
+
+    # Here on invalid or missing header. If we have content, assume
+    # missing fields and show them in a warning.
+    if hdr.len() > 0:
+        logger.warning('Invalid header, missing: %s' % hdr.missing_fields())
 
     return None

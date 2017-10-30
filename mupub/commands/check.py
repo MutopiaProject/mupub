@@ -5,6 +5,7 @@ __docformat__ = 'reStructuredText'
 
 import argparse
 import logging
+import os
 import sqlite3
 from clint.textui import colored, puts, indent
 import mupub
@@ -25,30 +26,30 @@ def check(infile, header_file):
 
     base, infile = mupub.resolve_input(infile)
 
-    logger.info('check command starting for %s.' % infile)
     if not mupub.commands.init.verify_init():
         return
 
-    if not infile:
-        logger.warning('File resolution failed')
-        return
-
     if header_file:
+        header_file = mupub.resolve_lysfile(header_file)
         logger.debug('Searching %s for header', header_file)
-        header = mupub.find_header(header_file)
+        logger.info('check command starting for %s.' % header_file)
+        try:
+            header = mupub.find_header(header_file)
+        except FileNotFoundError as fnf:
+            logger.error(fnf)
+            return
     else:
-        logger.debug('Searching %s for header', infile)
         header = mupub.find_header(infile)
 
     if not header:
-        logger.warning('No header found?')
+        logger.warning('Partial or no header content found')
         return
 
     with sqlite3.connect(mupub.getDBPath()) as conn:
         validator = mupub.DBValidator(conn)
         v_failures = validator.validate_header(header)
         if len(v_failures) > 0:
-            puts(colored.red('{} failed validation on:'.format(infile)))
+            puts(colored.red('Failed validation on:'))
             with indent(4):
                 for fail in v_failures:
                     puts(colored.red(fail))
