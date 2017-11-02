@@ -14,7 +14,9 @@ def tag(header_file, new_id, query):
     :param int new_id: New numeric identifier, unique to piece.
     """
     logger = logging.getLogger(__name__)
-    if not header_file:
+    if header_file:
+        header_file = mupub.resolve_lysfile(header_file)
+    else:
         _,header_file = mupub.utils.resolve_input()
         logger.info('tag target is %s.' % header_file)
 

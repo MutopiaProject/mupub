@@ -60,7 +60,8 @@ def _build_preview(base_params, lpversion, infile):
     """Build a preview file
 
     :param base_params: Starting list of LilyPond command and parameters.
-    :param infile: LilyPond file to compile
+    :param lpversion: The LilyPond version of the source file.
+    :param infile: LilyPond file to compile.
 
     """
 
