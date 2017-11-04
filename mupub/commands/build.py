@@ -11,6 +11,7 @@ import argparse
 import glob
 import logging
 import os
+import shutil
 import subprocess
 from clint.textui import colored, puts
 import mupub
@@ -73,24 +74,38 @@ def _build_preview(base_params, lpversion, infile, force_png_preview=False):
     """
 
     logger = logging.getLogger(__name__)
-    preview_params = [] # '-dno-include-book-title-preview',]
+    preview_fnm = mupub.CONFIG_DICT['common'].get('preview_fnm')
+    if preview_fnm:
+        tpath = os.path.join(os.path.dirname(infile), preview_fnm)
+        if os.path.exists(tpath):
+            logger.debug('Premade image found (%s) for preview' % tpath)
+            # build a destination from the infile name
+            namev = [os.path.basename(infile).rsplit('.')[0],]
+            namev.append('.preview')
+            namev.append(tpath[tpath.rfind('.'):]) # extension
+            dest = os.path.join('./', ''.join(namev))
+            _remove_if_exists(dest)
+            shutil.copyfile(tpath, dest)
+            logger.debug('Destination preview copied (%s)' % dest)
+            return
 
+    preview_params = ['-dno-include-book-title-preview',]
     if lpversion < mupub.LyVersion('2.14'):
-        base_params.append('-dresolution=101'),
-        base_params.append('--preview')
-        base_params.append('--no-print')
-        base_params.append('--format=png')
+        preview_params.append('-dresolution=101'),
+        preview_params.append('--preview')
+        preview_params.append('--no-print')
+        preview_params.append('--format=png')
     else:
-        base_params.append('-dno-print-pages'),
-        base_params.append('-dpreview')
+        preview_params.append('-dno-print-pages'),
+        preview_params.append('-dpreview')
         if force_png_preview:
-            base_params.append('--format=png')
+            preview_params.append('--format=png')
         else:
-            base_params.append('-dbackend=svg')
+            preview_params.append('-dbackend=svg')
 
     command = base_params + preview_params
     command.append(infile)
-    puts(colored.green('Building preview and midi'))
+    puts(colored.green('Building preview and midi files'))
     try:
         subprocess.check_output(command)
     except subprocess.CalledProcessError as cpe:

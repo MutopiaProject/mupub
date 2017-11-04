@@ -22,6 +22,7 @@ _CONFIG_DEFAULT = """
   local_db = mu-min-db.db
   download_url = http://download.linuxaudio.org/lilypond/binaries/
   mutopia_url = http://www.mutopiaproject.org/
+  preview_fnm = preview.svg
 [logging]
   log_to_file = True
   logfilename = mupub-errors.log

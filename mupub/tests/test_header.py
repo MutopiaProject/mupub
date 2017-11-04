@@ -31,12 +31,6 @@ class HeaderTest(unittest.TestCase):
         self.assertEqual(header.get_field('style'), 'Romantic')
 
 
-    @unittest.skip('Requires specific LilyPond versions to work')
-    def test_scheme_loader(self):
-        """Use scheme loader to build header."""
-        self._check_header(mupub.Header(mupub.SchemeLoader()))
-
-
     def test_ly_loader(self):
         """Use line parsing loader to build header."""
         self._check_header(mupub.Header(mupub.LYLoader()))
@@ -55,7 +49,7 @@ class HeaderTest(unittest.TestCase):
 
     def test_throws_badfile(self):
         """Make sure an exception is thrown on bad input file."""
-        header = mupub.Header(mupub.SchemeLoader())
+        header = mupub.Header(mupub.LYLoader())
         path = os.path.join(os.path.dirname(__file__),
                             TEST_DATA,
                             'foo-bar.ly')

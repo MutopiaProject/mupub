@@ -162,48 +162,6 @@ class VersionLoader(Loader):
         return table
 
 
-# scheme contributed by DAK
-_LILYHDR_SCM = re.sub(r'\s+', ' ', """
-(set! print-book-with-defaults
-      (lambda (book)
-        (module-for-each
-         (lambda (sym var)
-	   (if (markup? (variable-ref var))
-	       (format #t "~a=~S\\n" sym
-                   (markup->string (variable-ref var)))))
-         (ly:book-header book))))
-""")
-
-class SchemeLoader(Loader):
-    """Read a lilypond file and read the headers into a dict.
-    Load a hash table using LilyPond scheme.
-
-    This routine uses the scheme code developed by David Kastrup and
-    Felix Janda to extract header information from the lilypond file.
-
-   :param lilyfile: Filename
-   :type lilyfile: string
-   :return: dict
-
-    """
-
-    def load(self, lyf):
-        if not os.path.isfile(lyf):
-            raise FileNotFoundError
-
-        lilycmd = ['lilypond', '-s', '-e',]
-        lilycmd.append(''.join(_LILYHDR_SCM).strip())
-        lilycmd.append(lyf)
-        hdrs = subprocess.check_output(lilycmd, universal_newlines=True)
-        hdr_map = {}
-        for header_pair in hdrs.split('\n'):
-            header_vec = header_pair.split('=', 2)
-            if len(header_vec) > 1:
-                hdr_map[header_vec[0]] = header_vec[1].strip('" ')
-
-        return hdr_map
-
-
 class RawLoader(Loader):
     """
     A RawLoader is used to import a file that isn't wrapped
