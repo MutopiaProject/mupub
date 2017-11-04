@@ -1,4 +1,4 @@
-\version "2.19.35"
+\version "2.18.2"
 
 \header {
   title = "12 Etudes"
@@ -21,9 +21,8 @@ global = {
   \key d \major
 }
 
-% My first attempt with absolute notation with the fixed directive.
 
-upperVoice = \fixed c' {
+upperVoice = \relative c' {
   \voiceOne
   \set fingeringOrientations = #'(up)
   \override Fingering.add-stem-support = ##t
@@ -32,71 +31,10 @@ upperVoice = \fixed c' {
   g,8 <d e> e, <d e> fis, <d e> g, <d e> |
   a,8 <cis e> a,, <cis e> a, <cis e> g, <cis e> |
 
-  \mbreak
-  fis,8 <d fis> a,, <d fis> d, <d fis> e, <d fis> |
-  fis,8 <d fis> d, <d fis> b, <d fis> a, <d fis> |
-  gis,8 <d e> e, <d e> a, <cis e> cis, <e a> |
-  d, <b, a> b,, <d a> e, <d gis> e,, <d gis> |
-
-  \mbreak
-  a,,8 <cis a> e, <cis a> a, <cis a> a,, <cis g> |
-  d,8 <d fis> fis, <d fis> b, <d fis> a, <d fis> |
-  g,8 <d e> e, <d e> fis, <d e> g, <d e> |
-  a,8 <cis e> a,, <cis e> a, <cis e> g, <cis e> |
-
-  \mbreak
-  fis,8 <d fis> a,, <d fis> d, <d fis> e, <d fis> |
-  fis,8 <d fis> d, <d fis> b, <d fis> a, <d fis> |
-  gis,8 <d e> e, <d e> a, <cis e> cis, <e a> |
-  d,8 <b, a> b,, <d a> e, <d gis> e,, <d gis> |
-
-  \mbreak
-  a,,8 <cis a> a, <cis a> e, <cis a> cis, <cis a> |
-  a,,8 <cis a> e, <cis a> cis, <cis a> a,, <cis g> |
-  fis,8 <d fis> d, <d fis> b, <d fis> a, <d fis> |
-  a,,8 <cis g> e, <cis g> cis, <e g> a,, <cis g> |
-  
-  \mbreak
-  d,8 <d fis> a, <d fis> fis, <d fis> d, <d fis> |
-  c,8 <d fis> a, <d fis> fis, <d fis> c, <d fis> |
-  b,,8 <d g> d, <d g> g, <d g> b, <d g> |
-  bes,,8 <d gis> f, <d gis> e, <d gis> d, <d gis> |
-
-  \mbreak
-  a,,8 <d gis> e, <d gis> a, <cis a> a,, <cis g> |
-  d,8 <d fis> fis, <d fis> b, <d fis> a, <d fis> |
-  g,8 <d e> e, <d e> fis, <d e>  g, <d e> |
-  a,8 <cis e> a,, <cis e> a, <cis e> g, <cis e> |
-
-  \mbreak
-  fis,8 <c d> d, <c d> a, <c d> fis, <c d> |
-  g,8 <b, d> fis, <b, d> e, <b, g> d, <b, g> |
-  cis,8 <e g> a,, <e g> d, <d fis> fis, <d fis> |
-  g, <d e> e, <d e> a, <cis e> a,, <cis e> |
-
-  \mbreak
-  d,8 <d fis> a,, <d fis> d, <d fis> e, <d fis> |
-  fis,8 <d fis> d, <d fis> b, <d fis> a, <d fis> |
-  g,8 <d e> e, <d e> fis, <d e> g, <d e> |
-  a,8 <cis e> a,, <cis e> a, <cis e> g, <cis e> |
-
-  \mbreak
-  fis,8 <d fis> a,, <d fis> d, <d fis> e, <d fis> |
-  fis,8 <d fis> d, <d fis> b, <d fis> a, <d fis> |
-  g,8 <d e> e, <d e> fis, <d e> g, <d e> |
-  a, <d e> gis, <d e> a, <cis e> a,, <cis e> |
-
-  \mbreak
-  d,8 <d fis> fis, <d fis> a, <d fis> a,, <cis g> |
-  d,8 <d fis> fis, <d fis> a, <d fis> a,, <cis g> |
-  d,8 <d fis> fis, <d fis> a, <d fis> fis, <d fis> |
-  d,8 <d fis> fis, <d fis> a, <d fis> fis, <d fis> |
-  d,2 b,\rest
-
   \bar "|."
 }
 
-lowerVoice = \fixed c {
+lowerVoice = \relative c {
   \voiceTwo
   \set fingeringOrientations = #'(down)
   \override Fingering.add-stem-support = ##t
@@ -105,56 +43,6 @@ lowerVoice = \fixed c {
   g4 e fis g |
   a4 a, a g |
 
-  fis4 a, d e |
-  fis4 d  b a |
-  gis4 e a cis |
-  d4 b, e e, |
-
-  a,4 e a a, |
-  d4 fis b a |
-  g4 e fis g |
-  a4 a, a  g |
-
-  fis4 a, d e |
-  fis4 d b a |
-  gis4 e a cis |
-  d4 b, e e, |
-
-  a,4 a e cis |
-  a,4 e cis a, |
-  fis4 d b a |
-  a,4 e cis a, |
-
-  d4 a fis d |
-  c2. c4 |
-  b,2. b4 |
-  bes,1 |
-
-  a,2. a,4 |
-  d4 fis b a |
-  g4 e fis g |
-  a4 a, a g |
-
-  fis4 d a fis |
-  g4 fis e d |
-  cis4 a, d fis |
-  g4 e a a, |
-
-  d4 a, d e |
-  fis4 d b a |
-  g4 e fis g |
-  a4 a, a g |
-
-  fis4 a, d e |
-  fis4 d b a |
-  g4 e fis g |
-  a4 gis a a, |
-
-  d4 fis a a, |
-  d4 fis a a, |
-  d4 fis a fis |
-  d4 fis a fis |
-  s1
 }
 
 \score {

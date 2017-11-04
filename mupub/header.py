@@ -387,7 +387,7 @@ def find_header(relpath, prefix='.'):
 
     :param relpath: file path, relative to compser to find LilyPond files.
     :return: filled Header object, None if no files found in relpath
-    :rtype: Header, None if invalid
+    :rtype: Header
 
     """
     logger = logging.getLogger(__name__)
@@ -415,15 +415,7 @@ def find_header(relpath, prefix='.'):
         if len(raw_files) > 0:
             hdr.load_table_list(p_to_hdr, raw_files)
 
-    if hdr.is_valid():
-        # The version tag *should* live where the header is found
-        hdr.use(VersionLoader())
-        hdr.load_table_list(p_to_hdr, headers)
-        return hdr
+    hdr.use(VersionLoader())
+    hdr.load_table_list(p_to_hdr, headers)
 
-    # Here on invalid or missing header. If we have content, assume
-    # missing fields and show them in a warning.
-    if hdr.len() > 0:
-        logger.warning('Invalid header, missing: %s' % hdr.missing_fields())
-
-    return None
+    return hdr

@@ -32,6 +32,7 @@ def _build_scores(base_params, infile):
     :param infile: The file to compile.
 
     """
+    logger = logging.getLogger(__name__)
 
     pagedef = {'a4': 'a4', 'letter': 'let'}
     build_params = ['--format=pdf', '--format=ps',]
@@ -42,7 +43,11 @@ def _build_scores(base_params, infile):
         command = base_params + build_params
         command.append('-dpaper-size="{}"'.format(psize))
         command.append(infile)
-        subprocess.check_output(command)
+        try:
+            subprocess.check_output(command)
+        except subprocess.CalledProcessError as cpe:
+            logging.error('LilyPond returned an error code of %d' % cpe.returncode)
+            return False
 
         # rename the pdf and ps files to include their page size
         pdf_fnm = basefnm + '.pdf'
@@ -55,42 +60,53 @@ def _build_scores(base_params, infile):
             sized_ps = basefnm + '-{0}.ps'.format(pagedef[psize])
             os.rename(ps_fnm, sized_ps)
 
+    return True
 
-def _build_preview(base_params, lpversion, infile):
+
+def _build_preview(base_params, lpversion, infile, force_png_preview=False):
     """Build a preview file
 
     :param base_params: Starting list of LilyPond command and parameters.
     :param lpversion: The LilyPond version of the source file.
     :param infile: LilyPond file to compile.
-
+    :force_png_preview: Force the use of PNG format in preview
     """
 
-    preview_params = ['-dno-include-book-title-preview',]
+    logger = logging.getLogger(__name__)
+    preview_params = [] # '-dno-include-book-title-preview',]
 
-    supports_svg = True
     if lpversion < mupub.LyVersion('2.14'):
         base_params.append('-dresolution=101'),
         base_params.append('--preview')
         base_params.append('--no-print')
         base_params.append('--format=png')
-        supports_svg = False
     else:
         base_params.append('-dno-print-pages'),
         base_params.append('-dpreview')
-        base_params.append('-dbackend=svg')
+        if force_png_preview:
+            base_params.append('--format=png')
+        else:
+            base_params.append('-dbackend=svg')
 
     command = base_params + preview_params
     command.append(infile)
     puts(colored.green('Building preview and midi'))
-    subprocess.check_output(command)
+    try:
+        subprocess.check_output(command)
+    except subprocess.CalledProcessError as cpe:
+        logging.error('LilyPond returned an error code of %d' % cpe.returncode)
+        return False
+
+    return True
 
 
-def _build_one(infile, lily_path, lpversion, do_preview):
+def _build_one(infile, lily_path, lpversion, do_preview, force_png_preview=False):
     """Build a single lilypond file.
 
     :param infile: LilyPond file to build, might be None
     :param lily_path: Path to LilyPond build script
     :param do_preview: Boolean to flag additional preview build
+    :param force_png_preview: Force use of PNG format in preview
 
     """
 
@@ -101,12 +117,12 @@ def _build_one(infile, lily_path, lpversion, do_preview):
 
     base_params = [lily_path, '-dno-point-and-click',]
 
-    _build_scores(base_params, infile)
-    if do_preview:
-        _build_preview(base_params, lpversion, infile)
+    if _build_scores(base_params, infile):
+        if do_preview:
+            _build_preview(base_params, lpversion, infile, force_png_preview)
 
 
-def _lily_build(infile, header):
+def _lily_build(infile, header, force_png_preview=False):
     lpversion = mupub.LyVersion(header.get_value('lilypondVersion'))
     locator = mupub.LyLocator(str(lpversion), progress_bar=True)
     lily_path = locator.working_path()
@@ -114,16 +130,22 @@ def _lily_build(infile, header):
     # Build each score, doing a preview on the first one only.
     do_preview = True
     for ly_file in infile:
-        _build_one(ly_file, lily_path, lpversion, do_preview)
+        _build_one(ly_file, lily_path, lpversion, do_preview, force_png_preview)
         do_preview = False
 
 
-def build(infile, header_file, collect_only):
+def build(infile,
+          header_file,
+          collect_only=False,
+          skip_header_check=False,
+          force_png_preview=False ):
     """Build one or more |LilyPond| files, generate publication assets.
 
     :param infile: The |LilyPond| file(s) to build.
     :param header_file: The file containing the header information.
     :param collect_only: Skip building, just collect assets and build RDF.
+    :param skip_header_check: Skip header validation.
+    :param force_png_preview: Coerce PNG format in preview
 
     This command presumes your current working directory is the
     location where the contributed source files live in the
@@ -158,12 +180,21 @@ def build(infile, header_file, collect_only):
         puts(colored.red('failed to find header'))
         return
 
+    # Try to handle missing required fields.
     if not header.is_valid():
-        puts(colored.red('Validation failed.'))
-        return
+        mfields = header.missing_fields()
+        if len(mfields) > 0:
+            logger.warning('Invalid header, missing: %s' % mfields)
+        if skip_header_check:
+            puts(colored.yellow('Header not complete, continuing.'))
+        else:
+            # return without building otherwise
+            puts(colored.red('Header validation failed.'))
+            logger.debug('Incorrect or incomplete header.')
+            return
 
     if not collect_only:
-        _lily_build(infile, header)
+        _lily_build(infile, header, force_png_preview)
 
     # rename all .midi files to .mid
     for mid in glob.glob('*.midi'):
@@ -193,16 +224,27 @@ def main(args):
         'infile',
         nargs='*',
         default=[],
-        help='lilypond input file (try to work it out if not given)'
+        help='LilyPond input file (try to work it out if not given)'
     )
     parser.add_argument(
         '--header-file',
-        help='lilypond file that contains the header'
+        help='LilyPond file that contains the header'
     )
     parser.add_argument(
         '--collect-only',
         action='store_true',
-        help='collect built files into publishable assets')
+        help='Collect built files into publishable assets'
+    )
+    parser.add_argument(
+        '--skip-header-check',
+        action='store_true',
+        help='Do not exit on failed header validation'
+    )
+    parser.add_argument(
+        '--force-png-preview',
+        action='store_true',
+        help='Force a preview with PNG format instead of default SVG'
+    )
 
     args = parser.parse_args(args)
     build(**vars(args))

@@ -200,10 +200,11 @@ def init(dump, sync_only):
             logger.info('configuration saved')
         logger.info('starting initialization')
         _init_db()
-        return True
     except KeyboardInterrupt:
-        pass
-    return False
+        # handle caught exception
+        return False
+
+    return True
 
 
 def verify_init():

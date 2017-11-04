@@ -3,13 +3,13 @@
 
 import os.path
 import sys
-from unittest import TestCase
+import unittest
 import mupub
 import mupub.tests.tutils as tutils
 
 TEST_DATA = 'data'
 
-class HeaderTest(TestCase):
+class HeaderTest(unittest.TestCase):
     """mupub.Header test class"""
 
     def _check_header(self, header):
@@ -31,6 +31,7 @@ class HeaderTest(TestCase):
         self.assertEqual(header.get_field('style'), 'Romantic')
 
 
+    @unittest.skip('Requires specific LilyPond versions to work')
     def test_scheme_loader(self):
         """Use scheme loader to build header."""
         self._check_header(mupub.Header(mupub.SchemeLoader()))
