@@ -160,6 +160,8 @@ def _init_config():
     common = mupub.CONFIG_DICT['common']
     if 'mutopia_url' not in common:
         common['mutopia_url'] = 'http://www.mutopiaproject.org/'
+    if 'preview_fnm' not in common:
+        common['preview_fnm'] = 'preview.svg'
 
 
 def init(dump, sync_only):
