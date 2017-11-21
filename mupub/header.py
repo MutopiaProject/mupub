@@ -349,6 +349,8 @@ def find_header(relpath, prefix='.'):
 
     """
     logger = logging.getLogger(__name__)
+    if not relpath:
+        return None
 
     p_to_hdr = os.path.abspath(os.path.join(prefix, relpath))
     if os.path.isdir(p_to_hdr):

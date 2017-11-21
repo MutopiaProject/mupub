@@ -32,7 +32,6 @@ def check(infile, header_file):
     if header_file:
         header_file = mupub.resolve_lysfile(header_file)
         logger.debug('Searching %s for header', header_file)
-        logger.info('check command starting for %s.' % header_file)
         try:
             header = mupub.find_header(header_file)
         except FileNotFoundError as fnf:
@@ -40,11 +39,15 @@ def check(infile, header_file):
             return
     else:
         header = mupub.find_header(infile)
+        if not header:
+            logger.warning('No Mutopia header found. Are you in the proper folder?')
+            return
 
     if not header:
         logger.warning('Partial or no header content found')
         return
 
+    logger.info('check command starting for %s.' % header_file)
     with sqlite3.connect(mupub.getDBPath()) as conn:
         validator = mupub.DBValidator(conn)
         v_failures = validator.validate_header(header)
