@@ -172,39 +172,81 @@ piece is tagged, build artifacts are cleaned from the folder, and the final buil
 
    Publishing build workflow
 
-The ``check`` and ``build`` commands must be run from the folder in which the final build assets
-will be published. These commands can take a |lilypond| filename as an option but in most scenarios
-it is not necessary. On complicated builds that may have header information somewhere other than the
-main source file you might have to help the command by specifying ``--header-file``. Whatever is
+All ``mupub`` commands must be run from the folder in which the final build assets will be
+published. These commands can take a |lilypond| filename as an option but in most scenarios it is
+not necessary. On complicated builds that may have header information somewhere other than the main
+source file you might have to help ``mupub`` by specifying the ``--header-file`` flag. Whatever flag is
 passed to ``check`` should be passed to ``build`` and ``tag``.
 
-.. note:: ``mupub tag`` will prompt you with the piece-id. Because there is no central database
-          storing this value, a best guess is done and it should be reviewed carefully before being
-          accepted to prevent duplicate identifiers.
+``mupub tag`` parses the header to find existing piece identifiers, if any. Contributors will
+sometimes create a temporary tag for the purpose of reviewing the submission as it would look with
+the copyright at the bottom of the file. Any illegal tag (e.g., -0 or -draft) will be considered a
+new submission and the user will be prompted with a guess for the new piece id. Legal tags are
+parsed and the user is prompted with the existing identifier.
 
 
 Initializing
 ~~~~~~~~~~~~
 
-The application tracks several details in a local database. This is mostly used for doing validation
-checks but also for tracking piece identifiers.
+The user should run the ``init`` command whenever,
 
+  - configuration values need to be changed.
+  - new pieces have been published to the web site.
+  - an updated ``mupub`` application has been installed.
+  - any of the datafiles have been edited
 
-Help
-~~~~
+It is always safe to run the ``init`` command so run it if your are not sure.
 
-In addition to basic usage help, there is additional command help provided at the command line. The
-application requires at least one command to run. For example,
+There are two functions to the initialization process: updating the configuration values
+and synchronizing data from various data sources. The application tracks these details in a small
+local database. The decision to do things this way is because there is no central database holding
+all of the information needed to be tracked for publication. Once configuration is set and there is
+no need for modifying the configuration, the configuration queries can be skipped by only doing the
+synchronization step using the ``--sync-only`` flag,
 
 .. code-block:: bash
 
-  glenl@lola$ mupub --help         # for help on the application
-  glenl@lola$ mupub build --help   # for help on the build command
+  glenl@lola$ mupub init --sync-only
+  INFO     mupub.commands.init starting initialization
+  INFO     mupub.commands.init Looking at http://www.mutopiaproject.org/
+  INFO     mupub.commands.init 2207 is pending
+  INFO     mupub.commands.init 2208 is pending
+  glenl@lola$
 
+.. note:: To get the above output I edited the configuration manually and set loglevel to INFO.
+
+The output shows that two pieces, 2207 and 2208, are still awaiting publication (assigned but not
+yet processed.) Verifying with the website shows that 2206 is the most recently published piece.
+
+
+What is in the configuration folder
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The configuration area for the ``mupub`` application is ``$HOME/.mupub``. After initialization you
+will find these elements in this folder,
+
+.. table:: Configuration Area
+   :widths: auto
+
+   ================  ===============================================================
+         Name          Purpose
+   ================  ===============================================================
+   lycache           A folder containing |lilypond| installations done by ``check``
+   mu-config.cfg     The configuration file
+   mu-config.cfg~    A backup of the configuration file
+   mu-min-db.db      The SQLite database
+   mupub-errors.log  The log file
+   ================  ===============================================================
+
+.. warning:: The *lycache* area may get heavily populated over time when there are many submissions
+             using different compilers. This typically slows over time but it is safe to remove
+             installations that you know are no longer or rarely used.
 
 
 Listing zipped source files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+How does one check the contents of zipped build assets? Like this,
 
 .. code-block:: text
 
@@ -229,3 +271,33 @@ Listing zipped source files
   ---------                     -------
      118596                     14 files
   glenl@lola:Concerto_No3$
+
+
+Help
+~~~~
+
+In addition to basic usage help, there is additional help provided at the command line. For example,
+
+.. code-block:: text
+
+  glenl@lola$ mupub --help         # for help on the application
+  usage: mupub [-h] [--version] [--verbose] {clean,build,tag,check,init}
+
+  This is a command-line utility for managing the publication of
+  Mutopia Project contributions. All unctionality is provided by
+  commands within this utility:
+
+      check - Reviews the contributed piece for validity.
+      tag   - Modifies the header with MutopiaProject fields.
+      build - Builds a complete set of output files for publication.
+      clean - Clears all build products.
+
+  positional arguments:
+    {clean,build,tag,check,init}
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    --version             show program's version number and exit
+    --verbose             louder
+
+  Use mupub <command> --help for specific command help
