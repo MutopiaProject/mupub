@@ -144,20 +144,26 @@ def _lily_build(infile, header, force_png_preview=False):
 
     # Build each score, doing a preview on the first one only.
     do_preview = True
+    count = 0
     for ly_file in infile:
+        count += 1
+        puts(colored.green('Processing LilyPond file {} of {}'.format(count,len(infile))))
         _build_one(ly_file, lily_path, lpversion, do_preview, force_png_preview)
         do_preview = False
 
 
 def build(infile,
           header_file,
+          parts_folder,
           collect_only=False,
           skip_header_check=False,
           force_png_preview=False ):
+
     """Build one or more |LilyPond| files, generate publication assets.
 
     :param infile: The |LilyPond| file(s) to build.
     :param header_file: The file containing the header information.
+    :param parts_folder: Build part scores contained in this folder.
     :param collect_only: Skip building, just collect assets and build RDF.
     :param skip_header_check: Skip header validation.
     :param force_png_preview: Coerce PNG format in preview
@@ -208,8 +214,30 @@ def build(infile,
             logger.debug('Incorrect or incomplete header.')
             return
 
+    # The user can opt to build manually and then use this application
+    # to collect all the publication assets.
     if not collect_only:
+        # build infile collection first
         _lily_build(infile, header, force_png_preview)
+
+        # Build all parts if requested.
+        if parts_folder:
+            # User may fully specify the folder name
+            parts_path = parts_folder
+            if not os.path.exists(parts_path):
+                # ... or we'll try to find it here
+                parts_path = os.path.join(base+'-lys', parts_folder)
+                if not os.path.exists(parts_path):
+                    puts(colored.red('Failed to find parts folder - {}'.format(parts_folder)))
+                    puts(colored.red('Skipping asset collection'))
+                    return
+            parts_list = []
+            for fnm in os.listdir(path=parts_path):
+                if fnm.endswith('.ly'):
+                    parts_list.append(os.path.join(parts_path,fnm))
+            if len(parts_list) > 0:
+                puts(colored.green('Found {} part scores'.format(len(parts_list))))
+                _lily_build(parts_list, header, force_png_preview)
 
     # rename all .midi files to .mid
     for mid in glob.glob('*.midi'):
@@ -244,6 +272,10 @@ def main(args):
     parser.add_argument(
         '--header-file',
         help='LilyPond file that contains the header'
+    )
+    parser.add_argument(
+        '--parts-folder',
+        help='Specify folder containing part scores'
     )
     parser.add_argument(
         '--collect-only',

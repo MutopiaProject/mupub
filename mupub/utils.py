@@ -39,7 +39,6 @@ def resolve_lysfile(infile):
     if os.path.exists(infile):
         return infile
     base,infile = mupub.resolve_input(infile)
-    print(os.path.join(base+'-lys', infile))
     return os.path.join(base+'-lys', infile)
 
 
