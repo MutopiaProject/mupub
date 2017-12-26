@@ -115,7 +115,11 @@ def _build_preview(base_params, lpversion, infile, force_png_preview=False):
     return True
 
 
-def _build_one(infile, lily_path, lpversion, do_preview, force_png_preview=False):
+def _build_one(infile,
+               lily_path,
+               lpversion,
+               do_preview,
+               force_png_preview=False):
     """Build a single lilypond file.
 
     :param infile: LilyPond file to build, might be None
@@ -128,27 +132,35 @@ def _build_one(infile, lily_path, lpversion, do_preview, force_png_preview=False
     base, infile = mupub.utils.resolve_input(infile)
     if not infile:
         puts(colored.red('Failed to resolve infile %s' % infile))
-        return
+        return False
 
     base_params = [lily_path, '-dno-point-and-click',]
+    if not _build_scores(base_params, infile):
+        return False
+    if do_preview:
+        return _build_preview(base_params,
+                              lpversion,
+                              infile,
+                              force_png_preview)
+    return True
 
-    if _build_scores(base_params, infile):
-        if do_preview:
-            _build_preview(base_params, lpversion, infile, force_png_preview)
 
-
-def _lily_build(infile, header, force_png_preview=False):
+def _lily_build(infile, header, force_png_preview=False, skip_preview=False):
     lpversion = mupub.LyVersion(header.get_value('lilypondVersion'))
     locator = mupub.LyLocator(str(lpversion), progress_bar=True)
     lily_path = locator.working_path()
 
-    # Build each score, doing a preview on the first one only.
-    do_preview = True
+    # Build each score, doing a preview on the first one only (unless skipping)
+    do_preview = not skip_preview
     count = 0
     for ly_file in infile:
         count += 1
         puts(colored.green('Processing LilyPond file {} of {}'.format(count,len(infile))))
-        _build_one(ly_file, lily_path, lpversion, do_preview, force_png_preview)
+        _build_one(ly_file,
+                   lily_path,
+                   lpversion,
+                   do_preview,
+                   force_png_preview)
         do_preview = False
 
 
@@ -237,7 +249,7 @@ def build(infile,
                     parts_list.append(os.path.join(parts_path,fnm))
             if len(parts_list) > 0:
                 puts(colored.green('Found {} part scores'.format(len(parts_list))))
-                _lily_build(parts_list, header, force_png_preview)
+                _lily_build(parts_list, header, False, True)
 
     # rename all .midi files to .mid
     for mid in glob.glob('*.midi'):
