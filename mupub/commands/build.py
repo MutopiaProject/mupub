@@ -255,17 +255,22 @@ def build(infile,
     for mid in glob.glob('*.midi'):
         os.rename(mid, mid[:len(mid)-1])
 
-    assets = mupub.collect_assets(base)
-    puts(colored.green('Creating RDF file'))
-    header.write_rdf(base+'.rdf', assets)
+    try:
+        assets = mupub.collect_assets(base)
+        puts(colored.green('Creating RDF file'))
+        header.write_rdf(base+'.rdf', assets)
 
-    # remove by-products of build
-    _remove_if_exists(base+'.ps')
-    _remove_if_exists(base+'.png')
-    _remove_if_exists(base+'.preview.png')
-    _remove_if_exists(base+'.preview.svg')
-    _remove_if_exists(base+'.preview.eps')
-    logger.debug('Publishing build complete.')
+        # remove by-products of build
+        _remove_if_exists(base+'.ps')
+        _remove_if_exists(base+'.png')
+        _remove_if_exists(base+'.preview.png')
+        _remove_if_exists(base+'.preview.svg')
+        _remove_if_exists(base+'.preview.eps')
+        logger.info('Publishing build complete.')
+    except mupub.IncompleteBuild as exc:
+        logger.warning(exc)
+        puts(colored.red('Rebuild needed, assets were not completely built.'))
+        puts(colored.red('Do a "mupub clean" before next build.'))
 
 
 def main(args):
