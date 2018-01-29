@@ -17,7 +17,7 @@ During development of an upcoming release, the MINOR number may be
 incremented.
 
 """
-__version__ = '1.0.2-beta'
+__version__ = '1.0.3-beta'
 
 __author__ = 'Glen Larsen and Mutopia Project contributors'
 __author_email__= 'glenl.glx@gmail.com'
