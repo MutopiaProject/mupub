@@ -47,7 +47,7 @@ def check(infile, header_file):
         logger.warning('Partial or no header content found')
         return
 
-    logger.info('check command starting for %s.' % header_file)
+    logger.info('check command starting for %s.' % infile)
     with sqlite3.connect(mupub.getDBPath()) as conn:
         validator = mupub.DBValidator(conn)
         v_failures = validator.validate_header(header)

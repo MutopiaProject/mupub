@@ -94,22 +94,22 @@ class LyVersion():
         :rtype: string
 
         """
+        logger = logging.getLogger(__name__)
         if not self.is_valid():
             return None
 
         binurl = mupub.CONFIG_DICT['common']['download_url']
 
         req = requests.get(binurl)
-        compiler_page = BeautifulSoup(req.content,
-                                      'html.parser')
+        compiler_page = BeautifulSoup(req.content, 'html.parser')
         # Find the first link in the page that matches given cpu.
         tlink = compiler_page.find(href=cpu_descr+'/')
         if not tlink:
+            logger.warning('Did not find compiler script for %s' % cpu_descr)
             return None
 
         bin_archive = binurl+cpu_descr+'/'
-        comp_page = BeautifulSoup(requests.get(bin_archive).content,
-                                  'html.parser')
+        comp_page = BeautifulSoup(requests.get(bin_archive).content, 'html.parser')
         # Filter to get only lilypond install scripts, then search for
         # a match on the version.
         href_re = re.compile(COMPFMT.format(cpu_descr))
@@ -118,6 +118,9 @@ class LyVersion():
             script_m = RE_SCRIPT.match(script_ref)
             if script_m and self.match(LyVersion(script_m.group(1))):
                 return bin_archive + script_ref
+
+        logger.warn('No install scripts found for %s' % self.version)
+        logger.warn('Using %s' % binurl)
 
         return None
 
@@ -166,6 +169,7 @@ class LyInstaller(metaclass=abc.ABCMeta):
 
         """
         request = requests.get(script_url, stream=True)
+        print(request.status_code)
         with open(output_path, 'wb') as out_script:
             if self.progress_bar:
                 total_len = int(request.headers.get('content-length'))
@@ -273,6 +277,8 @@ class LyLocator():
         :rtype: str, None if working path cannot be determined.
 
         """
+        logger = logging.getLogger(__name__)
+
         for folder in _cached_compilers():
             candidate = LyVersion(folder)
             if self.version.match(candidate):
@@ -281,6 +287,7 @@ class LyLocator():
                 return os.path.join(LYCACHE, folder, *self.app_path)
 
         # here if there is no match.
+        logger.info('Compiler installation needed for %s' % self.version)
         if self.installer.install(self.version):
             return self.working_path()
 
