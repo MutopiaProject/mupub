@@ -21,6 +21,7 @@ _CONFIG_DEFAULT = """
   repository = ~/MutopiaProject
   local_db = mu-min-db.db
   download_url = http://download.linuxaudio.org/lilypond/binaries/
+  download_url_fallback = http://lilypond.org/downloads/binaries/
   mutopia_url = http://www.mutopiaproject.org/
   preview_fnm = preview.svg
 [logging]
@@ -29,11 +30,17 @@ _CONFIG_DEFAULT = """
   loglevel = INFO
 """
 
+# This is a hack to add new keys to the configuration.
+_new_common = {
+    'download_url_fallback': 'http://lilypond.org/downloads/binaries/',
+}
+
 def _configure():
     # A null handler is added to quite the internal logging for simple
     # library usage. See :py:func:`__main__() <mupub.__main__>` for
     # how loggers are added for command-line purposes.
     logging.getLogger('mupub').addHandler(logging.NullHandler())
+    config_dirty = False
 
     # On the first use, a default configuration is added in the user's
     # home folder.
@@ -42,11 +49,20 @@ def _configure():
         os.mkdir(CONFIG_DIR)
     if os.path.exists(_CONFIG_FNM):
         config.read_file(open(_CONFIG_FNM))
+
     else:
         config.read_string(_CONFIG_DEFAULT)
+        config_dirty = True
+
+    # Check for new keys so they can be slipped in to help the user
+    for ckey in iter(_new_common):
+        if ckey not in config['common']:
+            config['common'][ckey] = _new_common[ckey]
+            config_dirty = True
+
+    if config_dirty:
         with open(_CONFIG_FNM, 'w') as configfile:
-            config.write(configfile,
-                         space_around_delimiters=True)
+            config.write(configfile, space_around_delimiters=True)
 
     return config
 

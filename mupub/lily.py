@@ -10,6 +10,7 @@ import re
 import subprocess
 import tarfile
 import requests
+import http.client
 from bs4 import BeautifulSoup
 from clint.textui import progress
 import mupub
@@ -98,29 +99,32 @@ class LyVersion():
         if not self.is_valid():
             return None
 
-        binurl = mupub.CONFIG_DICT['common']['download_url']
+        # Check download_url then download_url_fallback
+        for urltag in ['download_url', 'download_url_fallback',]:
+            if urltag not in mupub.CONFIG_DICT['common']:
+                continue
+            binurl = mupub.CONFIG_DICT['common'][urltag]
+            req = requests.get(binurl)
+            if req.status_code != 200:
+                continue
+            logger.info('Trying %s' % binurl)
 
-        req = requests.get(binurl)
-        compiler_page = BeautifulSoup(req.content, 'html.parser')
-        # Find the first link in the page that matches given cpu.
-        tlink = compiler_page.find(href=cpu_descr+'/')
-        if not tlink:
-            logger.warning('Did not find compiler script for %s' % cpu_descr)
-            return None
+            compiler_page = BeautifulSoup(req.content, 'html.parser')
+            # Find the first link in the page that matches given cpu.
+            tlink = compiler_page.find(href=cpu_descr+'/')
+            if not tlink:
+                continue
 
-        bin_archive = binurl+cpu_descr+'/'
-        comp_page = BeautifulSoup(requests.get(bin_archive).content, 'html.parser')
-        # Filter to get only lilypond install scripts, then search for
-        # a match on the version.
-        href_re = re.compile(COMPFMT.format(cpu_descr))
-        for script in comp_page.find_all(href=href_re):
-            script_ref = script.contents[0]
-            script_m = RE_SCRIPT.match(script_ref)
-            if script_m and self.match(LyVersion(script_m.group(1))):
-                return bin_archive + script_ref
-
-        logger.warn('No install scripts found for %s' % self.version)
-        logger.warn('Using %s' % binurl)
+            bin_archive = binurl+cpu_descr+'/'
+            comp_page = BeautifulSoup(requests.get(bin_archive).content, 'html.parser')
+            # Filter to get only lilypond install scripts, then search for
+            # a match on the version.
+            href_re = re.compile(COMPFMT.format(cpu_descr))
+            for script in comp_page.find_all(href=href_re):
+                script_ref = script.contents[0]
+                script_m = RE_SCRIPT.match(script_ref)
+                if script_m and self.match(LyVersion(script_m.group(1))):
+                    return bin_archive + script_ref
 
         return None
 
@@ -222,6 +226,7 @@ class LinuxInstaller(LyInstaller):
 
         install_script = lyversion.get_install_script('-'.join(self.system_details()))
         if not install_script:
+            logger.warn('No install scripts found for %s' % lyversion.version)
             return False
 
         local_script = os.path.join(LYCACHE, os.path.basename(install_script))
