@@ -24,7 +24,7 @@ __author_email__= 'glenl.glx@gmail.com'
 __uri__ = 'http://mutopiaproject.org/'
 
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2017 The Mutopia Project'
+__copyright__ = 'Copyright 2018 The Mutopia Project'
 
 from .assets import collect_assets
 from .commands.build import build
