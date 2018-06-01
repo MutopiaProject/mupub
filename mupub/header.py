@@ -366,14 +366,11 @@ def find_header(relpath, prefix='.'):
         # Not found, attempt again with a RawLoader and check files
         # that may be header assignments in a file included from
         # another file.
-        hdr.use(RawLoader())
-        logger.debug('Using raw loader.')
-        raw_files = []
-        for header in headers:
-            if header.lower().startswith(('header', 'mutopia',)):
-                raw_files.append(header)
-        if len(raw_files) > 0:
-            hdr.load_table_list(p_to_hdr, raw_files)
+        rawp = os.path.abspath(os.path.join(prefix, relpath))
+        if os.path.exists(rawp):
+            logger.warning('Using raw loader')
+            hdr.use(RawLoader())
+            hdr.load_table(rawp)
 
     hdr.use(VersionLoader())
     hdr.load_table_list(p_to_hdr, headers)
