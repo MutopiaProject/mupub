@@ -77,7 +77,14 @@ def _update_tracker(conn):
     logger.info('Looking at %s' % common['mutopia_url'])
     url = urllib.parse.urljoin(common['mutopia_url'],
                                'latestadditions.html')
-    req = requests.get(url)
+    try:
+        req = requests.get(url)
+        req.raise_for_status()
+    except requests.RequestException as err:
+        print("Request failure", err)
+        print("Is the site up?")
+        sys.exit(1)
+
     latest_page = BeautifulSoup(req.content, 'html.parser')
     plist = latest_page.find_all(href=re.compile('piece-info\.cgi'))
     # Build a list of current ids

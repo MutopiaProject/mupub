@@ -43,6 +43,7 @@ def _build_scores(base_params, infile):
         puts(colored.green('Building score, page size = ' + psize))
         command = base_params + build_params
         command.append('-dpaper-size="{}"'.format(psize))
+        command.append('--include=' + os.path.dirname(infile))
         command.append(infile)
         try:
             subprocess.check_output(command)
@@ -96,6 +97,7 @@ def _build_preview(base_params, lpversion, infile, force_png_preview=False):
         preview_params.append('--no-print')
         preview_params.append('--format=png')
     else:
+        preview_params.append('--include=' + os.path.dirname(infile))
         preview_params.append('-dno-print-pages'),
         preview_params.append('-dpreview')
         if force_png_preview:
