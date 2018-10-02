@@ -117,7 +117,7 @@ def _update_tracker(conn):
 def _db_update(conn, datadir, target, table_name=None):
     if not table_name:
         table_name = target+'s'
-    with open(os.path.join(datadir, table_name+'.dat'), 'r') as infile:
+    with open(os.path.join(datadir, table_name+'.dat'), mode='r', encoding='utf-8') as infile:
         cursor = conn.cursor()
         sql_insert = _INSERT.format(table_name, target)
         for line in infile:
