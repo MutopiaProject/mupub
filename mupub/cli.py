@@ -16,9 +16,10 @@ _DATEFMT = '%Y-%m-%d %H:%M:%S'
 
 _LONG_DESCRIPTION="""
 This is a command-line utility for managing the publication of
-Mutopia Project contributions. All unctionality is provided by
+Mutopia Project contributions. All functionality is provided by
 commands within this utility:
 
+    init  - Initialize local data, syncbronize id's with mutopia site.
     check - Reviews the contributed piece for validity.
     tag   - Modifies the header with MutopiaProject fields.
     build - Builds a complete set of output files for publication.
