@@ -11,6 +11,7 @@ import argparse
 import glob
 import logging
 import os
+import sys
 import shutil
 import subprocess
 from clint.textui import colored, puts
@@ -91,12 +92,18 @@ def _build_preview(base_params, lpversion, infile, force_png_preview=False):
             return
 
     preview_params = ['-dno-include-book-title-preview',]
-    if lpversion < mupub.LyVersion('2.14'):
+    # 2.12 doesn't understand the --preview flag
+    if lpversion < mupub.LyVersion('2.12'):
         preview_params.append('-dresolution=101'),
         preview_params.append('--preview')
         preview_params.append('--no-print')
         preview_params.append('--format=png')
     else:
+        # 2.12 doesn't have the svg backend.
+        # It may be easier to tweak things here rather than explore
+        # all possibilities.
+        if lpversion < mupub.LyVersion('2.14'):
+            force_png_preview = True
         preview_params.append('--include=' + os.path.dirname(infile))
         preview_params.append('-dno-print-pages'),
         preview_params.append('-dpreview')
@@ -151,6 +158,9 @@ def _lily_build(infile, header, force_png_preview=False, skip_preview=False):
     lpversion = mupub.LyVersion(header.get_value('lilypondVersion'))
     locator = mupub.LyLocator(str(lpversion), progress_bar=True)
     lily_path = locator.working_path()
+    if not lily_path:
+        # No compiler (too old?) installed for this revision.
+        sys.exit(-2)
 
     # Build each score, doing a preview on the first one only (unless skipping)
     do_preview = not skip_preview

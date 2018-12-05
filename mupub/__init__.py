@@ -17,7 +17,7 @@ During development of an upcoming release, the MINOR number may be
 incremented.
 
 """
-__version__ = '1.0.6'
+__version__ = '1.0.8'
 
 __author__ = 'Glen Larsen, Chris Sawer'
 __author_email__= 'glenl.glx@gmail.com'

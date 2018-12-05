@@ -19,7 +19,7 @@ import mupub
 LYCACHE = os.path.join(mupub.CONFIG_DIR, 'lycache')
 COMPFMT = 'lilypond-.*\.sh'
 RE_SCRIPT = re.compile('lilypond-([\d\.\-]+)\..*\.sh')
-
+RE_VERSION = re.compile('(\d+)\.(\d+)\.(\d+)(-\d+)?')
 
 def _cached_compilers():
     cache = []
@@ -31,7 +31,7 @@ def _cached_compilers():
     return cache
 
 
-RE_VERSION = re.compile('(\d+)\.(\d+)\.(\d+)(-\d+)?')
+_vfact = [100000, 100, 1, 0]
 class LyVersion():
     """LilyPond version class.
 
@@ -42,17 +42,12 @@ class LyVersion():
     def __init__(self, lp_version):
         self.version = lp_version
         self.sortval = 0
-        self.trailer = 0
-        vmatch = RE_VERSION.match(lp_version)
-        if vmatch:
-            self.sortval += int(vmatch.group(1))*100000
-            self.sortval += int(vmatch.group(2))*100
-            self.sortval += int(vmatch.group(3))
-            # When a match is made to the fourth group, the trailing
-            # dashed integer, it is stored but not used during
-            # compares.
-            if vmatch.group(4):
-                self.trailer = int(vmatch.group(4)[1:])
+        # remove anything trailing a dash character
+        vers = lp_version.split('-')[0]
+        n = 0
+        for v in vers.split('.'):
+            self.sortval += int(v) * _vfact[n]
+            n += 1
 
     def is_valid(self):
         """Validity test, must have parsed to an internal sort value."""
@@ -64,6 +59,10 @@ class LyVersion():
     def __gt__(self, other):
         """Evaluate this > other using internal integer sortval."""
         return self.sortval > other.sortval
+
+    def __lt__(self, other):
+        """Evaluate this < other using internal integer sortval."""
+        return self.sortval < other.sortval
 
     def __eq__(self, other):
         """Evaluate this == other using internal integer sortval."""

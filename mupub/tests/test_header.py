@@ -123,6 +123,9 @@ class HeaderTest(unittest.TestCase):
         # test that it ignores any trailing value
         self.assertTrue(lyv_5 == lyv_2)
 
+        # regression
+        self.assertTrue(mupub.LyVersion('2.12.3') < mupub.LyVersion('2.14'))
+
 
     def test_bad_header(self):
         test_db = tutils.getTestDB()

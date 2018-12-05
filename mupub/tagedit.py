@@ -65,9 +65,18 @@ _LICENSES = {
     'Public Domain': LilyURL(
         '#"http://creativecommons.org/licenses/publicdomain"',
         'public domain'),
+    'Creative Commons Attribution 2.5': LilyURL(
+        '#"http://creativecommons.org/licenses/by/2.5"',
+        '"Creative Commons Attribution 2.5 (Unported) License"'),
     'Creative Commons Attribution 3.0': LilyURL(
         '#"http://creativecommons.org/licenses/by/3.0"',
         '"Creative Commons Attribution 3.0 (Unported) License"'),
+    'Creative Commons Attribution 4.0': LilyURL(
+        '#"http://creativecommons.org/licenses/by/4.0"',
+        '"Creative Commons Attribution 4.0 (Unported) License"'),
+    'Creative Commons Attribution-ShareAlike 2.5': LilyURL(
+        '#"http://creativecommons.org/licenses/by-sa/2.5/"',
+        '"Creative Commons Attribution ShareAlike 2.5 (Unported) License"'),
     'Creative Commons Attribution-ShareAlike 3.0': LilyURL(
         '#"http://creativecommons.org/licenses/by-sa/3.0/"',
         '"Creative Commons Attribution ShareAlike 3.0 (Unported) License"'),
