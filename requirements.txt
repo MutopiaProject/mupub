@@ -1,5 +1,5 @@
 # application packages
 beautifulsoup4==4.6.3
 clint==0.5.1
-pypng==0.0.18
+pypng==0.0.21
 requests==2.20.0
