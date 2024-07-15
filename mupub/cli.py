@@ -19,7 +19,7 @@ This is a command-line utility for managing the publication of
 Mutopia Project contributions. All functionality is provided by
 commands within this utility:
 
-    init  - Initialize local data, syncbronize id's with mutopia site.
+    init  - Initialize local data, synchronize id's with mutopia site.
     check - Reviews the contributed piece for validity.
     tag   - Modifies the header with MutopiaProject fields.
     build - Builds a complete set of output files for publication.
