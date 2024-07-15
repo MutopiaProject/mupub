@@ -31,7 +31,7 @@ jobs:
           make dist
           pip3 install --break-system-packages dist/mupub-1.0.8-py2.py3-none-any.whl
           cd mupub
-          python -m unittest
+          python -m unittest -v
 
       - id: coverage
         run: |
