@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    paths-ignore:
+      - '**.rst'
+      - LICENSE
+  pull_request:
+    types: [assigned, edited, opened, synchronize, reopened]
+
+jobs:
+  build-checks:
+    runs-on: ubuntu-latest
+    container: 'alpine:3.20'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - id: install_deps
+        run: |
+          apk update
+          apk add python3 black make py3-coverage py3-pip
+
+      - id: linter
+        run: |
+          black --check --diff --color mupub/
+
+      - id: tests
+        run: |
+          pip3 install --break-system-packages -r requirements.txt
+          make dist
+          pip3 install --break-system-packages dist/mupub-1.0.8-py2.py3-none-any.whl
+          cd mupub
+          python -m unittest -v
+
+      - id: coverage
+        run: |
+          make coverage

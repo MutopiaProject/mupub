@@ -17,14 +17,14 @@ def tag(header_file, new_id, query):
     if header_file:
         header_file = mupub.resolve_lysfile(header_file)
     else:
-        _,header_file = mupub.utils.resolve_input()
-        logger.info('tag target is %s.' % header_file)
+        _, header_file = mupub.utils.resolve_input()
+        logger.info("tag target is %s." % header_file)
 
-    logger.info('tag command starting with %s' % header_file)
+    logger.info("tag command starting with %s" % header_file)
     try:
         mupub.tag_file(header_file, new_id, query)
     except mupub.TagProcessException:
-        puts(colored.yellow('Tagging aborted, no changes made.'))
+        puts(colored.yellow("Tagging aborted, no changes made."))
 
 
 def main(args):
@@ -33,24 +33,21 @@ def main(args):
     :param args: unparsed arguments from the command line.
 
     """
-    parser = argparse.ArgumentParser(prog='mupub build')
+    parser = argparse.ArgumentParser(prog="mupub build")
+    parser.add_argument("--header-file", help="lilypond file that contains the header")
     parser.add_argument(
-        '--header-file',
-        help='lilypond file that contains the header'
-    )
-    parser.add_argument(
-        '--id',
+        "--id",
         type=int,
-        dest='new_id',
+        dest="new_id",
         default=0,
-        help='Force identifier to this value (danger!)'
+        help="Force identifier to this value (danger!)",
     )
     parser.add_argument(
-        '--no-query',
-        action='store_false',
+        "--no-query",
+        action="store_false",
         default=True,
-        dest='query',
-        help='Skip verification prompt.'
+        dest="query",
+        help="Skip verification prompt.",
     )
 
     args = parser.parse_args(args)

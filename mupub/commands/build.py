@@ -17,6 +17,7 @@ import subprocess
 from clint.textui import colored, puts
 import mupub
 
+
 def _remove_if_exists(path):
     if os.path.exists(path):
         os.unlink(path)
@@ -24,7 +25,7 @@ def _remove_if_exists(path):
 
 def _stripped_base(infile):
     basefnm = os.path.basename(infile)
-    return basefnm[:basefnm.rfind('.')]
+    return basefnm[: basefnm.rfind(".")]
 
 
 def _build_scores(base_params, infile):
@@ -36,31 +37,34 @@ def _build_scores(base_params, infile):
     """
     logger = logging.getLogger(__name__)
 
-    pagedef = {'a4': 'a4', 'letter': 'let'}
-    build_params = ['--format=pdf', '--format=ps',]
+    pagedef = {"a4": "a4", "letter": "let"}
+    build_params = [
+        "--format=pdf",
+        "--format=ps",
+    ]
     basefnm = _stripped_base(infile)
 
     for psize in pagedef.keys():
-        puts(colored.green('Building score, page size = ' + psize))
+        puts(colored.green("Building score, page size = " + psize))
         command = base_params + build_params
         command.append('-dpaper-size="{}"'.format(psize))
-        command.append('--include=' + os.path.dirname(infile))
+        command.append("--include=" + os.path.dirname(infile))
         command.append(infile)
         try:
             subprocess.check_output(command)
         except subprocess.CalledProcessError as cpe:
-            logging.error('LilyPond returned an error code of %d' % cpe.returncode)
+            logging.error("LilyPond returned an error code of %d" % cpe.returncode)
             return False
 
         # rename the pdf and ps files to include their page size
-        pdf_fnm = basefnm + '.pdf'
+        pdf_fnm = basefnm + ".pdf"
         if os.path.exists(pdf_fnm):
-            sized_pdf = basefnm + '-{0}.pdf'.format(pagedef[psize])
+            sized_pdf = basefnm + "-{0}.pdf".format(pagedef[psize])
             os.rename(pdf_fnm, sized_pdf)
 
-        ps_fnm = basefnm + '.ps'
+        ps_fnm = basefnm + ".ps"
         if os.path.exists(ps_fnm):
-            sized_ps = basefnm + '-{0}.ps'.format(pagedef[psize])
+            sized_ps = basefnm + "-{0}.ps".format(pagedef[psize])
             os.rename(ps_fnm, sized_ps)
 
     return True
@@ -76,59 +80,59 @@ def _build_preview(base_params, lpversion, infile, force_png_preview=False):
     """
 
     logger = logging.getLogger(__name__)
-    preview_fnm = mupub.CONFIG_DICT['common'].get('preview_fnm')
+    preview_fnm = mupub.CONFIG_DICT["common"].get("preview_fnm")
     if preview_fnm:
         tpath = os.path.join(os.path.dirname(infile), preview_fnm)
         if os.path.exists(tpath):
-            logger.debug('Premade image found (%s) for preview' % tpath)
+            logger.debug("Premade image found (%s) for preview" % tpath)
             # build a destination from the infile name
-            namev = [os.path.basename(infile).rsplit('.')[0],]
-            namev.append('.preview')
-            namev.append(tpath[tpath.rfind('.'):]) # extension
-            dest = os.path.join('./', ''.join(namev))
+            namev = [
+                os.path.basename(infile).rsplit(".")[0],
+            ]
+            namev.append(".preview")
+            namev.append(tpath[tpath.rfind(".") :])  # extension
+            dest = os.path.join("./", "".join(namev))
             _remove_if_exists(dest)
             shutil.copyfile(tpath, dest)
-            logger.debug('Destination preview copied (%s)' % dest)
+            logger.debug("Destination preview copied (%s)" % dest)
             return
 
-    preview_params = ['-dno-include-book-title-preview',]
+    preview_params = [
+        "-dno-include-book-title-preview",
+    ]
     # 2.12 doesn't understand the --preview flag
-    if lpversion < mupub.LyVersion('2.12'):
-        preview_params.append('-dresolution=101'),
-        preview_params.append('--preview')
-        preview_params.append('--no-print')
-        preview_params.append('--format=png')
+    if lpversion < mupub.LyVersion("2.12"):
+        preview_params.append("-dresolution=101"),
+        preview_params.append("--preview")
+        preview_params.append("--no-print")
+        preview_params.append("--format=png")
     else:
         # 2.12 doesn't have the svg backend.
         # It may be easier to tweak things here rather than explore
         # all possibilities.
-        if lpversion < mupub.LyVersion('2.14'):
+        if lpversion < mupub.LyVersion("2.14"):
             force_png_preview = True
-        preview_params.append('--include=' + os.path.dirname(infile))
-        preview_params.append('-dno-print-pages'),
-        preview_params.append('-dpreview')
+        preview_params.append("--include=" + os.path.dirname(infile))
+        preview_params.append("-dno-print-pages"),
+        preview_params.append("-dpreview")
         if force_png_preview:
-            preview_params.append('--format=png')
+            preview_params.append("--format=png")
         else:
-            preview_params.append('-dbackend=svg')
+            preview_params.append("-dbackend=svg")
 
     command = base_params + preview_params
     command.append(infile)
-    puts(colored.green('Building preview and midi files'))
+    puts(colored.green("Building preview and midi files"))
     try:
         subprocess.check_output(command)
     except subprocess.CalledProcessError as cpe:
-        logging.error('LilyPond returned an error code of %d' % cpe.returncode)
+        logging.error("LilyPond returned an error code of %d" % cpe.returncode)
         return False
 
     return True
 
 
-def _build_one(infile,
-               lily_path,
-               lpversion,
-               do_preview,
-               force_png_preview=False):
+def _build_one(infile, lily_path, lpversion, do_preview, force_png_preview=False):
     """Build a single lilypond file.
 
     :param infile: LilyPond file to build, might be None
@@ -140,22 +144,22 @@ def _build_one(infile,
 
     base, infile = mupub.utils.resolve_input(infile)
     if not infile:
-        puts(colored.red('Failed to resolve infile %s' % infile))
+        puts(colored.red("Failed to resolve infile %s" % infile))
         return False
 
-    base_params = [lily_path, '-dno-point-and-click',]
+    base_params = [
+        lily_path,
+        "-dno-point-and-click",
+    ]
     if not _build_scores(base_params, infile):
         return False
     if do_preview:
-        return _build_preview(base_params,
-                              lpversion,
-                              infile,
-                              force_png_preview)
+        return _build_preview(base_params, lpversion, infile, force_png_preview)
     return True
 
 
 def _lily_build(infile, header, force_png_preview=False, skip_preview=False):
-    lpversion = mupub.LyVersion(header.get_value('lilypondVersion'))
+    lpversion = mupub.LyVersion(header.get_value("lilypondVersion"))
     locator = mupub.LyLocator(str(lpversion), progress_bar=True)
     lily_path = locator.working_path()
     if not lily_path:
@@ -167,22 +171,23 @@ def _lily_build(infile, header, force_png_preview=False, skip_preview=False):
     count = 0
     for ly_file in infile:
         count += 1
-        puts(colored.green('Processing LilyPond file {} of {}'.format(count,len(infile))))
-        _build_one(ly_file,
-                   lily_path,
-                   lpversion,
-                   do_preview,
-                   force_png_preview)
+        puts(
+            colored.green(
+                "Processing LilyPond file {} of {}".format(count, len(infile))
+            )
+        )
+        _build_one(ly_file, lily_path, lpversion, do_preview, force_png_preview)
         do_preview = False
 
 
-def build(infile,
-          header_file,
-          parts_folder,
-          collect_only=False,
-          skip_header_check=False,
-          force_png_preview=False ):
-
+def build(
+    infile,
+    header_file,
+    parts_folder,
+    collect_only=False,
+    skip_header_check=False,
+    force_png_preview=False,
+):
     """Build one or more |LilyPond| files, generate publication assets.
 
     :param infile: The |LilyPond| file(s) to build.
@@ -199,7 +204,7 @@ def build(infile,
 
     """
     logger = logging.getLogger(__name__)
-    logger.info('build command starting')
+    logger.info("build command starting")
     base, lyfile = mupub.utils.resolve_input()
 
     if not mupub.commands.init.verify_init():
@@ -209,8 +214,8 @@ def build(infile,
         if lyfile:
             infile.append(lyfile)
         else:
-            logger.error('Failed to resolve any input files.')
-            logger.info('Make sure your working directory is correct.')
+            logger.error("Failed to resolve any input files.")
+            logger.info("Make sure your working directory is correct.")
             return
 
     # if a header file was given, use that for reading the header,
@@ -222,20 +227,20 @@ def build(infile,
         header = mupub.find_header(infile[0])
 
     if not header:
-        puts(colored.red('failed to find header'))
+        puts(colored.red("failed to find header"))
         return
 
     # Try to handle missing required fields.
     if not header.is_valid():
         mfields = header.missing_fields()
         if len(mfields) > 0:
-            logger.warning('Invalid header, missing: %s' % mfields)
+            logger.warning("Invalid header, missing: %s" % mfields)
         if skip_header_check:
-            puts(colored.yellow('Header not complete, continuing.'))
+            puts(colored.yellow("Header not complete, continuing."))
         else:
             # return without building otherwise
-            puts(colored.red('Header validation failed.'))
-            logger.debug('Incorrect or incomplete header.')
+            puts(colored.red("Header validation failed."))
+            logger.debug("Incorrect or incomplete header.")
             return
 
     # The user can opt to build manually and then use this application
@@ -250,38 +255,42 @@ def build(infile,
             parts_path = parts_folder
             if not os.path.exists(parts_path):
                 # ... or we'll try to find it here
-                parts_path = os.path.join(base+'-lys', parts_folder)
+                parts_path = os.path.join(base + "-lys", parts_folder)
                 if not os.path.exists(parts_path):
-                    puts(colored.red('Failed to find parts folder - {}'.format(parts_folder)))
-                    puts(colored.red('Skipping asset collection'))
+                    puts(
+                        colored.red(
+                            "Failed to find parts folder - {}".format(parts_folder)
+                        )
+                    )
+                    puts(colored.red("Skipping asset collection"))
                     return
             parts_list = []
             for fnm in os.listdir(path=parts_path):
-                if fnm.endswith('.ly'):
-                    parts_list.append(os.path.join(parts_path,fnm))
+                if fnm.endswith(".ly"):
+                    parts_list.append(os.path.join(parts_path, fnm))
             if len(parts_list) > 0:
-                puts(colored.green('Found {} part scores'.format(len(parts_list))))
+                puts(colored.green("Found {} part scores".format(len(parts_list))))
                 _lily_build(parts_list, header, False, True)
 
     # rename all .midi files to .mid
-    for mid in glob.glob('*.midi'):
-        os.rename(mid, mid[:len(mid)-1])
+    for mid in glob.glob("*.midi"):
+        os.rename(mid, mid[: len(mid) - 1])
 
     try:
         assets = mupub.collect_assets(base)
-        puts(colored.green('Creating RDF file'))
-        header.write_rdf(base+'.rdf', assets)
+        puts(colored.green("Creating RDF file"))
+        header.write_rdf(base + ".rdf", assets)
 
         # remove by-products of build
-        _remove_if_exists(base+'.ps')
-        _remove_if_exists(base+'.png')
-        _remove_if_exists(base+'.preview.png')
-        _remove_if_exists(base+'.preview.svg')
-        _remove_if_exists(base+'.preview.eps')
-        logger.info('Publishing build complete.')
+        _remove_if_exists(base + ".ps")
+        _remove_if_exists(base + ".png")
+        _remove_if_exists(base + ".preview.png")
+        _remove_if_exists(base + ".preview.svg")
+        _remove_if_exists(base + ".preview.eps")
+        logger.info("Publishing build complete.")
     except mupub.IncompleteBuild as exc:
         logger.warning(exc)
-        puts(colored.red('Rebuild needed, assets were not completely built.'))
+        puts(colored.red("Rebuild needed, assets were not completely built."))
         puts(colored.red('Do a "mupub clean" before next build.'))
 
 
@@ -291,35 +300,29 @@ def main(args):
     :param args: unparsed arguments from the command line.
 
     """
-    parser = argparse.ArgumentParser(prog='mupub build')
+    parser = argparse.ArgumentParser(prog="mupub build")
     parser.add_argument(
-        'infile',
-        nargs='*',
+        "infile",
+        nargs="*",
         default=[],
-        help='LilyPond input file (try to work it out if not given)'
+        help="LilyPond input file (try to work it out if not given)",
+    )
+    parser.add_argument("--header-file", help="LilyPond file that contains the header")
+    parser.add_argument("--parts-folder", help="Specify folder containing part scores")
+    parser.add_argument(
+        "--collect-only",
+        action="store_true",
+        help="Collect built files into publishable assets",
     )
     parser.add_argument(
-        '--header-file',
-        help='LilyPond file that contains the header'
+        "--skip-header-check",
+        action="store_true",
+        help="Do not exit on failed header validation",
     )
     parser.add_argument(
-        '--parts-folder',
-        help='Specify folder containing part scores'
-    )
-    parser.add_argument(
-        '--collect-only',
-        action='store_true',
-        help='Collect built files into publishable assets'
-    )
-    parser.add_argument(
-        '--skip-header-check',
-        action='store_true',
-        help='Do not exit on failed header validation'
-    )
-    parser.add_argument(
-        '--force-png-preview',
-        action='store_true',
-        help='Force a preview with PNG format instead of default SVG'
+        "--force-png-preview",
+        action="store_true",
+        help="Force a preview with PNG format instead of default SVG",
     )
 
     args = parser.parse_args(args)

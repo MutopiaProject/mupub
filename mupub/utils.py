@@ -1,6 +1,7 @@
 """Utility functions for mupub.
 """
-__docformat__ = 'reStructuredText'
+
+__docformat__ = "reStructuredText"
 
 import os
 import argparse
@@ -9,10 +10,11 @@ from clint.textui.validators import ValidationError
 import stat
 import mupub
 
+
 def _find_files(folder, outlist):
     for entry in os.listdir(path=folder):
         # ignore hidden and backup files
-        if entry.startswith('.') or entry.endswith('~'):
+        if entry.startswith(".") or entry.endswith("~"):
             continue
         path = os.path.join(folder, entry)
         stflags = os.stat(path).st_mode
@@ -38,8 +40,8 @@ def find_files(folder):
 def resolve_lysfile(infile):
     if os.path.exists(infile):
         return infile
-    base,infile = mupub.resolve_input(infile)
-    return os.path.join(base+'-lys', infile)
+    base, infile = mupub.resolve_input(infile)
+    return os.path.join(base + "-lys", infile)
 
 
 def resolve_input(infile=None):
@@ -66,31 +68,32 @@ def resolve_input(infile=None):
 
     base = os.path.basename(os.getcwd())
     if not infile:
-        if os.path.exists(base+'.ly'):
-            infile = base+'.ly'
-        elif os.path.exists(base+'-lys'):
-            candidate = os.path.join(base+'-lys', base+'.ly')
+        if os.path.exists(base + ".ly"):
+            infile = base + ".ly"
+        elif os.path.exists(base + "-lys"):
+            candidate = os.path.join(base + "-lys", base + ".ly")
             if os.path.exists(candidate):
                 infile = candidate
 
-    return base,infile
+    return base, infile
 
 
-_BOOLEANS = {'y': True,
-             'yes': True,
-             'true': True,
-             '1': True,
-             'n': False,
-             'no': False,
-             'false': False,
-             '0': False
+_BOOLEANS = {
+    "y": True,
+    "yes": True,
+    "true": True,
+    "1": True,
+    "n": False,
+    "no": False,
+    "false": False,
+    "0": False,
 }
 
-class BooleanValidator(object):
-    """A mechanism to validate valid boolean input.
-    """
 
-    _message = 'Enter a valid boolean.'
+class BooleanValidator(object):
+    """A mechanism to validate valid boolean input."""
+
+    _message = "Enter a valid boolean."
 
     def __init__(self, message=None):
         if message is not None:

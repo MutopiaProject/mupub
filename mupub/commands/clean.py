@@ -9,18 +9,18 @@ from clint.textui import colored, puts
 import mupub
 
 _DEATHROW = [
-    '*.preview.*',
-    '*-preview.*',
-    '*.mid',
-    '*.midi',
-    '*-mids.zip',
-    '*.pdf',
-    '*-pdfs.zip',
-    '*.ps.gz',
-    '*-pss.zip',
-    '*-lys.zip',
-    '*.rdf',
-    '*.log',
+    "*.preview.*",
+    "*-preview.*",
+    "*.mid",
+    "*.midi",
+    "*-mids.zip",
+    "*.pdf",
+    "*-pdfs.zip",
+    "*.ps.gz",
+    "*-pss.zip",
+    "*-lys.zip",
+    "*.rdf",
+    "*.log",
 ]
 
 
@@ -31,17 +31,17 @@ def clean(dry_run):
 
     """
     logger = logging.getLogger(__name__)
-    if not mupub.in_repository('.'):
-        logger.warning('Cannot clean in non-repository folder')
+    if not mupub.in_repository("."):
+        logger.warning("Cannot clean in non-repository folder")
         return
 
     for deadset in _DEATHROW:
         for deadfile in glob.iglob(deadset):
             if dry_run:
-                puts(colored.yellow('would delete {}'.format(deadfile)))
+                puts(colored.yellow("would delete {}".format(deadfile)))
             else:
                 os.unlink(deadfile)
-                logger.debug('deleted %s' % deadfile)
+                logger.debug("deleted %s" % deadfile)
 
 
 def main(args):
@@ -50,11 +50,11 @@ def main(args):
     :param args: unparsed arguments from the command line.
 
     """
-    parser = argparse.ArgumentParser(prog='mupub build')
+    parser = argparse.ArgumentParser(prog="mupub build")
     parser.add_argument(
-        '--dry-run',
-        action='store_true',
-        help="Show what would be done but don't do it."
+        "--dry-run",
+        action="store_true",
+        help="Show what would be done but don't do it.",
     )
 
     args = parser.parse_args(args)

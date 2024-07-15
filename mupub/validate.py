@@ -1,7 +1,7 @@
 """Various mechanisms for validating a header.
 """
 
-__docformat__ = 'reStructuredText'
+__docformat__ = "reStructuredText"
 
 import abc
 import mupub
@@ -9,9 +9,9 @@ import logging
 import os
 import sqlite3
 
+
 class Validator(metaclass=abc.ABCMeta):
-    """Abstract class that defines header validation protocols.
-    """
+    """Abstract class that defines header validation protocols."""
 
     @abc.abstractmethod
     def validate_composer(self, composer):
@@ -52,22 +52,23 @@ class Validator(metaclass=abc.ABCMeta):
 
         # license check is done separately to accomodate for copyright
         # synonym.
-        if not header.get_field('license'):
-            logger.warning('Missing license field.')
-            cc = header.get_field('copyright')
+        if not header.get_field("license"):
+            logger.warning("Missing license field.")
+            cc = header.get_field("copyright")
             if cc:
                 with sqlite3.connect(mupub.getDBPath()) as conn:
                     validator = mupub.DBValidator(conn)
                     if validator.validate_license(cc):
-                        logger.warning('license will be assigned to %s when tagged.' % cc)
-                        header.set_field('license', cc)
+                        logger.warning(
+                            "license will be assigned to %s when tagged." % cc
+                        )
+                        header.set_field("license", cc)
                     else:
-                        failures.append('copyright')
+                        failures.append("copyright")
             else:
-                failures.append('license')
+                failures.append("license")
 
         return failures
-
 
     def validate_header(self, header):
         """Validate a header.
@@ -83,14 +84,14 @@ class Validator(metaclass=abc.ABCMeta):
         """
 
         failures = self.basic_checks(header)
-        if not self.validate_composer(header.get_field('composer')):
-            failures.append('composer')
+        if not self.validate_composer(header.get_field("composer")):
+            failures.append("composer")
 
-        if not self.validate_style(header.get_field('style')):
-            failures.append('style')
+        if not self.validate_style(header.get_field("style")):
+            failures.append("style")
 
-        if not self.validate_license(header.get_field('license')):
-            failures.append('license')
+        if not self.validate_license(header.get_field("license")):
+            failures.append("license")
 
         return failures
 
@@ -115,7 +116,7 @@ class DBValidator(Validator):
         :rtype: bool
 
         """
-        query = 'SELECT count(*) FROM composers WHERE composer=?;'
+        query = "SELECT count(*) FROM composers WHERE composer=?;"
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, (composer,))
@@ -125,7 +126,6 @@ class DBValidator(Validator):
             cursor.close()
         return False
 
-
     def validate_style(self, style):
         """Validate a style via a DB connection.
 
@@ -134,7 +134,7 @@ class DBValidator(Validator):
         :rtype: bool
 
         """
-        query = 'SELECT count(*) FROM styles WHERE style=?'
+        query = "SELECT count(*) FROM styles WHERE style=?"
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, (style,))
@@ -144,7 +144,6 @@ class DBValidator(Validator):
             cursor.close()
         return False
 
-
     def validate_license(self, license_name):
         """Validate a license via a DB connection.
 
@@ -153,7 +152,7 @@ class DBValidator(Validator):
         :rtype: bool
 
         """
-        query = 'SELECT count(*) FROM licenses WHERE license=?'
+        query = "SELECT count(*) FROM licenses WHERE license=?"
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, (license_name,))
@@ -164,7 +163,7 @@ class DBValidator(Validator):
         return False
 
 
-def in_repository(path='.'):
+def in_repository(path="."):
     """Return True if path is in MutopiaProject archive hierarchy.
 
     Finds the `ftp` folder in the absolute path of the given path,
@@ -180,7 +179,7 @@ def in_repository(path='.'):
     if os.path.exists(here):
         try:
             here = here.split(os.sep)
-            composer = here[here.index('ftp') + 1]
+            composer = here[here.index("ftp") + 1]
             with sqlite3.connect(mupub.getDBPath()) as conn:
                 validator = mupub.DBValidator(conn)
                 return validator.validate_composer(composer)
