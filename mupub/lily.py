@@ -17,9 +17,9 @@ import mupub
 
 # The location of LilyPond categorized binaries
 LYCACHE = os.path.join(mupub.CONFIG_DIR, 'lycache')
-COMPFMT = 'lilypond-.*\.sh'
-RE_SCRIPT = re.compile('lilypond-([\d\.\-]+)\..*\.sh')
-RE_VERSION = re.compile('(\d+)\.(\d+)\.(\d+)(-\d+)?')
+COMPFMT = r'lilypond-.*\.sh'
+RE_SCRIPT = re.compile(r'lilypond-([\d\.\-]+)\..*\.sh')
+RE_VERSION = re.compile(r'(\d+)\.(\d+)\.(\d+)(-\d+)?')
 
 def _cached_compilers():
     cache = []

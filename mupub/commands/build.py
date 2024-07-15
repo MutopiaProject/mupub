@@ -89,7 +89,7 @@ def _build_preview(base_params, lpversion, infile, force_png_preview=False):
             _remove_if_exists(dest)
             shutil.copyfile(tpath, dest)
             logger.debug('Destination preview copied (%s)' % dest)
-            return
+            return True
 
     preview_params = ['-dno-include-book-title-preview',]
     # 2.12 doesn't understand the --preview flag
