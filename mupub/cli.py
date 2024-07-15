@@ -10,11 +10,11 @@ import sys
 import textwrap
 import mupub
 
-_FILEFMT = '%(asctime)s %(levelname)s %(name)s %(message)s'
-_CONSOLEFMT = '%(levelname)-8s %(name)-12s %(message)s'
-_DATEFMT = '%Y-%m-%d %H:%M:%S'
+_FILEFMT = "%(asctime)s %(levelname)s %(name)s %(message)s"
+_CONSOLEFMT = "%(levelname)-8s %(name)-12s %(message)s"
+_DATEFMT = "%Y-%m-%d %H:%M:%S"
 
-_LONG_DESCRIPTION="""
+_LONG_DESCRIPTION = """
 This is a command-line utility for managing the publication of
 Mutopia Project contributions. All functionality is provided by
 commands within this utility:
@@ -28,26 +28,23 @@ commands within this utility:
 
 
 def _configure_logging(verbose):
-    if 'logging' not in mupub.CONFIG_DICT.sections():
+    if "logging" not in mupub.CONFIG_DICT.sections():
         return
-    logdict = mupub.CONFIG_DICT['logging']
+    logdict = mupub.CONFIG_DICT["logging"]
 
     # Set the module logger to the lowest reasonable level (DEBUG)
-    mupub_logger = logging.getLogger('mupub')
+    mupub_logger = logging.getLogger("mupub")
     mupub_logger.setLevel(logging.DEBUG)
 
-    if logdict.getboolean('log_to_file', True):
+    if logdict.getboolean("log_to_file", True):
         # Add a rotating logfile handler
-        logpath = os.path.join(mupub.CONFIG_DIR,
-                               logdict.get('logfilename',
-                                           'mupub-errors.log'))
-        file_handler = RotatingFileHandler(logpath,
-                                           maxBytes=1024*100,
-                                           backupCount=3)
+        logpath = os.path.join(
+            mupub.CONFIG_DIR, logdict.get("logfilename", "mupub-errors.log")
+        )
+        file_handler = RotatingFileHandler(logpath, maxBytes=1024 * 100, backupCount=3)
         # Logging is always INFO level
         file_handler.setLevel(logging.INFO)
-        logform = logging.Formatter(fmt=_FILEFMT,
-                                    datefmt=_DATEFMT)
+        logform = logging.Formatter(fmt=_FILEFMT, datefmt=_DATEFMT)
         file_handler.setFormatter(logform)
         mupub_logger.addHandler(file_handler)
 
@@ -57,23 +54,22 @@ def _configure_logging(verbose):
         n_level = logging.DEBUG
     else:
         # Check configuration for an alternate level.
-        level = logdict.get('loglevel', 'INFO')
+        level = logdict.get("loglevel", "INFO")
         n_level = getattr(logging, level.upper(), None)
         # Default to DEBUG in the event of a misspelled level
         if not isinstance(n_level, int):
             n_level = logging.DEBUG
-            mupub_logger.warning('%s is an invalid level. Check config.' % level)
+            mupub_logger.warning("%s is an invalid level. Check config." % level)
 
     console = logging.StreamHandler()
     console.setLevel(n_level)
-    console_form = logging.Formatter(fmt=_CONSOLEFMT,
-                                     datefmt=_DATEFMT)
+    console_form = logging.Formatter(fmt=_CONSOLEFMT, datefmt=_DATEFMT)
     console.setFormatter(console_form)
     mupub_logger.addHandler(console)
 
 
-def _registered_commands(group='mupub.registered_commands'):
-    """ Get our registered commands.
+def _registered_commands(group="mupub.registered_commands"):
+    """Get our registered commands.
 
     Iterates the entry points and returns the registered commands as a
     dictionary.
@@ -98,29 +94,25 @@ def dispatch(argv):
     """
     registered_commands = _registered_commands()
     parser = argparse.ArgumentParser(
-        prog='mupub',
+        prog="mupub",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=textwrap.dedent(_LONG_DESCRIPTION),
-        epilog='Use mupub <command> --help for specific command help',
+        epilog="Use mupub <command> --help for specific command help",
     )
 
     parser.add_argument(
-        '--version',
-        action='version',
-        version='%(prog)s version {0}'.format(mupub.__version__)
+        "--version",
+        action="version",
+        version="%(prog)s version {0}".format(mupub.__version__),
     )
+    parser.add_argument("--verbose", action="store_true", help="louder")
     parser.add_argument(
-        '--verbose',
-        action='store_true',
-        help='louder'
-    )
-    parser.add_argument(
-        'command',
+        "command",
         choices=registered_commands.keys(),
     )
 
     parser.add_argument(
-        'args',
+        "args",
         help=argparse.SUPPRESS,
         nargs=argparse.REMAINDER,
     )

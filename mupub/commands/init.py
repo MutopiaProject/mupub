@@ -16,13 +16,13 @@ import mupub
 
 def _q_str(category, key, qstr):
     table = mupub.CONFIG_DICT[category]
-    default = table.get(key, '')
+    default = table.get(key, "")
     try:
         val = prompt.query(qstr, default=default)
         table[key] = val
         return val
     except EOFError:
-        print('\n')
+        print("\n")
         return None
 
 
@@ -30,39 +30,41 @@ def _q_int(category, key, qstr):
     table = mupub.CONFIG_DICT[category]
     default = table.get(key, 0)
     try:
-        val = int(prompt.query(qstr,
-                               default=str(default),
-                               validators=[validators.IntegerValidator()]))
+        val = int(
+            prompt.query(
+                qstr, default=str(default), validators=[validators.IntegerValidator()]
+            )
+        )
         table[key] = val
         return val
     except EOFError:
-        print('\n')
+        print("\n")
         return None
 
 
 # Licenses are not available from datafiles so they are initialized
 # with these values. See _db_sync().
 _LICENSES = [
-    'Creative Commons Attribution 2.5',
-    'Creative Commons Attribution 3.0',
-    'Creative Commons Attribution 4.0',
-    'Creative Commons Attribution-ShareAlike',
-    'Creative Commons Attribution-ShareAlike 2.0',
-    'Creative Commons Attribution-ShareAlike 2.5',
-    'Creative Commons Attribution-ShareAlike 3.0',
-    'Creative Commons Attribution-ShareAlike 4.0',
-    'Public Domain',
+    "Creative Commons Attribution 2.5",
+    "Creative Commons Attribution 3.0",
+    "Creative Commons Attribution 4.0",
+    "Creative Commons Attribution-ShareAlike",
+    "Creative Commons Attribution-ShareAlike 2.0",
+    "Creative Commons Attribution-ShareAlike 2.5",
+    "Creative Commons Attribution-ShareAlike 3.0",
+    "Creative Commons Attribution-ShareAlike 4.0",
+    "Public Domain",
 ]
 
 # The local database definition, tuples are (table-name,key-name):
 _TABLES = [
-    ('instruments', 'instrument'),
-    ('styles', 'style'),
-    ('composers', 'composer'),
-    ('licenses', 'license'),
+    ("instruments", "instrument"),
+    ("styles", "style"),
+    ("composers", "composer"),
+    ("licenses", "license"),
 ]
 
-_INSERT = 'INSERT OR IGNORE INTO {0} ({1}) VALUES (?)'
+_INSERT = "INSERT OR IGNORE INTO {0} ({1}) VALUES (?)"
 
 _CREATE_TRACKER = """CREATE TABLE IF NOT EXISTS
    id_tracker (
@@ -70,13 +72,14 @@ _CREATE_TRACKER = """CREATE TABLE IF NOT EXISTS
       pending INT DEFAULT 1
    )
 """
+
+
 def _update_tracker(conn):
     logger = logging.getLogger(__name__)
-    common = mupub.CONFIG_DICT['common']
+    common = mupub.CONFIG_DICT["common"]
 
-    logger.info('Looking at %s' % common['mutopia_url'])
-    url = urllib.parse.urljoin(common['mutopia_url'],
-                               'latestadditions.html')
+    logger.info("Looking at %s" % common["mutopia_url"])
+    url = urllib.parse.urljoin(common["mutopia_url"], "latestadditions.html")
     try:
         req = requests.get(url)
         req.raise_for_status()
@@ -85,60 +88,66 @@ def _update_tracker(conn):
         print("Is the site up?")
         sys.exit(1)
 
-    latest_page = BeautifulSoup(req.content, 'html.parser')
-    plist = latest_page.find_all(href=re.compile('piece-info\.cgi'))
+    latest_page = BeautifulSoup(req.content, "html.parser")
+    plist = latest_page.find_all(href=re.compile("piece-info\.cgi"))
     # Build a list of current ids
     idlist = []
     for ref in plist:
-        href = urllib.parse.urlparse(ref.get('href'))
+        href = urllib.parse.urlparse(ref.get("href"))
         if href.query:
             for q in urllib.parse.parse_qsl(href.query):
-                if q[0] == 'id':
+                if q[0] == "id":
                     idlist.append(q[1])
 
     cursor = conn.cursor()
     last_piece = (max(idlist),)
     # Remove anything older than the latest piece id (but keep latest)
-    cursor.execute('DELETE FROM id_tracker WHERE piece_id < ?', last_piece)
+    cursor.execute("DELETE FROM id_tracker WHERE piece_id < ?", last_piece)
     # Mark the latest on the server as pending
-    cursor.execute('UPDATE id_tracker set pending=0 WHERE piece_id = ?', last_piece)
+    cursor.execute("UPDATE id_tracker set pending=0 WHERE piece_id = ?", last_piece)
     # Finally, log the pendings as INFO
-    cursor.execute('SELECT piece_id FROM id_tracker WHERE pending')
+    cursor.execute("SELECT piece_id FROM id_tracker WHERE pending")
     for row in cursor.fetchall():
-        logger.info('%d is pending' % row)
+        logger.info("%d is pending" % row)
 
     # We want at least one row in the table, which may happen on the
     # first initialization.
-    cursor.execute('select count(piece_id) from id_tracker')
+    cursor.execute("select count(piece_id) from id_tracker")
     if cursor.fetchone()[0] == 0:
-        cursor.execute('INSERT INTO id_tracker (piece_id,pending) VALUES (?,0)', last_piece)
+        cursor.execute(
+            "INSERT INTO id_tracker (piece_id,pending) VALUES (?,0)", last_piece
+        )
 
 
 def _db_update(conn, datadir, target, table_name=None):
     if not table_name:
-        table_name = target+'s'
-    with open(os.path.join(datadir, table_name+'.dat'), mode='r', encoding='utf-8') as infile:
+        table_name = target + "s"
+    with open(
+        os.path.join(datadir, table_name + ".dat"), mode="r", encoding="utf-8"
+    ) as infile:
         cursor = conn.cursor()
         sql_insert = _INSERT.format(table_name, target)
         for line in infile:
             cursor.execute(sql_insert, (line.strip(),))
-            _ = infile.readline() # toss description line
+            _ = infile.readline()  # toss description line
 
 
 def _db_sync(local_conn):
     logger = logging.getLogger(__name__)
 
-    lice_insert = _INSERT.format('licenses','license')
+    lice_insert = _INSERT.format("licenses", "license")
     for lice in _LICENSES:
         local_conn.execute(lice_insert, (lice,))
-    datadir = os.path.expanduser(mupub.CONFIG_DICT['common']['datafiles'].strip())
-    _db_update(local_conn, datadir, 'composer')
-    _db_update(local_conn, datadir, 'style')
-    _db_update(local_conn, datadir, 'instrument')
+    datadir = os.path.expanduser(mupub.CONFIG_DICT["common"]["datafiles"].strip())
+    _db_update(local_conn, datadir, "composer")
+    _db_update(local_conn, datadir, "style")
+    _db_update(local_conn, datadir, "instrument")
     _update_tracker(local_conn)
 
 
-_CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS {0} ({1} TEXT PRIMARY KEY)'
+_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS {0} ({1} TEXT PRIMARY KEY)"
+
+
 def _init_db():
     logger = logging.getLogger(__name__)
     db_path = mupub.getDBPath()
@@ -146,29 +155,25 @@ def _init_db():
     try:
         with conn:
             for name, fields in _TABLES:
-                conn.execute(_CREATE_TABLE.format(name, ''.join(fields).strip()))
+                conn.execute(_CREATE_TABLE.format(name, "".join(fields).strip()))
             # Create table to track id prediction
             conn.execute(_CREATE_TRACKER)
             _db_sync(conn)
     except Exception as exc:
-        logger.warning('Exception caught, rolling back changes.')
-        logger.exception('In sync_local_db: %s', exc)
+        logger.warning("Exception caught, rolling back changes.")
+        logger.exception("In sync_local_db: %s", exc)
 
 
 def _init_config():
-    _q_str('common',
-           'datafiles',
-           'Location of MutopiaWeb project datafiles')
-    _q_str('common',
-           'repository',
-           'Location of local MutopiaProject git repository')
+    _q_str("common", "datafiles", "Location of MutopiaWeb project datafiles")
+    _q_str("common", "repository", "Location of local MutopiaProject git repository")
     # This probably doesn't have to be a query, but a check should be
     # made since this table entry wasn't present in alpha releases.
-    common = mupub.CONFIG_DICT['common']
-    if 'mutopia_url' not in common:
-        common['mutopia_url'] = 'http://www.mutopiaproject.org/'
-    if 'preview_fnm' not in common:
-        common['preview_fnm'] = 'preview.svg'
+    common = mupub.CONFIG_DICT["common"]
+    if "mutopia_url" not in common:
+        common["mutopia_url"] = "http://www.mutopiaproject.org/"
+    if "preview_fnm" not in common:
+        common["preview_fnm"] = "preview.svg"
 
 
 def init(dump, sync_only):
@@ -206,8 +211,8 @@ def init(dump, sync_only):
         if not sync_only:
             _init_config()
             mupub.saveConfig()
-            logger.info('configuration saved')
-        logger.info('starting initialization')
+            logger.info("configuration saved")
+        logger.info("starting initialization")
         _init_db()
     except KeyboardInterrupt:
         # handle caught exception
@@ -234,19 +239,19 @@ def verify_init():
         return True
     except mupub.BadConfiguration:
         # Handled expected exception
-        puts(colored.red('You need to run the init command before continuing.'))
+        puts(colored.red("You need to run the init command before continuing."))
 
     try:
-        do_init = prompt.query('Initialize now?',
-                               default='no',
-                               validators=[mupub.utils.BooleanValidator()])
+        do_init = prompt.query(
+            "Initialize now?", default="no", validators=[mupub.utils.BooleanValidator()]
+        )
     except (KeyboardInterrupt, EOFError):
         do_init = False
 
     if do_init:
         return init(False, False)
     else:
-        puts(colored.yellow('\nFine, but you will need to initialize eventually.'))
+        puts(colored.yellow("\nFine, but you will need to initialize eventually."))
 
     return False
 
@@ -257,16 +262,16 @@ def main(args):
     :param args: unparsed arguments from the command line.
 
     """
-    parser = argparse.ArgumentParser(prog='mupub init')
+    parser = argparse.ArgumentParser(prog="mupub init")
     parser.add_argument(
-        '--dump',
-        action='store_true',
-        help='Print configuration and exit.',
+        "--dump",
+        action="store_true",
+        help="Print configuration and exit.",
     )
     parser.add_argument(
-        '--sync-only',
-        action='store_true',
-        help='Perform only the database update',
+        "--sync-only",
+        action="store_true",
+        help="Perform only the database update",
     )
     args = parser.parse_args(args)
 

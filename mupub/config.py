@@ -5,15 +5,15 @@ run can be accomplished.
 
 """
 
-__docformat__ = 'reStructuredText'
+__docformat__ = "reStructuredText"
 
 import os
 import logging
 import configparser
 import mupub
 
-CONFIG_DIR = os.path.expanduser('~/.mupub')
-_CONFIG_FNM = os.path.join(CONFIG_DIR, 'mu-config.cfg')
+CONFIG_DIR = os.path.expanduser("~/.mupub")
+_CONFIG_FNM = os.path.join(CONFIG_DIR, "mu-config.cfg")
 
 _CONFIG_DEFAULT = """
 [common]
@@ -32,14 +32,15 @@ _CONFIG_DEFAULT = """
 
 # This is a hack to add new keys to the configuration.
 _new_common = {
-    'download_url_fallback': 'http://lilypond.org/downloads/binaries/',
+    "download_url_fallback": "http://lilypond.org/downloads/binaries/",
 }
+
 
 def _configure():
     # A null handler is added to quite the internal logging for simple
     # library usage. See :py:func:`__main__() <mupub.__main__>` for
     # how loggers are added for command-line purposes.
-    logging.getLogger('mupub').addHandler(logging.NullHandler())
+    logging.getLogger("mupub").addHandler(logging.NullHandler())
     config_dirty = False
 
     # On the first use, a default configuration is added in the user's
@@ -56,12 +57,12 @@ def _configure():
 
     # Check for new keys so they can be slipped in to help the user
     for ckey in iter(_new_common):
-        if ckey not in config['common']:
-            config['common'][ckey] = _new_common[ckey]
+        if ckey not in config["common"]:
+            config["common"][ckey] = _new_common[ckey]
             config_dirty = True
 
     if config_dirty:
-        with open(_CONFIG_FNM, 'w') as configfile:
+        with open(_CONFIG_FNM, "w") as configfile:
             config.write(configfile, space_around_delimiters=True)
 
     return config
@@ -70,18 +71,16 @@ def _configure():
 # load configuration on import
 CONFIG_DICT = _configure()
 
+
 def saveConfig():
-    """Convenience routine to save the configuration.
-    """
-    with open(_CONFIG_FNM, 'w') as configfile:
-        CONFIG_DICT.write(configfile,
-                          space_around_delimiters=True)
+    """Convenience routine to save the configuration."""
+    with open(_CONFIG_FNM, "w") as configfile:
+        CONFIG_DICT.write(configfile, space_around_delimiters=True)
 
 
 def getDBPath():
-    """Return database path from configuration.
-    """
-    return os.path.join(CONFIG_DIR, CONFIG_DICT['common']['local_db'])
+    """Return database path from configuration."""
+    return os.path.join(CONFIG_DIR, CONFIG_DICT["common"]["local_db"])
 
 
 def test_config():
@@ -91,10 +90,10 @@ def test_config():
 
     """
     if not os.path.exists(CONFIG_DIR):
-        raise mupub.BadConfiguration('Configuration folder not found.')
+        raise mupub.BadConfiguration("Configuration folder not found.")
     if not os.path.exists(_CONFIG_FNM):
-        raise mupub.BadConfiguration('Configuration file not found.')
+        raise mupub.BadConfiguration("Configuration file not found.")
     if not os.path.exists(getDBPath()):
-        raise mupub.BadConfiguration('Local database not found.')
+        raise mupub.BadConfiguration("Local database not found.")
     if len(CONFIG_DICT) == 0:
-        raise mupub.BadConfiguration('Configuration was not loaded.')
+        raise mupub.BadConfiguration("Configuration was not loaded.")
