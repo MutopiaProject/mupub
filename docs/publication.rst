@@ -45,8 +45,8 @@ This works great because the MutopiaProject website is static HTML and
 the caches are read-only. Everything is built off-line so the speed is
 reasonable. Problems arise when,
 
-  - Diacritical search is desired or you want to expand search
-    functionality outside the capabilities of the cache design.
+  - Diacritically insensitive search is desired or you want to expand
+    search functionality outside the capabilities of the cache design.
 
   - When you want to start tracking download counts for the purpose of
     popularity metrics.

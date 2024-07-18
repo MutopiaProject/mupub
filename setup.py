@@ -36,7 +36,7 @@ setup(
     install_requires=[
         'setuptools',
         'beautifulsoup4>=4.6',
-        'pypng>=0.0.18',
+        'pillow>=10',
         'clint>=0.5',
         'requests>=2.18',
     ],

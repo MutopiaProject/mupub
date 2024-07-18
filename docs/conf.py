@@ -28,8 +28,6 @@ version = '.'.join(mupub.__version__.split('.')[:2])
 # The full version, including alpha/beta/rc tags.
 release = mupub.__version__
 
-language = None
-
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 exclude_patterns = ['_build']
@@ -52,6 +50,7 @@ html_favicon = 'graphics/favicon.ico'
 
 html_static_path = ['_static', 'graphics', ]
 
-intersphinx_mapping = { 'python': ('https://docs.python.org/3.4', None),
-                        'musite': (musite_path, None),
+#                        'musite': (musite_path, None),
+
+intersphinx_mapping = { 'python': ('https://docs.python.org/3.12', None),
 }

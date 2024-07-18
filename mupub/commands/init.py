@@ -86,7 +86,7 @@ def _update_tracker(conn):
         sys.exit(1)
 
     latest_page = BeautifulSoup(req.content, 'html.parser')
-    plist = latest_page.find_all(href=re.compile('piece-info\.cgi'))
+    plist = latest_page.find_all(href=re.compile(r'piece-info\.cgi'))
     # Build a list of current ids
     idlist = []
     for ref in plist:

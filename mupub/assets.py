@@ -19,7 +19,7 @@ __docformat__ = 'reStructuredText'
 import glob
 import gzip
 import os
-import png
+from PIL import Image
 import shutil
 import zipfile
 import mupub
@@ -105,11 +105,9 @@ def collect_assets(basefnm):
         if len(pngfiles) > 0:
             preview_name = basefnm+'-preview.png'
             os.rename(pngfiles[0], preview_name)
-            with open(preview_name, 'rb') as png_file:
-                png_reader = png.Reader(file=png_file)
-                width, height, _, _ = png_reader.read()
-                assets['pngWidth'] = str(width)
-                assets['pngHeight'] = str(height)
+            with Image.open(preview_name, 'rb') as png_file:
+                assets['pngWidth'] = str(png_file.width)
+                assets['pngHeight'] = str(png_file.height)
 
     if preview_name == '':
         raise mupub.IncompleteBuild('No preview image found.')

@@ -15,6 +15,8 @@ import mupub
 CONFIG_DIR = os.path.expanduser('~/.mupub')
 _CONFIG_FNM = os.path.join(CONFIG_DIR, 'mu-config.cfg')
 
+LYCACHE_DIR = os.path.join(CONFIG_DIR, 'lycache')
+
 _CONFIG_DEFAULT = """
 [common]
   datafiles = ~/MutopiaWeb/datafiles
@@ -47,6 +49,8 @@ def _configure():
     config = configparser.RawConfigParser()
     if not os.path.isdir(CONFIG_DIR):
         os.mkdir(CONFIG_DIR)
+    if not os.path.isdir(LYCACHE_DIR):
+        os.mkdir(LYCACHE_DIR)
     if os.path.exists(_CONFIG_FNM):
         config.read_file(open(_CONFIG_FNM))
 
